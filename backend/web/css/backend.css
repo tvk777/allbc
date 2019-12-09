@@ -1,0 +1,58 @@
+@charset "utf-8";
+.file-preview-thumbnails img {
+    max-width: 100%;
+}
+
+.subways input {
+    display: inline-block;
+}
+
+.field-bcitemssubways-subway_id, .subways input.subway-name {
+    width: 220px;
+    float: left;
+}
+
+.field-bcitemssubways-walk_distance, .field-bcitemssubways-walk_seconds, .subways input.subway-dig {
+    max-width: 100px;
+    float: left;
+}
+
+.modal-form {
+    cursor: pointer;
+}
+.modal-form:hover{
+    background-color: #4ea5e0 !important;
+}
+.bc-places-update{
+ padding: 30px;
+}
+
+button.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.modal-dialog{position:relative;width:auto;margin:10px}
+@media (min-width:768px){
+    .modal-dialog{width:600px;margin:80px auto 30px auto}
+    .modal-content{-webkit-box-shadow:0 5px 15px rgba(0,0,0,0.5);box-shadow:0 5px 15px rgba(0,0,0,0.5)}
+}
+@media (min-width:992px){
+    .size-middle .modal-dialog{width:600px}
+    .size-large .modal-dialog{width:750px}
+    .modal-dialog {width:900px}
+}
+
+.pjax-height .modal-content{
+    min-height: 70vh;
+}
+
+#gmapbox{
+    width:450px;
+    height:300px;
+}
+
+.user-index .grid-view img{
+    max-width: 50px;
+}
