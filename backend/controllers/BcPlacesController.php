@@ -148,5 +148,17 @@ class BcPlacesController extends Controller
         return parent::render($view, $params);
     }
 
+    /*public function actionCreateNames()
+    {
+        $model = BcPlaces::find()->all();
+        foreach($model as $place){
+            $place->createName();
+        }
+
+        return $this->render('create-names', [
+            'model' => $model,
+        ]);
+    }*/
+
 
 }
