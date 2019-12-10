@@ -8,7 +8,7 @@ use common\widgets\GooglePlacesAutoComplete;
 $this->registerJsFile('//maps.googleapis.com/maps/api/js?' . http_build_query([
         'libraries' => 'places',
         'language' => 'ru',
-        'key' => 'AIzaSyAI6Pd1FNzideumlXBpPgvmzEDqyITNlCw'
+        'key' => Geo::getGoogleKey(),
     ]),['position' => $this::POS_END, 'async'=>'async', 'defer'=>'defer']);
 ?>
 <div id="locationField">
