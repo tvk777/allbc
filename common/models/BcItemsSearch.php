@@ -328,6 +328,7 @@ class BcItemsSearch extends BcItems
         $items = $query->all();
 
         //формирование маркеров для карты
+        //todo: продумать формирование маркеров для стр.выдачи офисов
         $markers = [];
         $markers['type'] = 'FeatureCollection';
         $markers['features'] = [];
@@ -352,15 +353,17 @@ class BcItemsSearch extends BcItems
             ];
             $markers['features'][] = $feature;
         }
+        //end формирование маркеров для карты
 
         if (!empty($params['visibles'])) $items = $visiblesItems;
 
         $itemsIds = ArrayHelper::getColumn($items, 'id'); //id БЦ по условиям user и другим фильтрам (локация БЦ)
-        //Отбор places по всем БЦ, которые подходят под параметры фильтрации (для рассчета кол-ва найденных офисов)
+        //Отбор places по всем БЦ, которые подходят под параметры фильтрации (для рассчета кол-ва найденных офисов и для стр.выдачи офисов)
         foreach ($places as $key => $place) {
             if (!ArrayHelper::isIn($place['item_id'], $itemsIds)) unset($places[$key]);
         }
-
+        
+        //todo: продумать принцип отбора places с item_id=0 для старницы выдачи офисов
         $placesIds = ArrayHelper::getColumn($places, 'id'); //id площадей по условиям target, m2
         //debug($placesIds);
 
@@ -466,6 +469,16 @@ class BcItemsSearch extends BcItems
         $result['markers'] = json_encode($markers);
         $result['pages'] = $pages;
         return $result;
+    }
+
+    public function seoSearchOffices($params)
+    {
+        if ($params['target'] === 1) {
+            $query_places = BcPlaces::find()->where(['archive' => 0])->with('bcitem')->andWhere(['hide' => 0]);
+        } else {
+            $query_places = BcPlacesSell::find()->where(['archive' => 0])->andWhere(['hide' => 0]);
+        }
+
     }
 
     protected function getItemsByUser($id)

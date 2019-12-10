@@ -237,6 +237,7 @@ class PageController extends Controller
         $whereCondition = $this->getFilter($seo, $params);
 
         $searchModel = new BcItemsSearch();
+        //todo: вставить условие если вывод офисов, то $searchModel->seoSearchOffices($whereCondition)
         $result = $searchModel->seoSearch($whereCondition);
 
         $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [

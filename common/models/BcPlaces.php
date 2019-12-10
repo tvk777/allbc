@@ -79,9 +79,9 @@ class BcPlaces extends ActiveRecord
             [['item_id', 'm2', 'valute_id', 'stage_name', 'price_period', 'ai', 'plan_comment', 'hide', 'archive', 'con_price'], 'required'],
             [['item_id', 'm2', 'm2min', 'valute_id', 'price_period', 'ai', 'commission', 'plan_comment', 'hide', 'archive', 'price', 'con_price', 'status_id', 'rent', 'hits', 'hide_contacts'], 'integer'],
             [['opex', 'tax', 'kop'], 'number'],
-            [['fio', 'fio_ua', 'fio_en', 'stage_name', 'phone', 'email'], 'string', 'max' => 255],
+            [['name', 'name_ua', 'name_en', 'fio', 'fio_ua', 'fio_en', 'stage_name', 'phone', 'email'], 'string', 'max' => 255],
             [['comment', 'comment_ua', 'comment_en'], 'string'],
-            [['uploaded', 'deleted','upfile', 'delfile'], 'safe'],
+            [['uploaded', 'deleted', 'upfile', 'delfile'], 'safe'],
         ];
     }
 
@@ -123,19 +123,28 @@ class BcPlaces extends ActiveRecord
             'fio' => Yii::t('app', 'fio'),
             'fio_ua' => Yii::t('app', 'fio'),
             'fio_en' => Yii::t('app', 'fio'),
+            'name' => Yii::t('app', 'name/h1'),
+            'name_ua' => Yii::t('app', 'name/h1'),
+            'name_en' => Yii::t('app', 'name/h1'),
         ];
     }
 
     public function getImages()
     {
-        return $this->hasMany(SystemFiles::className(), ['attachment_id' => 'id'])->andWhere(['attachment_type' => self::tableName()])->andWhere(['field'=>'imgs'])->orderBy('sort_order');
+        return $this->hasMany(SystemFiles::className(), ['attachment_id' => 'id'])->andWhere(['attachment_type' => self::tableName()])->andWhere(['field' => 'imgs'])->orderBy('sort_order');
+    }
+
+    //картинка БЦ (на случай если у places нет картинки)
+    public function getBcimg(){
+        return $this->bcitem->images[0];
     }
 
 
-    public function getStageImg(){
+    public function getStageImg()
+    {
         return $this->hasOne(SystemFiles::className(), ['attachment_id' => 'id'])
-            ->andWhere(['attachment_type'=>self::tableName()])
-            ->andWhere(['field'=>'stage_img']);
+            ->andWhere(['attachment_type' => self::tableName()])
+            ->andWhere(['field' => 'stage_img']);
     }
 
     public function getPrices()
@@ -144,37 +153,40 @@ class BcPlaces extends ActiveRecord
     }
 
 
-
-    public function getPeriod(){
-        return $this->hasOne(BcPeriods::className(), ['id'  => 'price_period']);
+    public function getPeriod()
+    {
+        return $this->hasOne(BcPeriods::className(), ['id' => 'price_period']);
     }
+
+    public function getBcitem()
+    {
+        return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
+    }
+
 
     public function getShowPrice()
     {
-        if($this->con_price!=1)
-        {
-            $str=$this->price.' за ';
-            $str.= $this->period->name;
-            return($str);
-        }
-        else
-        {
-            return('дог.');
+        if ($this->con_price != 1) {
+            $str = $this->price . ' за ';
+            $str .= $this->period->name;
+            return ($str);
+        } else {
+            return ('дог.');
         }
     }
+
     public function getShowm2()
     {
-        if(isset($this->m2min) && $this->m2min!=null)
-        {
-            return($this->m2min.'-'.$this->m2);
+        if (isset($this->m2min) && $this->m2min != null) {
+            return ($this->m2min . '-' . $this->m2);
         }
-        return($this->m2);
+        return ($this->m2);
     }
 
     public function beforeValidate()
     {
         $m2 = explode('-', $this->showm2);
-        if (count($m2)==2) {
+        if (count($m2) == 2) {
             $this->m2min = $m2[0];
             $this->m2 = $m2[1];
         } else {
@@ -211,9 +223,9 @@ class BcPlaces extends ActiveRecord
         }
         if (!empty($this->upfile)) {
             $upfile = (int)$this->upfile;
-            if($this->stageImg) $this->stageImg->delete();
+            if ($this->stageImg) $this->stageImg->delete();
             $stageImage = SystemFiles::find()->where(['id' => $upfile])->one();
-           $values = [
+            $values = [
                 'attachment_id' => $this->id,
                 'attachment_type' => $this->tableName(),
             ];
@@ -231,6 +243,47 @@ class BcPlaces extends ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+    public function createName()
+    {
+        $name = [];
+        $sqm_text='';
+        $sqm_text_ua='';
+        $sqm_text_en='';
+
+        $arenda = Synonyms::find()->where(['series' => 1])->orderBy('counter')->one();
+        $arenda->counter++;
+        $arenda->save();
+        $arenda_ru = $arenda->word;
+        $arenda_ua = $arenda->word_ua;
+        $arenda_en = $arenda->word_en;
+
+        $sqm = $this->m2min ? $this->m2min : $this->m2;
+        if($sqm>0) {
+            $sqm_model = Synonyms::find()->where(['series' => 2])->orderBy('counter')->one();
+            $sqm_model->counter++;
+            $sqm_model->save();
+
+            $sqm_text = ' площадью ' .$sqm.' '.$sqm_model->word;
+            $sqm_text_ua = ' площею ' .$sqm.' '.$sqm_model->word;
+            $sqm_text_en = ' area of '.$sqm.' '.$sqm_model->word_en;
+        }
+
+        $city = $this->bcitem->city;
+        $city_ru = $city->name;
+        $city_ua = $city->name_ua;
+        $city_en = $city->name_en;
+
+        $name['ru'] = $arenda_ru . $sqm_text.' г.' . $city_ru;
+        $name['ua'] = $arenda_ua . $sqm_text_ua .' м.' . $city_ua;
+        $name['en'] = $arenda_en . $sqm_text_en . ' - ' . $city_en;
+
+        $this->name = $name['ru'];
+        $this->name_ua = $name['ua'];
+        $this->name_en = $name['en'];
+        $this->save();
+
+        return $name;
+    }
 
 
 }

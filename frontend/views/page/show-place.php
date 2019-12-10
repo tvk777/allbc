@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p><? echo getDefaultTranslate('comment', $currentLanguage, $model) ?></p>
 
-    <? //debug($model->images); ?>
+    <? debug($model->bcimg->imgSrc); ?>
+    <?= Html::img($model->bcimg->imgSrc,['width' => '200px']) ?>
 
 </div>
