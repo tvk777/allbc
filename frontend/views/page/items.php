@@ -12,7 +12,7 @@ use yii\helpers\Url;
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
-if($city!==0){
+if ($city !== 0) {
     $city = $city->id;
 }
 $script = <<< JS
@@ -32,8 +32,8 @@ JS;
 $this->registerJs($script, $this::POS_READY, 'city-handler');
 //debug($conditions);
 $sortText = Yii::t('app', 'Sort');
-if(!empty($conditions) && !empty($conditions['sort'])){
-    switch ($conditions['sort']){
+if (!empty($conditions) && !empty($conditions['sort'])) {
+    switch ($conditions['sort']) {
         case 'price_asc':
             $sortText = Yii::t('app', 'Ascending prices');
             break;
@@ -54,6 +54,7 @@ if(!empty($conditions) && !empty($conditions['sort'])){
             break;
     }
 }
+$result = !empty($params['result']) && $params['result'] == 'offices' ? 'offices' : 'bc';
 ?>
 <section class="object_map_sect">
     <form action="" id="main_form">
@@ -69,9 +70,10 @@ if(!empty($conditions) && !empty($conditions['sort'])){
         'filters' => $filters,
         'params' => $params,
         'pricesChart' => $pricesChart,
-        'rate' => $rate
+        'rate' => $rate,
+        'result' => $result
     ]); ?>
-    
+
     <?php Pjax::begin([
         'enableReplaceState' => true,
         'enablePushState' => true,
@@ -104,19 +106,29 @@ if(!empty($conditions) && !empty($conditions['sort'])){
                             </div>
                             <div class="dropdown_select">
                                 <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'price_asc']) ?>"><?= Yii::t('app', 'Ascending prices') ?></a></p>
+                                    <p>
+                                        <a href="<?= Url::current(['sort' => 'price_asc']) ?>"><?= Yii::t('app', 'Ascending prices') ?></a>
+                                    </p>
                                 </div>
                                 <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'price_desc']) ?>"><?= Yii::t('app', 'Descending prices') ?></a></p>
+                                    <p>
+                                        <a href="<?= Url::current(['sort' => 'price_desc']) ?>"><?= Yii::t('app', 'Descending prices') ?></a>
+                                    </p>
                                 </div>
                                 <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'm2_asc']) ?>"><?= Yii::t('app', 'Ascending area') ?></a></p>
+                                    <p>
+                                        <a href="<?= Url::current(['sort' => 'm2_asc']) ?>"><?= Yii::t('app', 'Ascending area') ?></a>
+                                    </p>
                                 </div>
                                 <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'm2_desc']) ?>"><?= Yii::t('app', 'Descending area') ?></a></p>
+                                    <p>
+                                        <a href="<?= Url::current(['sort' => 'm2_desc']) ?>"><?= Yii::t('app', 'Descending area') ?></a>
+                                    </p>
                                 </div>
                                 <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'updated_at']) ?>"><?= Yii::t('app', 'By date added') ?></a></p>
+                                    <p>
+                                        <a href="<?= Url::current(['sort' => 'updated_at']) ?>"><?= Yii::t('app', 'By date added') ?></a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -130,15 +142,18 @@ if(!empty($conditions) && !empty($conditions['sort'])){
             <div class="row">
                 <div class="w_half">
                     <div class="objects_cards">
-                        <? for ($i = 0; $i <= 3; $i++) {
-                            if (isset($items[$i])) {
-                                echo $this->render('_partial/_card', [
-                                    'item' => $items[$i],
-                                    'target' => $seo->target,
-                                    'places' => $places
-                                ]);
+                        <? //if ($result != 'offices') {
+                            for ($i = 0; $i <= 3; $i++) {
+                                if (isset($items[$i])) {
+                                    echo $this->render('_partial/_card', [
+                                        'item' => $items[$i],
+                                        'target' => $seo->target,
+                                        'places' => $places,
+                                        'result' => $result
+                                    ]);
+                                }
                             }
-                        } ?>
+                        //} ?>
                     </div>
                 </div>
             </div>
@@ -152,15 +167,18 @@ if(!empty($conditions) && !empty($conditions['sort'])){
             <div class="row">
                 <div class="w_half">
                     <div class="objects_catalog objects_cards">
-                        <? for ($i = 4; $i <= 7; $i++) {
-                            if (isset($items[$i])) {
-                                echo $this->render('_partial/_card', [
-                                    'item' => $items[$i],
-                                    'target' => $seo->target,
-                                    'places' => $places
-                                ]);
+                        <? //if ($result != 'offices') {
+                            for ($i = 4; $i <= 7; $i++) {
+                                if (isset($items[$i])) {
+                                    echo $this->render('_partial/_card', [
+                                        'item' => $items[$i],
+                                        'target' => $seo->target,
+                                        'places' => $places,
+                                        'result' => $result
+                                    ]);
+                                }
                             }
-                        } ?>
+                        //} ?>
                     </div>
                     <? echo LinkPager::widget([
                         'pagination' => $pages,

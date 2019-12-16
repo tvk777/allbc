@@ -135,7 +135,8 @@ class BcPlaces extends ActiveRecord
     }
 
     //картинка БЦ (на случай если у places нет картинки)
-    public function getBcimg(){
+    public function getBcimg()
+    {
         return $this->bcitem->images[0];
     }
 
@@ -150,6 +151,14 @@ class BcPlaces extends ActiveRecord
     public function getPrices()
     {
         return $this->hasMany(BcPlacesPrice::className(), ['place_id' => 'id']);
+    }
+
+    //цена в грн. за кв.м.
+    public function getPriceSqm()
+    {
+        return $this->hasOne(BcPlacesPrice::className(), ['place_id' => 'id'])
+            ->andWhere((['valute_id' => 1]))
+            ->andWhere((['period_id' => 1]));
     }
 
 
@@ -246,9 +255,9 @@ class BcPlaces extends ActiveRecord
     public function createName()
     {
         $name = [];
-        $sqm_text='';
-        $sqm_text_ua='';
-        $sqm_text_en='';
+        $sqm_text = '';
+        $sqm_text_ua = '';
+        $sqm_text_en = '';
 
         $arenda = Synonyms::find()->where(['series' => 1])->orderBy('counter')->one();
         $arenda->counter++;
@@ -258,14 +267,14 @@ class BcPlaces extends ActiveRecord
         $arenda_en = $arenda->word_en;
 
         $sqm = $this->m2min ? $this->m2min : $this->m2;
-        if($sqm>0) {
+        if ($sqm > 0) {
             $sqm_model = Synonyms::find()->where(['series' => 2])->orderBy('counter')->one();
             $sqm_model->counter++;
             $sqm_model->save();
 
-            $sqm_text = ' площадью ' .$sqm.' '.$sqm_model->word;
-            $sqm_text_ua = ' площею ' .$sqm.' '.$sqm_model->word;
-            $sqm_text_en = ' area of '.$sqm.' '.$sqm_model->word_en;
+            $sqm_text = ' площадью ' . $sqm . ' ' . $sqm_model->word;
+            $sqm_text_ua = ' площею ' . $sqm . ' ' . $sqm_model->word;
+            $sqm_text_en = ' area of ' . $sqm . ' ' . $sqm_model->word_en;
         }
 
         $city = $this->bcitem->city;
@@ -273,8 +282,8 @@ class BcPlaces extends ActiveRecord
         $city_ua = $city->name_ua;
         $city_en = $city->name_en;
 
-        $name['ru'] = $arenda_ru . $sqm_text.' г.' . $city_ru;
-        $name['ua'] = $arenda_ua . $sqm_text_ua .' м.' . $city_ua;
+        $name['ru'] = $arenda_ru . $sqm_text . ' г.' . $city_ru;
+        $name['ua'] = $arenda_ua . $sqm_text_ua . ' м.' . $city_ua;
         $name['en'] = $arenda_en . $sqm_text_en . ' - ' . $city_en;
 
         $this->name = $name['ru'];

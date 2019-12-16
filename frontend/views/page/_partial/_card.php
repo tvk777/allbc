@@ -6,17 +6,36 @@ use yii\helpers\Html;
 //debug($item);
 $paramTarget = $target==1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
-$href = '/'.$item->slug->slug.'?target='.$paramTarget;
-$city = $item->city->name;
-$district = $item->district ? $item->district->name . ' р-н' : '';
-$street = $item->street;
-$minmax = $item->minm2!=$item->maxm2 ? Yii::t('app', 'from') . ' ' . $item->minm2 . ' m² ...' . $item->maxm2 . ' m²' : $item->minm2 . ' m²';
-$minPrice = $item->minprice!='z' ? Yii::t('app', 'from') . ' ' . $item->minprice . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
-$itemPlaces = $item->getFilteredPlaces($places, $target);
-$placesInfo = $item->getPlacesInfo($itemPlaces);
+if($result=='bc') {
+    $href = '/' . $item->slug->slug . '?target=' . $paramTarget;
+    $city = $item->city->name;
+    $district = $item->district ? $item->district->name . ' р-н' : '';
+    $street = $item->street;
+    $minmax = $item->minm2 != $item->maxm2 ? Yii::t('app', 'from') . ' ' . $item->minm2 . ' m² ...' . $item->maxm2 . ' m²' : $item->minm2 . ' m²';
+    $minPrice = $item->minprice != 'z' ? Yii::t('app', 'from') . ' ' . $item->minprice . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
+    $itemPlaces = $item->getFilteredPlaces($places, $target);
+    $placesInfo = $item->getPlacesInfo($itemPlaces);
+    $itemSubway = !empty($item->subways[0]) ? $item->subways[0] : null;
+    $itemClass = $item->class->name;
+    $slides = !empty($item->slides) ? $item->slides : null;
+    $itemComission = $item->percent_commission;
+} else {
+    $href = '';
+    $city = $item->bcitem->city->name;
+    $district = $item->bcitem->district ? $item->bcitem->district->name . ' р-н' : '';
+    $street = $item->bcitem->street;
+    $minmax = !empty($item->m2minm2) ? Yii::t('app', 'from') . ' ' . $item->m2min . ' m² ...' . $item->m2 . ' m²' : $item->m2 . ' m²';
+    $minPrice = $item->con_price != 1 ? Yii::t('app', 'from') . ' ' . $item->priceSqm->price . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
+    $itemPlaces = null;
+    $placesInfo = null;
+    $itemSubway = !empty($item->bcitem->subways[0]) ? $item->bcitem->subways[0] : null;
+    $itemClass = $item->bcitem->class->name;
+    $slides = !empty($item->bcitem->slides) ? $item->bcitem->slides : null;
+    $itemComission = $item->bcitem->percent_commission;
+}
 
-if (isset($item->subways[0])) {
-    switch ($item->subways[0]->subwayDetails->branch_id) {
+if (!empty($itemSubway)) {
+    switch ($itemSubway->subwayDetails->branch_id) {
         case 1:
             $subwayIco = '<i class="red_metro"></i>';
             break;
@@ -30,7 +49,7 @@ if (isset($item->subways[0])) {
             $subwayIco = '<i class="metro"></i>';
     }
 
-    $subway = $subwayIco . $item->subways[0]->subwayDetails->name . ' <span class="about">~</span> ' . $item->subways[0]->walk_distance . ' м';
+    $subway = $subwayIco . $itemSubway->subwayDetails->name . ' <span class="about">~</span> ' . $itemSubway->walk_distance . ' м';
 
 } else {
     $subway = '';
@@ -44,7 +63,7 @@ if (isset($item->subways[0])) {
                 <div class="object_slider_header">
                     <div class="inline">
                         <div class="cl_pill">
-                            <p><?= $item->class->name ?></p>
+                            <p><?= $itemClass ?></p>
                         </div>
                     </div>
                     <div class="inline">
@@ -54,8 +73,8 @@ if (isset($item->subways[0])) {
                     </div>
                 </div>
                 <div class="object_slider">
-                    <? if ($item->slides) : ?>
-                        <? foreach ($item->slides as $slide): ?>
+                    <? if (!empty($slides)) : ?>
+                        <? foreach ($slides as $slide): ?>
                             <div class="slide">
                                 <a href="<?= $slide['big'] ?>" class="img_box" data-fancybox="card_1"
                                    data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></a>
@@ -66,7 +85,7 @@ if (isset($item->subways[0])) {
             </div>
             <div class="object_thumb_descript">
                 <div class="p_info red_p">
-                    <p><?= Yii::t('app', 'Commission') . ': ' . $item->percent_commission ?> %</p>
+                    <p><?= Yii::t('app', 'Commission') . ': ' . $itemComission ?> %</p>
                 </div>
                 <?= Html::a($item->name, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
                 <div class="two_cols_2">
@@ -79,6 +98,7 @@ if (isset($item->subways[0])) {
                             <p><?= $subway ?></p>
                         </div>
                     </div>
+                    <? if($result=='bc') :?>
                     <div class="two_cols_2_col">
                         <div class="office_cont_wrapp">
                             <div class="office_cont">
@@ -92,6 +112,7 @@ if (isset($item->subways[0])) {
                             <p><?= Yii::t('app', 'offices') ?></p>
                         </div>
                     </div>
+                    <? endif; ?>
                 </div>
                 <div class="thumb_5_footer">
                     <div class="thumb_5_footer_col">
@@ -103,6 +124,7 @@ if (isset($item->subways[0])) {
                 </div>
             </div>
         </div>
+        <? if($result=='bc') :?>
         <div class="hover_box">
             <div class="object_table">
                 <div class="table_row table_header">
@@ -151,5 +173,6 @@ if (isset($item->subways[0])) {
                 <? endif; ?>
             </div>
         </div>
+        <? endif; ?>
     </div>
 </div>

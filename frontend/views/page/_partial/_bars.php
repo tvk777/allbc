@@ -47,12 +47,12 @@ $this->registerJs( $js, $position = yii\web\View::POS_HEAD, $key = null );
 <div class="range_inputs  type1">
     <div class="input_wrapp inline">
         <?= Html::input('number', null, null, ['id' => 'input-number_1']) ?>
-        <?= Html::input('hidden', 'filter[pricemin]', '', ['id' => 'minpricem2']) ?>
+        <?= Html::input('hidden', 'filter[pricemin]', $minmax[0], ['id' => 'minpricem2']) ?>
     </div>
     <div class="slash inline"></div>
     <div class="input_wrapp inline">
         <?= Html::input('number', null, null, ['id' => 'input-number_2']) ?>
-        <?= Html::input('hidden', 'filter[pricemax]', '', ['id' => 'maxpricem2']) ?>
+        <?= Html::input('hidden', 'filter[pricemax]', $minmax[1], ['id' => 'maxpricem2']) ?>
     </div>
 </div>
 

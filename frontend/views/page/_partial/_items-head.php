@@ -35,7 +35,7 @@ $this->registerJsVar('metroVal', $metroVal, $this::POS_HEAD);
 $this->registerJsVar('defaultDist', $defaultDist, $this::POS_HEAD);
 $this->registerJsVar('defaultName', $defaultName, $this::POS_HEAD);
 $activeM2 = '';
-if (!empty($params['m2min']) || !empty($params['m2max'])) {
+if ((!empty($params['m2min']) && $params['m2min']!=$countValM2['min']) || (!empty($params['m2max']) && $params['m2max']!=$countValM2['max'])) {
     $activeM2 = 'green_active';
 }
 $minM2 = !empty($params['m2min']) ? $params['m2min'] : $countValM2['min'];
@@ -55,9 +55,6 @@ if($currency==2){
 } else {
     $currencySymbol = '&#8372;';
 }
-if (!empty($params['pricemin']) || !empty($params['pricemax'])) {
-    $activePrice = 'green_active';
-}
 if ($type == 3) {
     $minpricesChart = $pricesChart['type3']['min'];
     $maxpricesChart = $pricesChart['type3']['max'];
@@ -73,6 +70,10 @@ $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
 $this->registerJsVar('maxTotalPrice', $pricesChart['type1']['max'], $this::POS_HEAD);
 
+if ((!empty($params['pricemin']) && $params['pricemin'] !=round($minpricesChart/$rate)) ||
+    (!empty($params['pricemax']) && $params['pricemax'] !=round($maxpricesChart/$rate))) {
+    $activePrice = 'green_active';
+}
 
 $activeMore = '';
 if (!empty($params['districts']) || !empty($params['walk_dist']) || !empty($params['subway']) || !empty($params['classes']) || !empty($params['statuses']) || !empty($params['comission'])) $activeMore = 'active';
@@ -151,12 +152,12 @@ switch ($currency){
                                         <div class="col">
                                             <div class="input_wrapp inline">
                                                 <?= Html::input('number', null, null, ['id' => 'input-number_5']) ?>
-                                                <?= Html::input('hidden', 'filter[m2min]', '', ['id' => 'minm2']) ?>
+                                                <?= Html::input('hidden', 'filter[m2min]', $minM2, ['id' => 'minm2']) ?>
                                             </div>
                                             <div class="slash inline"></div>
                                             <div class="input_wrapp inline">
                                                 <?= Html::input('number', null, null, ['id' => 'input-number_6']) ?>
-                                                <?= Html::input('hidden', 'filter[m2max]', '', ['id' => 'maxm2']) ?>
+                                                <?= Html::input('hidden', 'filter[m2max]', $maxM2, ['id' => 'maxm2']) ?>
                                             </div>
                                         </div>
                                     </div>
@@ -502,7 +503,8 @@ switch ($currency){
         <div class="resp_filter_wrapp more-filters">
             <div class="resp_filter_inner">
                 <div class="checkbox">
-                    <input class="more-filters" type="checkbox" name="filter[comission]" id="ch_1_2"/>
+                    <? $comChecked = !empty($params['comission']) && $params['comission']=='on' ? 'checked' : '' ?>
+                    <input class="more-filters" type="checkbox" name="filter[comission]" id="ch_1_2" <?= $comChecked ?>/>
                     <label for="ch_1_2">Без комиссии</label>
                 </div>
             </div>
@@ -550,11 +552,19 @@ switch ($currency){
                     <div class="col">
                         <div class="checkboxes_wrapp">
                             <div class="pill_checlbox">
-                                <input name=filter[result] value="offices" type="radio" id="pill_ch_1"/>
+                                <? if($result=='offices'){
+                                    $ofChecked = 'checked';
+                                    $bcChecked = '';
+                                } else {
+                                    $ofChecked = '';
+                                    $bcChecked = 'checked';
+                                };
+                                ?>
+                                <input name=filter[result] value="offices" type="radio" id="pill_ch_1" <?= $ofChecked ?>/>
                                 <label for="pill_ch_1">Офисы</label>
                             </div>
                             <div class="pill_checlbox">
-                                <input name=filter[result] value="bc" type="radio" id="pill_ch_2" checked/>
+                                <input name=filter[result] value="bc" type="radio" id="pill_ch_2" <?= $bcChecked ?>/>
                                 <label for="pill_ch_2">Бизнес-Центры</label>
                             </div>
                         </div>

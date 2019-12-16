@@ -1399,6 +1399,8 @@ $(document).ready(function () {
         priceSlider3.noUiSlider.set(defaultDist);
         $("#walk_dist").val('');
         $("#subway").val('');
+        $("#pill_ch_1").attr('checked', false);
+        $("#pill_ch_2").attr('checked', true);
         $(".filter-form").submit();
     });
 

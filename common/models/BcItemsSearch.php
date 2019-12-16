@@ -221,10 +221,10 @@ class BcItemsSearch extends BcItems
 
         if ($params['target'] === 1) {
             $query_places = BcPlaces::find()->where(['archive' => 0])->andWhere(['hide' => 0]);
-            $query = BcItems::find()->multilingual()->with('places', 'images', 'class')->where(['active' => 1])->andWhere(['hide' => 0]);
+            $query = BcItems::find()->multilingual()->with('images', 'class')->where(['active' => 1])->andWhere(['hide' => 0]);
         } else {
             $query_places = BcPlacesSell::find()->where(['archive' => 0])->andWhere(['hide' => 0]);
-            $query = BcItems::find()->with('placesSell', 'images')->where(['active' => 1])->andWhere(['hide' => 0]);
+            $query = BcItems::find()->with('images', 'class')->where(['active' => 1])->andWhere(['hide' => 0]);
         }
 
         if (!empty($params['m2min']) && !empty($params['m2max'])) {
@@ -250,9 +250,9 @@ class BcItemsSearch extends BcItems
         if (!empty($params['pricemin']) || !empty($params['pricemax'])) {
             $currency = !empty($params['currency']) ? $params['currency'] : 1;
             $type = !empty($params['type']) ? $params['type'] : 1;
-            if($params['target'] === 1){
+            if ($params['target'] === 1) {
                 $price_query = BcPlacesPrice::find();
-            } else{
+            } else {
                 $price_query = BcPlacesSellPrice::find();
             }
             $price_query->andWhere(['period_id' => $type]);
@@ -268,11 +268,35 @@ class BcItemsSearch extends BcItems
             ]);
         }
 
-
-        $places = $query_places->asArray()->all(); //выбранные площади по условиям target, m2, price
+        if ($params['result'] === 'offices') {
+            //запрос для страницы выдачи офисов
+            $query_places->with('bcitem', 'priceSqm')
+                ->join('LEFT JOIN', 'bc_places_price pr', 'id = pr.place_id AND pr.valute_id=1 AND pr.period_id = 1');
+            //сортировка для страницы выдачи офисов
+            switch ($params['sort']) {
+                case 'price_desc':
+                    $query_places->orderBy('con_price ASC, pr.price  DESC');
+                    break;
+                case 'price_asc':
+                    $query_places->orderBy('con_price ASC, pr.price  ASC');
+                    break;
+                case 'm2_desc':
+                    //todo: вычислять по какому полю сортировать (m2||m2min)
+                    $query_places->orderBy('m2 DESC');
+                    break;
+                case 'm2_asc':
+                    $query_places->orderBy('m2 ASC');
+                    break;
+                default:
+                    $query_places->orderBy('updated_at DESC');
+                    break;
+            }
+        }
+        $query_places->with('bcitem.translations');
+        $placesQuery = clone $query_places;
+        $places = $query_places->all(); //выбранные площади по условиям target, m2, price
         $placesItemsIds = array_unique(ArrayHelper::getColumn($places, 'item_id')); //уникальные item_id по условиям target, m2, price
-//debug($placesItemsIds);
-
+        //debug($places);
 
 
         //фильтрация БЦ
@@ -314,39 +338,70 @@ class BcItemsSearch extends BcItems
         //отбор площадей для графиков без учета фильтра по цене и кв.м.
         $chartsQuery = clone $query;
         $chartItems = $chartsQuery->asArray()->all();
-        $chartItemsIds = ArrayHelper::getColumn($chartItems, 'id');
+        $chartItemsIds = ArrayHelper::getColumn($chartItems, 'id');//id БЦ которые подходят по всем условиям фильтров
+        $condition = ['in', 'item_id', $chartItemsIds]; //todo: добавить условие для item_id = 0 (если выдача офисов)
         if ($params['target'] === 1) {
-            $placesForCharts = BcPlaces::find()->where(['archive' => 0])->andWhere(['hide' => 0])->andWhere(['in', 'item_id', $chartItemsIds])->asArray()->all();
+            $placesForCharts = BcPlaces::find()->where(['archive' => 0])->andWhere(['hide' => 0])->andWhere($condition)->asArray()->all();
         } else {
-            $placesForCharts = BcPlacesSell::find()->where(['archive' => 0])->andWhere(['hide' => 0])->andWhere(['in', 'item_id', $chartItemsIds])->asArray()->all();
+            $placesForCharts = BcPlacesSell::find()->where(['archive' => 0])->andWhere(['hide' => 0])->andWhere($condition)->asArray()->all();
         }
 
-
         $query->andWhere(['in', 'id', $placesItemsIds]); //БЦ соответствующие выбранным площадям с учетом фильтра по кв.м.
+        $items = $query->all();
         //конец фильтрации БЦ
 
-        $items = $query->all();
+        if (!empty($params['visibles'])) $items = $visiblesItems;
+
+        $itemsIds = ArrayHelper::getColumn($items, 'id'); //id БЦ по условиям user и другим фильтрам (локация БЦ)
+        //Отбор places по всем БЦ, которые подходят под параметры фильтрации (для рассчета кол-ва найденных офисов и для стр.выдачи офисов)
+        if ($params['result'] === 'bc') {
+            foreach ($places as $key => $place) {
+                if (!ArrayHelper::isIn($place['item_id'], $itemsIds)) unset($places[$key]);
+            }
+        } else {
+            foreach ($places as $key => $place) {
+                if (!ArrayHelper::isIn($place['item_id'], $itemsIds) && $place['item_id']!=0) unset($places[$key]);
+                $placesQuery->andWhere(['or',['in','item_id', $itemsIds],['=','item_id', 0]]);
+            }
+            $items = $places;
+        }
 
         //формирование маркеров для карты
-        //todo: продумать формирование маркеров для стр.выдачи офисов
         $markers = [];
         $markers['type'] = 'FeatureCollection';
         $markers['features'] = [];
         $currentLanguage = $params['lang'];
         foreach ($items as $item) {
             $name = getDefaultTranslate('name', $currentLanguage, $item);
-            $img = isset($item->images[0]) ? $item->images[0]->imgSrc : '';
-            $class = $item->class->short_name;
+            $id = $item->id;
+            if($params['result'] === 'bc') {
+                $img = isset($item->images[0]) ? $item->images[0]->imgSrc : '';
+                $class = $item->class->short_name;
+                $coord = [$item->lng, $item->lat];
+                $addres = $item->street;
+            }
+             else {
+                 if(isset($item->images[0])){
+                     $img = $item->images[0]->imgSrc;
+                 } elseif (isset($item->bcimg)){
+                     $img = $item->bcimg->imgSrc;
+                 } else{
+                     $img = '';
+                 }
+                $class = $item->bcitem->class->short_name;
+                $coord = [$item->bcitem->lng, $item->bcitem->lat];
+                $addres = $item->bcitem->street;
+            }
             $feature = [
                 'type' => 'Feature',
                 'geometry' => [
                     'type' => 'Point',
-                    'coordinates' => [$item->lng, $item->lat]
+                    'coordinates' => $coord
                 ],
                 'properties' => [
-                    'id' => $item->id,
+                    'id' => $id,
                     'title' => $name,
-                    'address' => $item->street,
+                    'address' => $addres,
                     'img' => $img,
                     'class' => $class
                 ]
@@ -354,115 +409,112 @@ class BcItemsSearch extends BcItems
             $markers['features'][] = $feature;
         }
         //end формирование маркеров для карты
+        if($params['result'] === 'bc') {
+            $placesIds = ArrayHelper::getColumn($places, 'id'); //id площадей по условиям target, m2
+            //query for sort by m2, price, updated & for pagination
+            $itemsQuery = (new \yii\db\Query())
+                ->select([
+                    'item_id', 'i.updated_at', 'MIN(m2) as minm2', 'MIN(p.m2min) as minm2min', 'MAX(m2) as maxm2',
+                    new \yii\db\Expression('IF(MIN(pr.price)>0, MIN(pr.price), "z") AS minprice'), 'MAX(pr.price) as maxprice'
+                ]);
+            $itemsQuery->from('bc_items i');
+            if ($params['target'] === 1) {
+                $itemsQuery->join('INNER JOIN', 'bc_places p', 'i.id = p.item_id');
+                $itemsQuery->join('LEFT JOIN', 'bc_places_price pr', 'p.id = pr.place_id AND pr.valute_id=1 AND pr.period_id = 1');
+            } else {
+                $itemsQuery->join('INNER JOIN', 'bc_places_sell p', 'i.id = p.item_id');
+                $itemsQuery->join('LEFT JOIN', 'bc_places_sell_price pr', 'p.id = pr.place_id AND pr.valute_id=1 AND pr.period_id = 1');
+            }
 
-        if (!empty($params['visibles'])) $items = $visiblesItems;
+            if (empty($params['visibles'])) {
+                $itemsQuery->where(['in', 'i.id', $itemsIds]);
+            } else {
+                $itemsQuery->where(['in', 'i.id', $params['visibles']]);
+            }
 
-        $itemsIds = ArrayHelper::getColumn($items, 'id'); //id БЦ по условиям user и другим фильтрам (локация БЦ)
-        //Отбор places по всем БЦ, которые подходят под параметры фильтрации (для рассчета кол-ва найденных офисов и для стр.выдачи офисов)
-        foreach ($places as $key => $place) {
-            if (!ArrayHelper::isIn($place['item_id'], $itemsIds)) unset($places[$key]);
-        }
-        
-        //todo: продумать принцип отбора places с item_id=0 для старницы выдачи офисов
-        $placesIds = ArrayHelper::getColumn($places, 'id'); //id площадей по условиям target, m2
-        //debug($placesIds);
+            $itemsQuery->andWhere(['in', 'p.id', $placesIds]);
+            $itemsQuery->groupBy('item_id');
 
-        //query for sort by m2, price, updated & for pagination
-        $itemsQuery = (new \yii\db\Query())
-            ->select([
-                'item_id', 'i.updated_at', 'MIN(m2) as minm2', 'MIN(p.m2min) as minm2min', 'MAX(m2) as maxm2',
-                new \yii\db\Expression('IF(MIN(pr.price)>0, MIN(pr.price), "z") AS minprice'), 'MAX(pr.price) as maxprice'
-            ]);
-        $itemsQuery->from('bc_items i');
-        if ($params['target'] === 1) {
-            $itemsQuery->join('INNER JOIN', 'bc_places p', 'i.id = p.item_id');
-            $itemsQuery->join('LEFT JOIN', 'bc_places_price pr', 'p.id = pr.place_id AND pr.valute_id=1 AND pr.period_id = 1');
-        } else {
-            $itemsQuery->join('INNER JOIN', 'bc_places_sell p', 'i.id = p.item_id');
-            $itemsQuery->join('LEFT JOIN', 'bc_places_sell_price pr', 'p.id = pr.place_id AND pr.valute_id=1 AND pr.period_id = 1');
-        }
+            //сортировка для страницы выдачи БЦ
+            switch ($params['sort']) {
+                case 'price_desc':
+                    $itemsQuery->orderBy('maxprice DESC');
+                    break;
+                case 'price_asc':
+                    $itemsQuery->orderBy('minprice ASC');
+                    break;
+                case 'm2_desc':
+                    $itemsQuery->orderBy('maxm2 DESC');
+                    break;
+                case 'm2_asc':
+                    $itemsQuery->orderBy('minm2 ASC');
+                    break;
+                default:
+                    $itemsQuery->orderBy('i.updated_at DESC');
+                    break;
+            }
 
-        if (empty($params['visibles'])) {
-            $itemsQuery->where(['in', 'i.id', $itemsIds]);
-        } else {
-            $itemsQuery->where(['in', 'i.id', $params['visibles']]);
-        }
+            $pages = new Pagination(['totalCount' => $itemsQuery->count(), 'pageSize' => 8]);
+            $pages->pageSizeParam = false;
+            $pages->forcePageParam = false;
+            $bcItems = $itemsQuery->offset($pages->offset)
+                ->limit($pages->limit)
+                ->all(); //Массив БЦ ([item_id][updated_at][minm2][minm2min][maxm2][minprice][maxprice])
 
-        $itemsQuery->andWhere(['in', 'p.id', $placesIds]);
-        $itemsQuery->groupBy('item_id');
+            $bcItemsIds = ArrayHelper::getColumn($bcItems, 'item_id');
 
-        //сортировка
-        switch ($params['sort']) {
-            case 'price_desc':
-                $itemsQuery->orderBy('maxprice DESC');
-                break;
-            case 'price_asc':
-                $itemsQuery->orderBy('minprice ASC');
-                break;
-            case 'm2_desc':
-                $itemsQuery->orderBy('maxm2 DESC');
-                break;
-            case 'm2_asc':
-                $itemsQuery->orderBy('minm2 ASC');
-                break;
-            default:
-                $itemsQuery->orderBy('i.updated_at DESC');
-                break;
-        }
+            if ($params['target'] === 1) {
+                $itemsModel = BcItems::find()
+                    ->where(['in', 'id', $bcItemsIds])
+                    ->with('slug', 'images', 'class', 'subways.subwayDetails.branch.image', 'city', 'district', 'places', 'places.images', 'places.stageImg', 'places.prices')
+                    ->multilingual()
+                    ->all();
+            } else {
+                $itemsModel = BcItems::find()
+                    ->where(['in', 'id', $bcItemsIds])
+                    ->with('slug', 'images', 'class', 'subways.subwayDetails.branch.image', 'city', 'district', 'placesSell', 'placesSell.images', 'placesSell.stageImg', 'placesSell.prices')
+                    ->multilingual()
+                    ->all();
+            }
 
-        $pages = new Pagination(['totalCount' => $itemsQuery->count(), 'pageSize' => 8]);
-        $pages->pageSizeParam = false;
-        $pages->forcePageParam = false;
-        $bcItems = $itemsQuery->offset($pages->offset)
-            ->limit($pages->limit)
-            ->all(); //Массив БЦ ([item_id][updated_at][minm2][minm2min][maxm2][minprice][maxprice])
-
-        $bcItemsIds = ArrayHelper::getColumn($bcItems, 'item_id');
-
-        if ($params['target'] === 1) {
-            $itemsModel = BcItems::find()
-                ->where(['in', 'id', $bcItemsIds])
-                ->with('slug', 'images', 'class', 'subways.subwayDetails.branch.image', 'city', 'district', 'places', 'places.images', 'places.stageImg', 'places.prices')
-                ->multilingual()
-                ->all();
-        } else {
-            $itemsModel = BcItems::find()
-                ->where(['in', 'id', $bcItemsIds])
-                ->with('slug', 'images', 'class', 'subways.subwayDetails.branch.image', 'city', 'district', 'placesSell', 'placesSell.images', 'placesSell.stageImg', 'placesSell.prices')
-                ->multilingual()
-                ->all();
-        }
-
-        foreach ($itemsModel as $model) {
-            foreach ($bcItems as $one) {
-                if ($one['item_id'] == $model->id) {
-                    $model->minm2 = (!empty($one['minm2min']) && $one['minm2min'] < $one['minm2']) ? $one['minm2min'] : $one['minm2'];
-                    $model->maxm2 = $one['maxm2'];
-                    $model->minprice = $one['minprice'];
-                    $model->maxprice = $one['maxprice'];
+            foreach ($itemsModel as $model) {
+                foreach ($bcItems as $one) {
+                    if ($one['item_id'] == $model->id) {
+                        $model->minm2 = (!empty($one['minm2min']) && $one['minm2min'] < $one['minm2']) ? $one['minm2min'] : $one['minm2'];
+                        $model->maxm2 = $one['maxm2'];
+                        $model->minprice = $one['minprice'];
+                        $model->maxprice = $one['maxprice'];
+                    }
                 }
             }
+
+            switch ($params['sort']) {
+                case 'price_desc':
+                    ArrayHelper::multisort($itemsModel, ['maxprice'], [SORT_DESC]);
+                    break;
+                case 'price_asc':
+                    ArrayHelper::multisort($itemsModel, ['minprice'], [SORT_ASC]);
+                    break;
+                case 'm2_desc':
+                    ArrayHelper::multisort($itemsModel, ['maxm2'], [SORT_DESC]);
+                    break;
+                case 'm2_asc':
+                    ArrayHelper::multisort($itemsModel, ['minm2'], [SORT_ASC]);
+                    break;
+                default:
+                    ArrayHelper::multisort($itemsModel, ['updated_at'], [SORT_DESC]);
+                    break;
+            }
+        } else {
+            $pages = new Pagination(['totalCount' => $placesQuery->count(), 'pageSize' => 8]);
+            $pages->pageSizeParam = false;
+            $pages->forcePageParam = false;
+            $itemsModel = $placesQuery->offset($pages->offset)
+                ->limit($pages->limit)
+                ->all();
         }
 
-        switch ($params['sort']) {
-            case 'price_desc':
-                ArrayHelper::multisort($itemsModel, ['maxprice'], [SORT_DESC]);
-                break;
-            case 'price_asc':
-                ArrayHelper::multisort($itemsModel, ['minprice'], [SORT_ASC]);
-                break;
-            case 'm2_desc':
-                ArrayHelper::multisort($itemsModel, ['maxm2'], [SORT_DESC]);
-                break;
-            case 'm2_asc':
-                ArrayHelper::multisort($itemsModel, ['minm2'], [SORT_ASC]);
-                break;
-            default:
-                ArrayHelper::multisort($itemsModel, ['updated_at'], [SORT_DESC]);
-                break;
-        }
-
-//debug(json_encode($markers));
+//debug($itemsModel);
         $result['bcItems'] = $itemsModel;
         $result['places'] = $places;
         $result['places_for_charts'] = $placesForCharts;

@@ -4665,7 +4665,8 @@ img.logo_black {
 }
 
 .object_card_title {
-    min-height: 44px;
+    height: 44px;
+    overflow: hidden;
     font-size: 18px;
     font-weight: 700;
     display: block;
