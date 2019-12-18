@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use common\models\Slugs;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\BcPlaces */
@@ -15,7 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ready
     <?
     /*foreach($model as $place){
-      debug($place->createName());
+        $slug = 'arenda-ofica-'.$place->m2.'-m2-'.$place->bcitem->city->name.'-id'.$place->id;
+        $alias = Slugs::generateSlug('bc_places', $place->id, $slug);
+        echo $alias.'<br>';
+        //Slugs::initialize('bc_places', $place->id, $alias);
     }*/
     ?>
 

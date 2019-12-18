@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use common\models\SystemFiles;
 use yii\helpers\Html;
+use common\models\Slugs;
 
 /**
  * BcPlacesController implements the CRUD actions for BcPlaces model.
@@ -61,6 +62,8 @@ class BcPlacesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->alias = !empty($model->slug) ? $model->slug->slug : '';
+
 
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -148,7 +151,9 @@ class BcPlacesController extends Controller
         return parent::render($view, $params);
     }
 
-    /*public function actionCreateNames()
+
+    /* функции будут нужны для переноса данных с сайта
+    public function actionCreateNames()
     {
         $model = BcPlaces::find()->all();
         foreach($model as $place){
@@ -158,7 +163,24 @@ class BcPlacesController extends Controller
         return $this->render('create-names', [
             'model' => $model,
         ]);
-    }*/
+    }
+
+    public function actionCreateUrls()
+    {
+        $model = BcPlaces::find()->all();
+        foreach($model as $place){
+            $slug = 'arenda-ofica-'.$place->m2.'-m2-'.$place->bcitem->city->name.'-id'.$place->id;
+            $alias = Slugs::generateSlug('bc_places', $place->id, $slug);
+            Slugs::initialize('bc_places', $place->id, $alias);
+        }
+
+        return $this->render('create-names', [
+            'model' => $model,
+        ]);
+    }
+    todo: формирование и заполнение сео-тегов - title, description, keywords (уточнить по поводу точного адреса)
+    */
+
 
 
 }

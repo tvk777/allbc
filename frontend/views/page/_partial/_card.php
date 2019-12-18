@@ -3,7 +3,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-//debug($item);
+//debug($item->city);
 $paramTarget = $target==1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
 if($result=='bc') {
@@ -31,6 +31,13 @@ if($result=='bc') {
     $itemSubway = !empty($item->bcitem->subways[0]) ? $item->bcitem->subways[0] : null;
     $itemClass = $item->bcitem->class->name;
     $slides = !empty($item->bcitem->slides) ? $item->bcitem->slides : null;
+    if(!empty($item->slides)){
+        $slides = $item->slides;
+    } elseif ($item->item_id!==0 && !empty($item->bcitem->slides)) {
+        $slides = $item->bcitem->slides;
+    } else {
+        $slides = null;
+    }
     $itemComission = $item->bcitem->percent_commission;
 }
 

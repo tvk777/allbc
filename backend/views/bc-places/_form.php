@@ -38,6 +38,16 @@ if($model->stageImg) {
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= MultiLangTabsWidget::widget([
+        'model' => $model,
+        'attributes' => [
+            'name' => 0,
+            'comment' => 0,
+        ],
+        'form' => $form]); ?>
+
+    <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'showm2')->textInput() ?>
     <?= $form->field($model, 'stage_name')->textInput(['maxlength' => true]) ?>
     <?= FileInput::widget([
@@ -78,12 +88,7 @@ if($model->stageImg) {
     <?= $form->field($model, 'delfile')->hiddenInput(['class' => 'delfile'])->label(false) ?>
 
 
-    <?= MultiLangTabsWidget::widget([
-        'model' => $model,
-        'attributes' => [
-            'comment' => 0,
-        ],
-        'form' => $form]); ?>
+
 
     <?= $form->field($model, 'plan_comment')->checkbox(['0', '1',]) ?>
     <?= $form->field($model, 'status_id')->textInput() ?>
@@ -108,6 +113,7 @@ if($model->stageImg) {
     <?= $form->field($model, 'commission')->checkbox(['0', '1',]) ?>
     <?= $form->field($model, 'hide')->checkbox(['0', '1',]) ?>
     <?= $form->field($model, 'archive')->checkbox(['0', '1',]) ?>
+    <?= $form->field($model, 'hide_bc')->checkbox(['0', '1',]) ?>
 
     <?= MultiLangTabsWidget::widget([
         'model' => $model,

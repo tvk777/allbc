@@ -41,6 +41,8 @@ use omgdef\multilingual\MultilingualBehavior;
  */
 class BcPlaces extends ActiveRecord
 {
+    public $alias;
+    public $latlng;
     public $uploaded;
     public $deleted;
     public $upfile;
@@ -75,13 +77,26 @@ class BcPlaces extends ActiveRecord
     public function rules()
     {
         return [
+           ['alias', 'unique',
+                'targetClass' => Slugs::className(),
+                'targetAttribute' => 'slug',
+                'message' => Yii::t('app', 'This slug is already exist'),
+                'when' => function ($model) {
+                    if (!$model->isNewRecord) {
+                        return $model->alias !== $model->slug->getOldAttribute('slug');
+                    } else {
+                        return true;
+                    }
+                },
+            ],
             [['created_at', 'updated_at'], 'safe'],
             [['item_id', 'm2', 'valute_id', 'stage_name', 'price_period', 'ai', 'plan_comment', 'hide', 'archive', 'con_price'], 'required'],
-            [['item_id', 'm2', 'm2min', 'valute_id', 'price_period', 'ai', 'commission', 'plan_comment', 'hide', 'archive', 'price', 'con_price', 'status_id', 'rent', 'hits', 'hide_contacts'], 'integer'],
-            [['opex', 'tax', 'kop'], 'number'],
-            [['name', 'name_ua', 'name_en', 'fio', 'fio_ua', 'fio_en', 'stage_name', 'phone', 'email'], 'string', 'max' => 255],
+            [['item_id', 'm2', 'm2min', 'valute_id', 'price_period', 'ai', 'commission', 'plan_comment', 'hide', 'archive', 'price', 'con_price', 'status_id', 'rent', 'hits', 'hide_contacts', 'hide_bc'], 'integer'],
+            [['lat', 'lng', 'opex', 'tax', 'kop'], 'number'],
+            [['name', 'name_ua', 'name_en', 'fio', 'fio_ua', 'fio_en', 'stage_name', 'phone', 'email', 'street'], 'string', 'max' => 255],
+            [['title', 'title_ua', 'title_en', 'keywords', 'keywords_ua', 'keywords_en', 'description', 'description_ua', 'description_en'], 'string', 'max' => 255],
             [['comment', 'comment_ua', 'comment_en'], 'string'],
-            [['uploaded', 'deleted', 'upfile', 'delfile'], 'safe'],
+            [['uploaded', 'deleted', 'upfile', 'delfile', 'alias'], 'safe'], //todo:вернуть проверку уникальности alias
         ];
     }
 
@@ -134,12 +149,6 @@ class BcPlaces extends ActiveRecord
         return $this->hasMany(SystemFiles::className(), ['attachment_id' => 'id'])->andWhere(['attachment_type' => self::tableName()])->andWhere(['field' => 'imgs'])->orderBy('sort_order');
     }
 
-    //картинка БЦ (на случай если у places нет картинки)
-    public function getBcimg()
-    {
-        return $this->bcitem->images[0];
-    }
-
 
     public function getStageImg()
     {
@@ -147,6 +156,19 @@ class BcPlaces extends ActiveRecord
             ->andWhere(['attachment_type' => self::tableName()])
             ->andWhere(['field' => 'stage_img']);
     }
+
+    public function getSlides()
+    {
+        $slides = [];
+        if (count($this->images) > 0) {
+            foreach ($this->images as $i => $img) {
+                $slides[$i]['thumb'] = $img->thumb300x200Src;
+                $slides[$i]['big'] = $img->imgSrc;
+            }
+        }
+        return $slides;
+    }
+
 
     public function getPrices()
     {
@@ -167,10 +189,6 @@ class BcPlaces extends ActiveRecord
         return $this->hasOne(BcPeriods::className(), ['id' => 'price_period']);
     }
 
-    public function getBcitem()
-    {
-        return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
-    }
 
 
     public function getShowPrice()
@@ -192,8 +210,30 @@ class BcPlaces extends ActiveRecord
         return ($this->m2);
     }
 
+    public function getBcitem()
+    {
+        if($this->item_id===0) return $this->hasOne(Offices::className(), ['id' => 'place_id'])->andWhere(['target' => 1]);
+        return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
+    }
+
+    public function getSlug()
+    {
+        return $this->hasOne(Slugs::className(), ['model_id' => 'id'])->andWhere(['model' => self::tableName()]);
+    }
+
     public function beforeValidate()
     {
+        if (empty($this->name)) {
+            $this->name = $this->createName();
+        }
+        //debug($this->name);
+
+        if (empty($this->alias)) {
+            $slug = 'arenda-ofica-'.$this->m2.'-m2-'.$this->bcitem->city->name.'-id'.$this->id;
+            $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
+        }
+        //debug($this->alias);
+
         $m2 = explode('-', $this->showm2);
         if (count($m2) == 2) {
             $this->m2min = $m2[0];
@@ -223,6 +263,13 @@ class BcPlaces extends ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
+        if ($insert) {
+            Slugs::initialize($this->tableName(), $this->id, $this->alias);
+        } else {
+            if ($this->alias != $this->slug->slug) {
+                Slugs::updateSlug($this->tableName(), $this->id, $this->alias);
+            }
+        }
         if (!empty($this->uploaded)) {
             $uploaded = explode(',', $this->uploaded);
             SystemFiles::updateAll([

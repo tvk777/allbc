@@ -221,11 +221,11 @@ class BcItemsSearch extends BcItems
 
         if ($params['target'] === 1) {
             $query_places = BcPlaces::find()->where(['archive' => 0])->andWhere(['hide' => 0]);
-            $query = BcItems::find()->multilingual()->with('images', 'class')->where(['active' => 1])->andWhere(['hide' => 0]);
         } else {
             $query_places = BcPlacesSell::find()->where(['archive' => 0])->andWhere(['hide' => 0]);
-            $query = BcItems::find()->with('images', 'class')->where(['active' => 1])->andWhere(['hide' => 0]);
         }
+        $query = BcItems::find()->multilingual()->with('images', 'class')->where(['active' => 1])->andWhere(['hide' => 0]);
+
 
         if (!empty($params['m2min']) && !empty($params['m2max'])) {
             $query_places->andWhere([
@@ -292,7 +292,7 @@ class BcItemsSearch extends BcItems
                     break;
             }
         }
-        $query_places->with('bcitem.translations');
+        $query_places->with('bcitem.translations', 'bcitem.class', 'images', 'bcitem.images');
         $placesQuery = clone $query_places;
         $places = $query_places->all(); //выбранные площади по условиям target, m2, price
         $placesItemsIds = array_unique(ArrayHelper::getColumn($places, 'item_id')); //уникальные item_id по условиям target, m2, price
@@ -383,8 +383,8 @@ class BcItemsSearch extends BcItems
              else {
                  if(isset($item->images[0])){
                      $img = $item->images[0]->imgSrc;
-                 } elseif (isset($item->bcimg)){
-                     $img = $item->bcimg->imgSrc;
+                 } elseif (isset($item->bcitem->images[0])){
+                     $img = $item->bcitem->images[0]->imgSrc;
                  } else{
                      $img = '';
                  }
