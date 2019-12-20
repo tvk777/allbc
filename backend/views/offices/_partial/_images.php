@@ -6,7 +6,8 @@ use common\widgets\UploadImagesWidget;
 <div class="images-form">
     <?= UploadImagesWidget::widget([
         'form' => $form,
-        'model' => $model,
+        'model' => $place,
+        'uploadAction' => '/bc-places/upload-image'
     ])
     ?>
 </div>

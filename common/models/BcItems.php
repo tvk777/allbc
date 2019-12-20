@@ -189,7 +189,7 @@ class BcItems extends ActiveRecord
 
     public function getSubways()
     {
-        return $this->hasMany(BcItemsSubways::className(), ['item_id' => 'id']);
+        return $this->hasMany(BcItemsSubways::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
     }
 
     public function getPlaces()
@@ -272,7 +272,7 @@ class BcItems extends ActiveRecord
 
     public function beforeSave($insert)
     {
-        //debug($this->subways); die();
+        //debug($this->city_id); die();
         //debug(Yii::$app->request->post('Subways')); die();
         $city_id = Geo::getCityValue($this->city_id);
         $country_id = Geo::getCountryValue($this->country_id);
@@ -376,6 +376,7 @@ class BcItems extends ActiveRecord
                     $itemSubway->subway_id = $one['subway_id'];
                     $itemSubway->walk_distance = $one['walk_distance'];
                     $itemSubway->walk_seconds = $one['walk_seconds'] * 60;
+                    $itemSubway->model = $this->tableName();
                     $itemSubway->save();
                 }
                 if (isset($old_subways[$one['subway_id']])) {

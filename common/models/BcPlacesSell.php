@@ -233,5 +233,58 @@ class BcPlacesSell extends ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+   
+    function CalcPrice($valutes = array())
+    {
+        Db::delete('delete from allbc_bc_places_sell_price where place_id='.$this->id);
+
+        if($this->con_price==1 || $this->price<1)
+            return(0);
+
+        if(!is_array($valutes) || count($valutes)<1)
+            $valutes = Valute::allAsArrayKeyId();
+
+        if($this->price_period==1)
+            $price_m2 = $this->price;
+        elseif($this->price_period==2)
+            $price_m2 = $this->price/$this->m2;
+
+        $price_m2 = $price_m2*$valutes[$this->valute_id]['rate'];
+        //$opex = $this->opex*$valutes[$this->valute_id]['rate'];
+
+        foreach($valutes as $k=>$v)
+        {
+            /*****************m2*********************/
+            $data['place_id'] = $this->id;
+            $data['valute_id'] = $v['id'];
+            $data['period_id'] = 1;
+            $data['price'] = $price_m2/$v['rate'];
+            $data['city_id'] = $this->item->city->id;
+            Db::table('allbc_bc_places_sell_price')->insert(
+                $data
+            );
+            /*****************Full*********************/
+            $data['place_id'] = $this->id;
+            $data['valute_id'] = $v['id'];
+            $data['period_id'] = 2;
+            $data['price'] = round($price_m2/$v['rate'],0)*$this->m2;
+            $data['city_id'] = $this->item->city->id;
+            Db::table('allbc_bc_places_sell_price')->insert(
+                $data
+            );
+            /*****************All In Full*********************/
+            $data['place_id'] = $this->id;
+            $data['valute_id'] = $v['id'];
+            $data['period_id'] = 100;
+            $data['price'] = round($price_m2/$v['rate'],0)*$this->m2 +
+                (round($price_m2/$v['rate'],0)*$this->m2 * $this->tax/100) +
+                (round($price_m2/$v['rate'],0)*$this->m2 * $this->kop/100);
+            $data['city_id'] = $this->item->city->id;
+            Db::table('allbc_bc_places_sell_price')->insert(
+                $data
+            );
+        }
+    }
+
 
 }

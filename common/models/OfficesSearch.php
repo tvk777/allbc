@@ -17,7 +17,7 @@ class OfficesSearch extends Offices
     public function rules()
     {
         return [
-            [['id', 'place_id', 'target', 'city_id', 'country_id', 'district_id', 'class_id', 'percent_commission'], 'integer'],
+            [['id', 'target', 'city_id', 'country_id', 'district_id', 'class_id', 'percent_commission'], 'integer'],
         ];
     }
 
@@ -58,7 +58,6 @@ class OfficesSearch extends Offices
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'place_id' => $this->place_id,
             'target' => $this->target,
             'city_id' => $this->city_id,
             'country_id' => $this->country_id,

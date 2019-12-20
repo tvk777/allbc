@@ -30,8 +30,8 @@ class Synonyms extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['series', 'word_ua', 'word_en'], 'required'],
-            [['series', 'counter'], 'integer'],
+            [['series', 'word'], 'required'],
+            [['series', 'counter', 'main'], 'integer'],
             [['word', 'word_ua', 'word_en'], 'string', 'max' => 255],
         ];
     }

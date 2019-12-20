@@ -228,6 +228,7 @@ class BcItemsController extends Controller
         if (Yii::$app->request->isAjax) {
 
             $result_subways = Geo::getSubwaysByLatLng(Yii::$app->request->post('latlng'));
+            //debug(Yii::$app->request->post('latlng'));
             if ($result_subways != 0) {
                 $result_subway = reset($result_subways);
                 $range = Geo::getDirection(Yii::$app->request->post('placelatlng'), "place_id:" . $result_subway['place_id']);

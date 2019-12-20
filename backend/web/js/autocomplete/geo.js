@@ -76,10 +76,9 @@
             types: ['geocode']
         };
         var autocompleteSubway0 = new google.maps.places.Autocomplete(document.getElementById('subway0_autocomplate_name'), optionsSubway);
-        //console.log(autocompleteSubway1);
+        //console.log(autocompleteSubway0);
         autocompleteSubway0.addListener('place_changed', function () {
             var place = autocompleteSubway0.getPlace();
-
             if (!place.geometry) {
                 window.alert("No details available for input: '" + place.name + "'");
                 return;
@@ -95,7 +94,6 @@
                 },
                 success: function(data) {
                     result = jQuery.parseJSON(data);
-
                     $('#subway0_autocomplate_name').val(result[0].name);
                     $('#subway0_autocomplate_value').val(result[0].id);
                     $('#subway0_autocomplate_range').val(result[0].walk_distance);

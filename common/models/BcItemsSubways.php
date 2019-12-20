@@ -30,6 +30,7 @@ class BcItemsSubways extends \yii\db\ActiveRecord
         return [
             [['item_id'], 'required'],
             [['item_id', 'subway_id', 'walk_distance', 'walk_seconds'], 'integer'],
+            [['model'], 'string']
         ];
     }
 

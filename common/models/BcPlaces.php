@@ -9,6 +9,7 @@ use yii\db\Expression;
 use omgdef\multilingual\MultilingualTrait;
 use omgdef\multilingual\MultilingualQuery;
 use omgdef\multilingual\MultilingualBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "bc_places".
@@ -47,6 +48,7 @@ class BcPlaces extends ActiveRecord
     public $deleted;
     public $upfile;
     public $delfile;
+    public $showm2;
 
     /**
      * {@inheritdoc}
@@ -77,7 +79,7 @@ class BcPlaces extends ActiveRecord
     public function rules()
     {
         return [
-           ['alias', 'unique',
+            ['alias', 'unique',
                 'targetClass' => Slugs::className(),
                 'targetAttribute' => 'slug',
                 'message' => Yii::t('app', 'This slug is already exist'),
@@ -90,13 +92,16 @@ class BcPlaces extends ActiveRecord
                 },
             ],
             [['created_at', 'updated_at'], 'safe'],
-            [['item_id', 'm2', 'valute_id', 'stage_name', 'price_period', 'ai', 'plan_comment', 'hide', 'archive', 'con_price'], 'required'],
+            [['item_id', 'm2', 'valute_id', 'price_period', 'ai', 'plan_comment', 'hide', 'archive', 'con_price'], 'required'],
             [['item_id', 'm2', 'm2min', 'valute_id', 'price_period', 'ai', 'commission', 'plan_comment', 'hide', 'archive', 'price', 'con_price', 'status_id', 'rent', 'hits', 'hide_contacts', 'hide_bc'], 'integer'],
             [['lat', 'lng', 'opex', 'tax', 'kop'], 'number'],
             [['name', 'name_ua', 'name_en', 'fio', 'fio_ua', 'fio_en', 'stage_name', 'phone', 'email', 'street'], 'string', 'max' => 255],
             [['title', 'title_ua', 'title_en', 'keywords', 'keywords_ua', 'keywords_en', 'description', 'description_ua', 'description_en'], 'string', 'max' => 255],
-            [['comment', 'comment_ua', 'comment_en'], 'string'],
-            [['uploaded', 'deleted', 'upfile', 'delfile', 'alias'], 'safe'], //todo:вернуть проверку уникальности alias
+            [['comment', 'comment_ua', 'comment_en', 'stage_name'], 'string'],
+            [['uploaded', 'deleted', 'upfile', 'delfile'], 'safe'],
+            ['no_bc', 'default', 'value' => null],
+            ['plan_comment', 'default', 'value' => 0],
+            ['showm2', 'required', 'message' => 'Необходимо указать площадь помещения в кв.м.'],
         ];
     }
 
@@ -190,7 +195,6 @@ class BcPlaces extends ActiveRecord
     }
 
 
-
     public function getShowPrice()
     {
         if ($this->con_price != 1) {
@@ -202,7 +206,7 @@ class BcPlaces extends ActiveRecord
         }
     }
 
-    public function getShowm2()
+    public function getM2range()
     {
         if (isset($this->m2min) && $this->m2min != null) {
             return ($this->m2min . '-' . $this->m2);
@@ -212,7 +216,7 @@ class BcPlaces extends ActiveRecord
 
     public function getBcitem()
     {
-        if($this->item_id===0) return $this->hasOne(Offices::className(), ['id' => 'place_id'])->andWhere(['target' => 1]);
+        if ($this->no_bc === 1) return $this->hasOne(Offices::className(), ['id' => 'item_id']);
         return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
     }
 
@@ -223,24 +227,31 @@ class BcPlaces extends ActiveRecord
 
     public function beforeValidate()
     {
-        if (empty($this->name)) {
-            $this->name = $this->createName();
+        if (!$this->isNewRecord) {
+            if (empty($this->alias)) {
+                $slug = 'arenda-ofica-' . $this->m2 . '-m2-' . $this->bcitem->city->name . '-id' . $this->id;
+                $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
+            }
         }
-        //debug($this->name);
-
-        if (empty($this->alias)) {
-            $slug = 'arenda-ofica-'.$this->m2.'-m2-'.$this->bcitem->city->name.'-id'.$this->id;
-            $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
-        }
-        //debug($this->alias);
 
         $m2 = explode('-', $this->showm2);
+
         if (count($m2) == 2) {
             $this->m2min = $m2[0];
             $this->m2 = $m2[1];
         } else {
             $this->m2 = $this->showm2;
+            $this->m2min = null;
         }
+
+        if (empty($this->name) || empty($this->name_ua) || empty($this->name_en)) {
+            $name = $this->createName();
+            $this->name = $name['ru'];
+            $this->name_ua = $name['ua'];
+            $this->name_en = $name['en'];
+        }
+
+
         return parent::beforeValidate();
     }
 
@@ -263,13 +274,24 @@ class BcPlaces extends ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
+        $this->calcPrice();
+
         if ($insert) {
             Slugs::initialize($this->tableName(), $this->id, $this->alias);
         } else {
+            //debug($this->price);
+            if ($changedAttributes['price'] != $this->price ||
+                $changedAttributes['valute_id'] != $this->valute_id ||
+                $changedAttributes['price_period'] != $this->price_period ||
+                $changedAttributes['con_price'] != $this->con_price
+            ) $this->calcPrice();
+
             if ($this->alias != $this->slug->slug) {
                 Slugs::updateSlug($this->tableName(), $this->id, $this->alias);
             }
         }
+
+
         if (!empty($this->uploaded)) {
             $uploaded = explode(',', $this->uploaded);
             SystemFiles::updateAll([
@@ -313,7 +335,7 @@ class BcPlaces extends ActiveRecord
         $arenda_ua = $arenda->word_ua;
         $arenda_en = $arenda->word_en;
 
-        $sqm = $this->m2min ? $this->m2min : $this->m2;
+        $sqm = !empty($this->m2min) ? $this->m2min : $this->m2;
         if ($sqm > 0) {
             $sqm_model = Synonyms::find()->where(['series' => 2])->orderBy('counter')->one();
             $sqm_model->counter++;
@@ -323,7 +345,6 @@ class BcPlaces extends ActiveRecord
             $sqm_text_ua = ' площею ' . $sqm . ' ' . $sqm_model->word;
             $sqm_text_en = ' area of ' . $sqm . ' ' . $sqm_model->word_en;
         }
-
         $city = $this->bcitem->city;
         $city_ru = $city->name;
         $city_ua = $city->name_ua;
@@ -333,12 +354,95 @@ class BcPlaces extends ActiveRecord
         $name['ua'] = $arenda_ua . $sqm_text_ua . ' м.' . $city_ua;
         $name['en'] = $arenda_en . $sqm_text_en . ' - ' . $city_en;
 
-        $this->name = $name['ru'];
+        /*$this->name = $name['ru'];
         $this->name_ua = $name['ua'];
         $this->name_en = $name['en'];
-        $this->save();
+        $this->save();*/
 
         return $name;
+    }
+
+    public function calcPrice()
+    {
+        BcPlacesPrice::deleteAll(['place_id' => $this->id]);
+        if ($this->con_price == 1 || $this->price < 1) return (0);
+
+        $valutes = BcValutes::find()->asArray()->all();
+        $valutes = ArrayHelper::map($valutes, 'id', 'rate');
+
+        if ($this->price_period == 1)
+            $price_m2 = $this->price;
+        elseif ($this->price_period == 2)
+            $price_m2 = $this->price / 12;
+        elseif ($this->price_period == 3)
+            $price_m2 = $this->price / $this->m2;
+
+        $price_m2 = $price_m2 * $valutes[$this->valute_id];
+        $opex = floatval($this->opex) * $valutes[$this->valute_id];
+        $tax = floatval($this->tax);
+        $kop = floatval($this->kop);
+        foreach ($valutes as $k => $v) {
+            /*****************m2*********************/
+            $data = new BcPlacesPrice();
+            $data->place_id = $this->id;
+            $data->valute_id = $k;
+            $data->period_id = 1;
+            $data->price = round($price_m2 / $v, 0);
+            $data->city_id = $this->bcitem->city->id;
+            $data->save();
+            //debug($data->getErrors());
+            /*****************m2 Year*********************/
+            $data = new BcPlacesPrice();
+            $data->place_id = $this->id;
+            $data->valute_id = $k;
+            $data->period_id = 2;
+            $data->price = round($price_m2 / $v, 0) * 12;
+            $data->city_id = $this->bcitem->city->id;
+            $data->save();
+            //debug($data->getErrors());
+            /******************Month********************/
+            $data = new BcPlacesPrice();
+            $data->place_id = $this->id;
+            $data->valute_id = $k;
+            $data->period_id = 3;
+            $data->price = round($price_m2 / $v, 0) * $this->m2;
+            $data->city_id = $this->bcitem->city->id;
+            $data->save();
+            //debug($data->getErrors());
+            /*****************All In Month*********************/
+            $data = new BcPlacesPrice();
+            $price_and_opex = round($price_m2 / $v + $opex / $v);
+            $data->place_id = $this->id;
+            $data->valute_id = $k;
+            $data->period_id = 100;
+            $data->price = round($this->m2 * ($price_and_opex) +
+                ($this->m2 * ($price_and_opex) * $tax / 100) +
+                ($this->m2 * ($price_and_opex) * $kop / 100), 0);
+            $data->city_id = $this->bcitem->city->id;
+            $allInMonth = $data->price;
+            $data->save();
+            //debug($data->getErrors());
+            /*******************All In Year*******************/
+            $data = new BcPlacesPrice();
+            $data->place_id = $this->id;
+            $data->valute_id = $k;
+            $data->period_id = 101;
+            $data->price = $allInMonth * 12;
+            $data->city_id = $this->bcitem->city->id;
+            $data->save();
+            //debug($data->getErrors());
+            /*******************All In M2*******************/
+            $data = new BcPlacesPrice();
+            $data->place_id = $this->id;
+            $data->valute_id = $k;
+            $data->period_id = 102;
+            $data->price = round(1 * ($price_and_opex) +
+                (1 * ($price_and_opex) * $tax / 100) +
+                (1 * ($price_and_opex) * $kop / 100), 0);
+            $data->city_id = $this->bcitem->city->id;
+            $data->save();
+            //debug($data->getErrors());
+        }
     }
 
 

@@ -8,8 +8,8 @@ $this->registerJsFile('//maps.googleapis.com/maps/api/js?' . http_build_query([
     ]),['position' => $this::POS_END, 'async'=>'async', 'defer'=>'defer']);
 $this->registerJsFile( '/backend/web/js/autocomplete/geo.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
 
-if(count($model->subways)>0) {
-    foreach ($model->subways as $key => $subway) {
+if(count($office->subways)>0) {
+    foreach ($office->subways as $key => $subway) {
         $subways[$key]['name'] = $subway->subwayDetails->name;
         $subways[$key]['walk_distance'] = $subway->walk_distance;
         $subways[$key]['walk_seconds'] = round($subway->walk_seconds / 60);
@@ -28,21 +28,21 @@ if(count($model->subways)>0) {
     <input type="text" value="" class="form-control" id="address_autocomplate_name">
     <input type="hidden" id="address_autocomplate_value" name="address_location">
 
-    <?= $form->field($model, 'cityName')->textInput(['id' => 'city_autocomplate_name']) ?>
-    <?= $form->field($model, 'city_id')->hiddenInput(['id' => 'city_autocomplate_value'])->label(false) ?>
+    <?= $form->field($office, 'cityName')->textInput(['id' => 'city_autocomplate_name']) ?>
+    <?= $form->field($office, 'city_id')->hiddenInput(['id' => 'city_autocomplate_value'])->label(false) ?>
 
-    <?= $form->field($model, 'street')->textInput(['id' => 'street_autocomplate_name']) ?>
+    <?= $form->field($place, 'street')->textInput(['id' => 'street_autocomplate_name']) ?>
 </div>
 <div class="col-sm-6">
-    <?= $form->field($model, 'countryName')->textInput(['id' => 'country_autocomplate_name']) ?>
-    <?= $form->field($model, 'country_id')->hiddenInput(['id' => 'country_autocomplate_value'])->label(false) ?>
+    <?= $form->field($office, 'countryName')->textInput(['id' => 'country_autocomplate_name']) ?>
+    <?= $form->field($office, 'country_id')->hiddenInput(['id' => 'country_autocomplate_value'])->label(false) ?>
 
-    <?= $form->field($model, 'districtName')->textInput(['id' => 'district_autocomplate_name']) ?>
-    <?= $form->field($model, 'district_id')->hiddenInput(['id' => 'district_autocomplate_value'])->label(false) ?>
+    <?= $form->field($office, 'districtName')->textInput(['id' => 'district_autocomplate_name']) ?>
+    <?= $form->field($office, 'district_id')->hiddenInput(['id' => 'district_autocomplate_value'])->label(false) ?>
 
-    <?= $form->field($model, 'latlng')->textInput(['id' => 'latlng_autocomplate_name']) ?>
-    <?= $form->field($model, 'lat')->hiddenInput(['id' => 'lat_autocomplate_value'])->label(false) ?>
-    <?= $form->field($model, 'lng')->hiddenInput(['id' => 'lng_autocomplate_value'])->label(false) ?>
+    <?= $form->field($place, 'latlng')->textInput(['id' => 'latlng_autocomplate_name']) ?>
+    <?= $form->field($place, 'lat')->hiddenInput(['id' => 'lat_autocomplate_value'])->label(false) ?>
+    <?= $form->field($place, 'lng')->hiddenInput(['id' => 'lng_autocomplate_value'])->label(false) ?>
     <div id="gmapbox"> </div>
 </div>
 <div class="col-sm-6">
@@ -76,6 +76,6 @@ if(count($model->subways)>0) {
             ]); ?>
         <? } ?>
     </div>
-    <?= $form->field($model, 'shuttle')->textInput() ?>
+    <?= $form->field($office, 'shuttle')->textInput() ?>
 </div>
 

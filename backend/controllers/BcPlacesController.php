@@ -63,7 +63,7 @@ class BcPlacesController extends Controller
     {
         $model = $this->findModel($id);
         $model->alias = !empty($model->slug) ? $model->slug->slug : '';
-
+        $model->showm2 = $model->m2range;
 
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

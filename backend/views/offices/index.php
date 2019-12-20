@@ -28,10 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             [
-                'attribute' => 'place_id',
-                'filter' => false,
-            ],
-            [
                 'label' => 'Название',
                 'value' => function ($data) {
                     return $data->place->name;

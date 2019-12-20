@@ -3,6 +3,10 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\BcPlaces;
+use common\models\BcPlacesSell;
+use common\models\Geo;
+use common\models\GeoSubways;
 use common\models\Offices;
 use common\models\OfficesSearch;
 use yii\web\Controller;
@@ -64,14 +68,37 @@ class OfficesController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Offices();
+        $office = new Offices();
+        $place = new BcPlaces();
+        $place->no_bc = 1;
+        $place->plan_comment = 0;
+        //$place->showm2 = $place->m2range;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($office->load(Yii::$app->request->post()) && $place->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                if ($office->save()) {
+                    $place->item_id = $office->id;
+                    if (!$place->save()) {
+                        $transaction->rollBack();
+                        //return false;
+                    }
+                } else {
+                    $transaction->rollBack();
+                    //return false;
+                }
+            } catch (Exception $exception) {
+                $transaction->rollBack();
+                //return false;
+            }
+
+            $transaction->commit();
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'office' => $office,
+            'place' => $place
         ]);
     }
 
@@ -84,14 +111,30 @@ class OfficesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $office = $this->findModel($id);
+        $place = $office->place;
+//debug($place->name);
+        $place->alias = $place->slug ? $place->slug->slug : '';
+        $office->cityName = $office->city ? $office->city->name : '';
+        $office->countryName = $office->country ? $office->country->name : '';
+        $office->districtName = $office->district ? $office->district->name : '';
+        $place->latlng = $place->lat . ', ' . $place->lng;
+        $place->showm2 = $place->m2range;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+        if ($office->load(Yii::$app->request->post()) && $place->load(Yii::$app->request->post())) {
+            $isValid = $office->validate();
+            $isValid = $place->validate() && $isValid;
+            if ($isValid) {
+                $office->save(false);
+                $place->save(false);
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'office' => $office,
+            'place' => $place
         ]);
     }
 
@@ -107,6 +150,43 @@ class OfficesController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetSubway()
+    {
+        if (Yii::$app->request->isAjax) {
+
+            $result_subways = Geo::getSubwaysByLatLng(Yii::$app->request->post('latlng'));
+            if ($result_subways != 0) {
+                $result_subway = reset($result_subways);
+                $range = Geo::getDirection(Yii::$app->request->post('placelatlng'), "place_id:" . $result_subway['place_id']);
+                if ($subway = GeoSubways::find()->where(['place_id' => $result_subway['place_id']])->one()) {
+                    $result[] = array('id' => $subway->id, 'name' => $subway->name, 'place_id' => $subway->place_id);
+                } else {
+                    try {
+                        $subway = new GeoSubways();
+                        $subway->name = $result_subway['name'];
+                        $subway->lat = $result_subway['lat'];
+                        $subway->lng = $result_subway['lng'];
+                        $subway->place_id = $result_subway['place_id'];
+                        $subway->save();
+                        $result[] = array('id' => $subway->id, 'name' => $subway->name, 'place_id' => $subway->place_id);
+                    } catch (ErrorException $ex) {
+                        Yii::warning("Ошибка геокодирования");
+                    }
+                }
+
+                if (isset($result)) {
+                    if ($range != 0) {
+                        $range['walk_seconds'] = round($range['walk_seconds'] / 60);
+                        $result[0] = array_merge($result[0], $range);
+                    }
+                }
+                return json_encode($result);
+            }
+
+
+        }
     }
 
     /**
