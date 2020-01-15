@@ -65,7 +65,7 @@ class SeoCatalogUrls extends ActiveRecord
     }
 
 
-    /**
+    /**   
      * {@inheritdoc}
      */
     public function rules()

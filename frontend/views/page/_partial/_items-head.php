@@ -95,8 +95,7 @@ switch ($currency){
 
 
 ?>
-<?= Html::beginForm(['page/bars'], 'post', ['data-pjax' => true, 'id' => 'barsForm']) ?>
-<?= Html::beginForm(['/example/pjax/pjax-example-5'], 'post', ['data-pjax' => '', 'class' => 'form-inline']); ?>
+<?= Html::beginForm(['beginFormpage/bars'], 'post', ['data-pjax' => true, 'id' => 'barsForm']) ?>
 <?= Html::input('hidden', 'bars[]', serialize($pricesChart)) ?>
 <?= Html::input('hidden', 'type', $type, ['id' => 'type']) ?>
 <?= Html::input('hidden', 'currency', $currency, ['id' => 'currency']) ?>
@@ -104,7 +103,6 @@ switch ($currency){
 
 
 
-<? //echo Html::beginForm(['page/seo_catalog_urls', 'slug' => $seo->slug->slug], 'get', ['class' => 'filter-form']) ?>
 <?= Html::beginForm('/'.$seo->slug->slug, 'get', ['class' => 'filter-form']) ?>
 <div id="filters">
     <div class="filter_nav">
@@ -585,5 +583,4 @@ switch ($currency){
     </div>
     <div class="mask_2"></div>
 </div>
-<? //echo Html::submitButton('Отправить', ['class' => 'submit']) ?>
 <?= Html::endForm() ?>

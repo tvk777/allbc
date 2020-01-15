@@ -502,13 +502,19 @@ $(document).ready(function () {
         countCity.html($(this).data('inflect'));
         cityLink.val($(this).data('value'));
         cityLink.data('valuesell', $(this).data('valuesell'));
+        //alert('valuesell=' + cityLink.data('valuesell'));
+        //alert(main_type.val());
         $("#submit_main_form").click();
     });
     $(".sel-type").on('click', function (e) {
+        e.preventDefault();
         main_type.val($(this).data('value'));
+        //alert(main_type.val());
+        $("#submit_main_form").click();
     });
     $("#submit_main_form").on('click', function (e) {
         e.preventDefault();
+        //alert(main_type.val());
         if (main_type.val() == 1) {
             cityUrl = cityLink.val();
         } else {

@@ -4,11 +4,17 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
 if ($city !== 0) {
+    $sellHref = $city->slug_sell;
+    $rentHref = $city->slug;
     $city = $city->id;
+} else {
+    $sellHref = $mainSell;
+    $rentHref = $mainRent;
 }
 $script = <<< JS
 var city = $city, 
@@ -53,9 +59,9 @@ $result = !empty($params['result']) && $params['result'] == 'offices' ? 'offices
 ?>
 <section class="object_map_sect">
     <form action="" id="main_form">
-        <input name="city_link" type="hidden" id="city_link" value="<?= $mainRent ?>"
-               data-valuesell="<?= $mainSell ?>">
-        <input name="main_type" type="hidden" id="main_type" value="1">
+        <input name="city_link" type="hidden" id="city_link" value="<?= $rentHref ?>"
+               data-valuesell="<?= $sellHref ?>">
+        <input name="main_type" type="hidden" id="main_type" value="<?= $seo->target ?>">
         <input id="submit_main_form" type="hidden">
     </form>
 
