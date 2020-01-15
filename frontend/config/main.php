@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+    'defaultRoute'=> 'site',
     'sourceLanguage' => 'en',
     'language'=>'ua',
     'id' => 'app-frontend',

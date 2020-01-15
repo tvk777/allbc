@@ -100,6 +100,7 @@ class BcPlaces extends ActiveRecord
             [['comment', 'comment_ua', 'comment_en', 'stage_name'], 'string'],
             [['uploaded', 'deleted', 'upfile', 'delfile'], 'safe'],
             ['no_bc', 'default', 'value' => null],
+            ['hide_bc', 'default', 'value' => 1],
             ['plan_comment', 'default', 'value' => 0],
             ['showm2', 'required', 'message' => 'Необходимо указать площадь помещения в кв.м.'],
         ];
@@ -184,8 +185,8 @@ class BcPlaces extends ActiveRecord
     public function getPriceSqm()
     {
         return $this->hasOne(BcPlacesPrice::className(), ['place_id' => 'id'])
-            ->andWhere((['valute_id' => 1]))
-            ->andWhere((['period_id' => 1]));
+            ->andWhere((['bc_places_price.valute_id' => 1]))
+            ->andWhere((['bc_places_price.period_id' => 1]));
     }
 
 
@@ -216,9 +217,14 @@ class BcPlaces extends ActiveRecord
 
     public function getBcitem()
     {
-        if ($this->no_bc === 1) return $this->hasOne(Offices::className(), ['id' => 'item_id']);
-        return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
+        return $this->hasOne(BcItems::className(), ['id' => 'item_id'])->with('translations');
     }
+
+    public function getOffice()
+    {
+        return $this->hasOne(Offices::className(), ['id' => 'item_id']);
+    }
+
 
     public function getSlug()
     {
@@ -229,7 +235,8 @@ class BcPlaces extends ActiveRecord
     {
         if (!$this->isNewRecord) {
             if (empty($this->alias)) {
-                $slug = 'arenda-ofica-' . $this->m2 . '-m2-' . $this->bcitem->city->name . '-id' . $this->id;
+                $item = $this->no_bc===1 ? $this->office : $this->bcitem;
+                $slug = 'arenda-ofica-' . $this->m2 . '-m2-' . $item->city->name . '-id' . $this->id;
                 $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
             }
         }
@@ -277,13 +284,17 @@ class BcPlaces extends ActiveRecord
         $this->calcPrice();
 
         if ($insert) {
+            if(empty($this->alias)) {
+                $item = $this->no_bc===1 ? $this->office : $this->bcitem;
+                $slug = 'arenda-ofica-' . $this->m2 . '-m2-' . $item->city->name . '-id' . $this->id;
+                $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
+            }
             Slugs::initialize($this->tableName(), $this->id, $this->alias);
         } else {
-            //debug($this->price);
-            if ($changedAttributes['price'] != $this->price ||
-                $changedAttributes['valute_id'] != $this->valute_id ||
-                $changedAttributes['price_period'] != $this->price_period ||
-                $changedAttributes['con_price'] != $this->con_price
+            if (isset($changedAttributes['price']) && $changedAttributes['price'] != $this->price ||
+                isset($changedAttributes['valute_id']) && $changedAttributes['valute_id'] != $this->valute_id ||
+                isset($changedAttributes['price_period']) && $changedAttributes['price_period'] != $this->price_period ||
+                isset($changedAttributes['con_price']) && $changedAttributes['con_price'] != $this->con_price
             ) $this->calcPrice();
 
             if ($this->alias != $this->slug->slug) {
@@ -345,7 +356,7 @@ class BcPlaces extends ActiveRecord
             $sqm_text_ua = ' площею ' . $sqm . ' ' . $sqm_model->word;
             $sqm_text_en = ' area of ' . $sqm . ' ' . $sqm_model->word_en;
         }
-        $city = $this->bcitem->city;
+        $city = $this->no_bc===1 ? $this->office->city : $this->bcitem->city;
         $city_ru = $city->name;
         $city_ua = $city->name_ua;
         $city_en = $city->name_en;
@@ -364,6 +375,7 @@ class BcPlaces extends ActiveRecord
 
     public function calcPrice()
     {
+        $item = $this->no_bc===1 ? $this->office : $this->bcitem; //debug($this->offfice);
         BcPlacesPrice::deleteAll(['place_id' => $this->id]);
         if ($this->con_price == 1 || $this->price < 1) return (0);
 
@@ -382,13 +394,14 @@ class BcPlaces extends ActiveRecord
         $tax = floatval($this->tax);
         $kop = floatval($this->kop);
         foreach ($valutes as $k => $v) {
+            $price_m2 = round($price_m2 / $v, 0);
             /*****************m2*********************/
             $data = new BcPlacesPrice();
             $data->place_id = $this->id;
             $data->valute_id = $k;
             $data->period_id = 1;
-            $data->price = round($price_m2 / $v, 0);
-            $data->city_id = $this->bcitem->city->id;
+            $data->price = $price_m2;
+            $data->city_id = $item->city->id;
             $data->save();
             //debug($data->getErrors());
             /*****************m2 Year*********************/
@@ -396,8 +409,8 @@ class BcPlaces extends ActiveRecord
             $data->place_id = $this->id;
             $data->valute_id = $k;
             $data->period_id = 2;
-            $data->price = round($price_m2 / $v, 0) * 12;
-            $data->city_id = $this->bcitem->city->id;
+            $data->price = $price_m2 * 12;
+            $data->city_id = $item->city->id;
             $data->save();
             //debug($data->getErrors());
             /******************Month********************/
@@ -405,8 +418,8 @@ class BcPlaces extends ActiveRecord
             $data->place_id = $this->id;
             $data->valute_id = $k;
             $data->period_id = 3;
-            $data->price = round($price_m2 / $v, 0) * $this->m2;
-            $data->city_id = $this->bcitem->city->id;
+            $data->price = $price_m2 * $this->m2;
+            $data->city_id = $item->city->id;
             $data->save();
             //debug($data->getErrors());
             /*****************All In Month*********************/
@@ -418,7 +431,7 @@ class BcPlaces extends ActiveRecord
             $data->price = round($this->m2 * ($price_and_opex) +
                 ($this->m2 * ($price_and_opex) * $tax / 100) +
                 ($this->m2 * ($price_and_opex) * $kop / 100), 0);
-            $data->city_id = $this->bcitem->city->id;
+            $data->city_id = $item->city->id;
             $allInMonth = $data->price;
             $data->save();
             //debug($data->getErrors());
@@ -428,7 +441,7 @@ class BcPlaces extends ActiveRecord
             $data->valute_id = $k;
             $data->period_id = 101;
             $data->price = $allInMonth * 12;
-            $data->city_id = $this->bcitem->city->id;
+            $data->city_id = $item->city->id;
             $data->save();
             //debug($data->getErrors());
             /*******************All In M2*******************/
@@ -439,7 +452,7 @@ class BcPlaces extends ActiveRecord
             $data->price = round(1 * ($price_and_opex) +
                 (1 * ($price_and_opex) * $tax / 100) +
                 (1 * ($price_and_opex) * $kop / 100), 0);
-            $data->city_id = $this->bcitem->city->id;
+            $data->city_id = $item->city->id;
             $data->save();
             //debug($data->getErrors());
         }

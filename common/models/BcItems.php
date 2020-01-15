@@ -128,36 +128,36 @@ class BcItems extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('attr', 'ID'),
-            'created_at' => Yii::t('attr', 'Created At'),
-            'updated_at' => Yii::t('attr', 'Updated At'),
-            'deleted_at' => Yii::t('attr', 'Deleted At'),
-            'city_id' => Yii::t('attr', 'City ID'),
-            'country_id' => Yii::t('attr', 'Country ID'),
-            'district_id' => Yii::t('attr', 'District ID'),
-            'street' => Yii::t('attr', 'Street'),
-            'lat' => Yii::t('attr', 'Lat'),
-            'lng' => Yii::t('attr', 'Lng'),
-            'sort_order' => Yii::t('attr', 'Sort Order'),
-            'class_id' => Yii::t('attr', 'Class'),
-            'percent_commission' => Yii::t('attr', 'Percent Commission'),
-            'active' => Yii::t('attr', 'Published'),
-            'contacts_admin' => Yii::t('attr', 'Contacts Admin'),
-            'hide' => Yii::t('attr', 'Hide'),
-            'redirect' => Yii::t('attr', 'Redirect'),
-            'hide_contacts' => Yii::t('attr', 'Hide Contacts'),
-            'email' => Yii::t('attr', 'Email'),
-            'email_name' => Yii::t('attr', 'Email Name'),
-            'approved' => Yii::t('attr', 'Approved'),
-            'name' => Yii::t('attr', 'Name'),
-            'annons' => Yii::t('attr', 'Annons'),
-            'content' => Yii::t('attr', 'Content'),
-            'mgr_content' => Yii::t('attr', 'Mgr_content'),
-            'shuttle' => Yii::t('attr', 'Shuttle'),
-            'cityName' => Yii::t('attr', 'Город'),
-            'countryName' => Yii::t('attr', 'Страна'),
-            'districtName' => Yii::t('attr', 'Район'),
-            'total_m2' => Yii::t('attr', 'Общая площадь здания, кв.м.'),
+            'id' => Yii::t('app', 'ID'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'deleted_at' => Yii::t('app', 'Deleted At'),
+            'city_id' => Yii::t('app', 'City ID'),
+            'country_id' => Yii::t('app', 'Country ID'),
+            'district_id' => Yii::t('app', 'District ID'),
+            'street' => Yii::t('app', 'Street'),
+            'lat' => Yii::t('app', 'Lat'),
+            'lng' => Yii::t('app', 'Lng'),
+            'sort_order' => Yii::t('app', 'Sort Order'),
+            'class_id' => Yii::t('app', 'Class'),
+            'percent_commission' => Yii::t('app', 'Percent Commission'),
+            'active' => Yii::t('app', 'Published'),
+            'contacts_admin' => Yii::t('app', 'Contacts Admin'),
+            'hide' => Yii::t('app', 'Hide'),
+            'redirect' => Yii::t('app', 'Redirect'),
+            'hide_contacts' => Yii::t('app', 'Hide Contacts'),
+            'email' => Yii::t('app', 'Email'),
+            'email_name' => Yii::t('app', 'Email Name'),
+            'approved' => Yii::t('app', 'Approved'),
+            'name' => Yii::t('app', 'Name'),
+            'annons' => Yii::t('app', 'Annons'),
+            'content' => Yii::t('app', 'Content'),
+            'mgr_content' => Yii::t('app', 'Mgr_content'),
+            'shuttle' => Yii::t('app', 'Shuttle'),
+            'cityName' => Yii::t('app', 'Город'),
+            'countryName' => Yii::t('app', 'Страна'),
+            'districtName' => Yii::t('app', 'Район'),
+            'total_m2' => Yii::t('app', 'Общая площадь здания, кв.м.'),
         ];
     }
 
@@ -194,7 +194,7 @@ class BcItems extends ActiveRecord
 
     public function getPlaces()
     {
-        return $this->hasMany(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0]);
+        return $this->hasMany(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['bc_places.hide' => 0]);
     }
 
     public function getPlacesSell()

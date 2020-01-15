@@ -104,7 +104,8 @@ switch ($currency){
 
 
 
-<?= Html::beginForm(['page/seo_catalog_urls', 'slug' => $seo->slug->slug], 'get', ['class' => 'filter-form']) ?>
+<? //echo Html::beginForm(['page/seo_catalog_urls', 'slug' => $seo->slug->slug], 'get', ['class' => 'filter-form']) ?>
+<?= Html::beginForm('/'.$seo->slug->slug, 'get', ['class' => 'filter-form']) ?>
 <div id="filters">
     <div class="filter_nav">
         <div class="row">

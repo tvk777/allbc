@@ -6,7 +6,7 @@ use common\models\BcClasses;
 use common\models\BcStatuses;
 ?>
 <div class="col-sm-6">
-    <?= $form->field($office, 'target')->dropDownList(['1' => 'Аренда', '2' => 'Продажа']) ?>
+    <? //echo $form->field($office, 'target')->dropDownList(['1' => 'Аренда', '2' => 'Продажа']) ?>
 
     <?= $form->field($place, 'alias')->textInput(['maxlength' => true]) ?>
     <?= $form->field($place, 'showm2')->textInput() ?>
@@ -26,7 +26,7 @@ use common\models\BcStatuses;
     <?= $form->field($place, 'valute_id')->textInput() ?>
     <?= $form->field($place, 'price_period')->textInput() ?>
 
-    <?= $form->field($place, 'opex')->textInput(['maxlength' => true]) ?>
+    <? if($office->target===1) echo $form->field($place, 'opex')->textInput(['maxlength' => true]) ?>
     <?= $form->field($place, 'tax')->textInput(['maxlength' => true]) ?>
     <?= $form->field($place, 'kop')->textInput(['maxlength' => true]) ?>
 

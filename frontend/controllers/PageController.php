@@ -178,16 +178,20 @@ class PageController extends Controller
     //тестирование выдачи по условиям фильтров
     public function actionTestitems()
     {
+        $whereCondition['result'] = 'offices'; //'bc'; //
         $whereCondition['target'] = 1;
         $whereCondition['city'] = 5;
+        $whereCondition['sort'] = 'm2_desc';
+        $whereCondition['lang'] = 'ua';
         $whereCondition['m2'] = [35, 150];
-        //$whereCondition['price'] = [70, 90];
+        $whereCondition['price'] = [70, 90];
         //$whereCondition['user'] = 259;
         //$whereCondition['subway'] = 1;
         //$whereCondition['walk_dist'] = 1500;
         //$whereCondition['classes'] = [1];
         //$whereCondition['districts'] = [7];
         //$whereCondition['visibles'] = [31792, 31627, 32171];
+
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearch($whereCondition);
 
@@ -239,6 +243,7 @@ class PageController extends Controller
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearch($whereCondition);
 
+        //$countPlacesNum = $params['result']=='bc' ? count($result['places']) : count($result['places']);
         $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [
             'countPlaces' => count($result['places']),
         ]);

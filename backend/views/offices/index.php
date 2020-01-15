@@ -15,7 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Offices'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Office for Rent'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Office for Sale'), ['create-sell'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -30,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Название',
                 'value' => function ($data) {
-                    return $data->place->name;
+                    return $data->target===1 ? $data->place->name : $data->placesell->name;
                 },
                 'filter' => false,
             ],
@@ -40,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'text',
                 'filter' => ['1' => 'Аренда', '2' => 'Продажа'],
                 'value' => function ($data) {
-                    return $data['target'] ? 'Аренда' : 'Продажа';
+                    return $data['target'] == 1 ? 'Аренда' : 'Продажа';
                 }
             ],
 
@@ -51,7 +52,19 @@ $this->params['breadcrumbs'][] = $this->title;
             //'class_id',
             //'percent_commission',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}'
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+
+                'urlCreator'=>function($action, $data, $key, $index){
+                    $action = $data['target'] == 1 ? $action : $action.'-sell';
+                    return [$action,'id'=>$data->id];
+                },
+            ],
         ],
     ]); ?>
 

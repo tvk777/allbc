@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
-
-//echo Url::current(['sort' => 'price_asc']);
+$currUrl = Url::current();
+$currUrl = strpos($currUrl, '?') ? $currUrl.'&' : $currUrl.'?';
 //debug($countValM2);
 //debug($pricesChart);
-
+debug($params);
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
@@ -107,27 +107,27 @@ $result = !empty($params['result']) && $params['result'] == 'offices' ? 'offices
                             <div class="dropdown_select">
                                 <div class="select_item">
                                     <p>
-                                        <a href="<?= Url::current(['sort' => 'price_asc']) ?>"><?= Yii::t('app', 'Ascending prices') ?></a>
+                                        <a href="<?= $currUrl.'sort=price_asc' ?>"><?= Yii::t('app', 'Ascending prices') ?></a>
                                     </p>
                                 </div>
                                 <div class="select_item">
                                     <p>
-                                        <a href="<?= Url::current(['sort' => 'price_desc']) ?>"><?= Yii::t('app', 'Descending prices') ?></a>
+                                        <a href="<?= $currUrl.'sort=price_desc' ?>"><?= Yii::t('app', 'Descending prices') ?></a>
                                     </p>
                                 </div>
                                 <div class="select_item">
                                     <p>
-                                        <a href="<?= Url::current(['sort' => 'm2_asc']) ?>"><?= Yii::t('app', 'Ascending area') ?></a>
+                                        <a href="<?= $currUrl.'sort=m2_asc' ?>"><?= Yii::t('app', 'Ascending area') ?></a>
                                     </p>
                                 </div>
                                 <div class="select_item">
                                     <p>
-                                        <a href="<?= Url::current(['sort' => 'm2_desc']) ?>"><?= Yii::t('app', 'Descending area') ?></a>
+                                        <a href="<?= $currUrl.'sort=m2_desc' ?>"><?= Yii::t('app', 'Descending area') ?></a>
                                     </p>
                                 </div>
                                 <div class="select_item">
                                     <p>
-                                        <a href="<?= Url::current(['sort' => 'updated_at']) ?>"><?= Yii::t('app', 'By date added') ?></a>
+                                        <a href="<?= $currUrl.'sort=updated_at' ?>"><?= Yii::t('app', 'By date added') ?></a>
                                     </p>
                                 </div>
                             </div>

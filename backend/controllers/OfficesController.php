@@ -69,8 +69,10 @@ class OfficesController extends Controller
     public function actionCreate()
     {
         $office = new Offices();
+        $office->target = 1;
         $place = new BcPlaces();
         $place->no_bc = 1;
+        $place->hide_bc = 1;
         $place->plan_comment = 0;
         //$place->showm2 = $place->m2range;
 
@@ -92,6 +94,43 @@ class OfficesController extends Controller
                 //return false;
             }
 
+            $transaction->commit();
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('create', [
+            'office' => $office,
+            'place' => $place
+        ]);
+    }
+
+    public function actionCreateSell()
+    {
+        $office = new Offices();
+        $office->target = 2;
+        $place = new BcPlacesSell();
+        $place->no_bc = 1;
+        $place->hide_bc = 1;
+        $place->plan_comment = 0;
+
+        if ($office->load(Yii::$app->request->post()) && $place->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                if ($office->save()) {
+                    $place->item_id = $office->id;
+                    if (!$place->save()) {
+                        $transaction->rollBack();
+                        //return false;
+                    }
+                } else {
+                    $transaction->rollBack();
+                    //return false;
+                }
+            } catch (Exception $exception) {
+                $transaction->rollBack();
+                //return false;
+            }
+//debug($transaction);
             $transaction->commit();
             return $this->redirect(['index']);
         }
@@ -137,6 +176,36 @@ class OfficesController extends Controller
             'place' => $place
         ]);
     }
+
+    public function actionUpdateSell($id)
+    {
+        $office = $this->findModel($id);
+        $place = $office->placesell;
+//debug($place->name);
+        $place->alias = $place->slug ? $place->slug->slug : '';
+        $office->cityName = $office->city ? $office->city->name : '';
+        $office->countryName = $office->country ? $office->country->name : '';
+        $office->districtName = $office->district ? $office->district->name : '';
+        $place->latlng = $place->lat . ', ' . $place->lng;
+        $place->showm2 = $place->m2range;
+
+
+        if ($office->load(Yii::$app->request->post()) && $place->load(Yii::$app->request->post())) {
+            $isValid = $office->validate();
+            $isValid = $place->validate() && $isValid;
+            if ($isValid) {
+                $office->save(false);
+                $place->save(false);
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('update', [
+            'office' => $office,
+            'place' => $place
+        ]);
+    }
+
 
     /**
      * Deletes an existing Offices model.

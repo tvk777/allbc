@@ -21,24 +21,29 @@ if($result=='bc') {
     $itemComission = $item->percent_commission;
 } else {
     $href = '';
-    $city = $item->bcitem->city->name;
-    $district = $item->bcitem->district ? $item->bcitem->district->name . ' р-н' : '';
-    $street = $item->bcitem->street;
+    if($item->no_bc === 1) {
+        $office = $item->office;
+    } else {
+        $office = $item->bcitem;
+    }
+    $city = $office->city->name;
+    $district = $office->district ? $office->district->name . ' р-н' : '';
+    $street = $item->street;
     $minmax = !empty($item->m2minm2) ? Yii::t('app', 'from') . ' ' . $item->m2min . ' m² ...' . $item->m2 . ' m²' : $item->m2 . ' m²';
     $minPrice = $item->con_price != 1 ? Yii::t('app', 'from') . ' ' . $item->priceSqm->price . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
     $itemPlaces = null;
     $placesInfo = null;
-    $itemSubway = !empty($item->bcitem->subways[0]) ? $item->bcitem->subways[0] : null;
-    $itemClass = $item->bcitem->class->name;
-    $slides = !empty($item->bcitem->slides) ? $item->bcitem->slides : null;
+    $itemSubway = !empty($office->subways[0]) ? $office->subways[0] : null;
+    $itemClass = $office->class->name;
+    $slides = !empty($office->slides) ? $office->slides : null;
     if(!empty($item->slides)){
         $slides = $item->slides;
-    } elseif ($item->item_id!==0 && !empty($item->bcitem->slides)) {
-        $slides = $item->bcitem->slides;
+    } elseif ($item->item_id!==0 && !empty($office->slides)) {
+        $slides = $office->slides;
     } else {
         $slides = null;
     }
-    $itemComission = $item->bcitem->percent_commission;
+    $itemComission = $office->percent_commission;
 }
 
 if (!empty($itemSubway)) {

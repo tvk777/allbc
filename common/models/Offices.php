@@ -65,9 +65,14 @@ class Offices extends ActiveRecord
 
     public function getPlace()
     {
-        if($this->target == 1) return $this->hasOne(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0]);
+        return $this->hasOne(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0]);
+    }
+
+    public function getPlacesell()
+    {
         return $this->hasOne(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0]);
     }
+
 
 
     public function getClass()

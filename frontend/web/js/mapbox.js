@@ -33,7 +33,7 @@
             container: '#cardsPjax',
             async: false,
         });
-        //console.log(visibles);
+        console.log(visibles);
     }
 
 
