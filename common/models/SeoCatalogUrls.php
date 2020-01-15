@@ -58,14 +58,14 @@ class SeoCatalogUrls extends ActiveRecord
                 'langForeignKey' => 'seo_id',
                 'tableName' => "{{%seo_catalog_urlsLang}}",
                 'attributes' => [
-                    'name', 'short_content', 'content', 'title', 'description', 'keywords', 'crumbs', 'links', 'links2', 'links3', 'main_rent_link_href', 'main_sell_link_href'
+                    'name', 'short_content', 'content', 'title', 'description', 'keywords', 'crumbs', 'links', 'links2', 'links3'
                 ]
             ],
         ];
     }
 
 
-    /**   
+    /**
      * {@inheritdoc}
      */
     public function rules()
@@ -89,7 +89,7 @@ class SeoCatalogUrls extends ActiveRecord
             [['price', 'redirect'], 'string', 'max' => 255],
             [['m2'], 'string', 'max' => 10],
             [['name', 'short_content', 'content', 'title', 'description', 'keywords', 'crumbs', 'links', 'links2', 'links3', 'main_rent_link_href', 'main_sell_link_href'], 'string'],
-            [['name_ru', 'short_content_ru', 'content_ru', 'title_ru', 'description_ru', 'keywords_ru', 'crumbs_ru', 'links_ru', 'links2_ru', 'links3_ru', 'main_rent_link_href_ru', 'main_sell_link_href_ru', 'name_ua', 'short_content_ua', 'content_ua', 'title_ua', 'description_ua', 'keywords_ua', 'crumbs_ua', 'links_ua', 'links2_ua', 'links3_ua', 'main_rent_link_href_ua', 'main_sell_link_href_ua', 'name_en', 'short_content_en', 'content_en', 'title_en', 'description_en', 'keywords_en', 'crumbs_en', 'links_en', 'links2_en', 'links3_en', 'main_rent_link_href_en', 'main_sell_link_href_en'], 'safe'],];
+            [['name_ru', 'short_content_ru', 'content_ru', 'title_ru', 'description_ru', 'keywords_ru', 'crumbs_ru', 'links_ru', 'links2_ru', 'links3_ru', 'name_ua', 'short_content_ua', 'content_ua', 'title_ua', 'description_ua', 'keywords_ua', 'crumbs_ua', 'links_ua', 'links2_ua', 'links3_ua', 'name_en', 'short_content_en', 'content_en', 'title_en', 'description_en', 'keywords_en', 'crumbs_en', 'links_en', 'links2_en', 'links3_en'], 'safe'],];
     }
 
     /**

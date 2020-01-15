@@ -136,7 +136,7 @@ class BcItemsSearch extends BcItems
         if (!empty($params['subway'])) {
             $dist = !empty($params['walk_dist']) ? $params['walk_dist'] : NULL;
             $query_bcitems->andWhere(['in', 'id', $this->getItemsBySubway($params['subway'], $dist)]);
-            //todo: сделать фильтрацию офисов, создать метод getOfficesBySubway
+            $query_offices->andWhere(['in', 'id', $this->getOfficesBySubway($params['subway'], $dist)]);
         }
 
         if ($result === 'bc') $query_bcitems->with('class', 'images');
@@ -443,12 +443,22 @@ class BcItemsSearch extends BcItems
 
     protected function getItemsBySubway($id, $dist = NULL)
     {
-        $query = BcItemsSubways::find()->where(['subway_id' => $id]);
+        $query = BcItemsSubways::find()->where(['subway_id' => $id])->andWhere(['model' => 'bc_items']);
         if ($dist !== NULL) $query->andWhere(['<=', 'walk_distance', $dist]);
         $items = $query->orderBy('item_id')->asArray()->all();
         $ids = ArrayHelper::getColumn($items, 'item_id');
         return $ids;
     }
+
+    protected function getOfficesBySubway($id, $dist = NULL)
+    {
+        $query = BcItemsSubways::find()->where(['subway_id' => $id])->andWhere(['model' => 'offices']);
+        if ($dist !== NULL) $query->andWhere(['<=', 'walk_distance', $dist]);
+        $items = $query->orderBy('item_id')->asArray()->all();
+        $ids = ArrayHelper::getColumn($items, 'item_id');
+        return $ids;
+    }
+
 
 }
 
