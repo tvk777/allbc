@@ -177,45 +177,25 @@ $share_img_url = '';
                             </div>
                         </div>
                     </div>
-                    <? if (!empty($model->user)) : ?>
-                        <? //debug($model->user->userInfo->avatar) ?>
-                        <div class="inner">
-                            <div class="author_wrapp">
-                                <? if (!empty($model->user->userInfo->avatar->thumb260x260Src)) : ?>
-                                    <div class="col">
-                                        <div class="author_photo">
-                                            <img src="<? echo $model->user->userInfo->avatar->thumb260x260Src ?>"
-                                                 alt=""/>
-                                        </div>
-                                    </div>
-                                <? endif; ?>
-                                <div class="col">
-                                    <h3><? echo $model->user->userInfo->name ?></h3>
-                                    <p class="desc_p_2"><b>Собственник</b><span
-                                            class="border_line_2"> |</span><?= $comission ?></p>
-                                    <p><a href="<?= $city_url . '?filter[user]=' . $model->user->user_id ?>"
-                                          class="green_link_3">Другие объявления автора</a></p>
-                                </div>
-                            </div>
-                            <? if (!empty($model->user->userInfo->phone) || !empty($model->user->userInfo->broker_phone)) : ?>
-                                <? $phone = !empty($model->user->userInfo->broker_phone) ? $model->user->userInfo->broker_phone : $model->user->userInfo->phone;
-                                $short = substr($phone, 0, 3); ?>
-                                <div class="tel_pill_wrapp tel_pill_wrapp_resp">
-                                    <div>
-                                        <a href="tel:<?= $phone ?>" class="green_pill tel_pill tel_hide_pill"
-                                           data-tel-pill="tel_pill_1"><i class="tel_icon_white"></i> <span
-                                                class="tel_number"><?= $short ?>х хххххххх</span><span
-                                                class="show_tel">Показать</span></a>
-                                    </div>
-                                    <div>
-                                        <a href="tel:<?= $phone ?>" class="white_pill tel_pill tel_visible_pill"
-                                           data-tel-pill="tel_pill_1"><i class="tel_icon"></i> <span
-                                                class="tel_number"><?= $phone ?></span><span
-                                                class="hide_tel">Скрыть</span></a>
-                                    </div>
-                                </div>
-                            <? endif; ?>
-                        </div>
+                    <? if (count($model->owners) > 0) : ?>
+                        <? foreach ($model->owners as $user) : ?>
+                            <?= $this->render('_partial/_user-info', [
+                                'user' => $user,
+                                'city_url' => $city_url,
+                                'comission' => $comission,
+                                'role' => 'Собственник'
+                            ]); ?>
+                        <? endforeach; ?>
+                    <? endif; ?>
+                    <? if (count($model->brokers) > 0) : ?>
+                        <? foreach ($model->brokers as $user) : ?>
+                            <?= $this->render('_partial/_user-info', [
+                                'user' => $user,
+                                'city_url' => $city_url,
+                                'comission' => $comission,
+                                'role' => 'Брокер'
+                            ]); ?>
+                        <? endforeach; ?>
                     <? endif; ?>
                     <div class="inner">
                         <div class="pills_wrapp">
@@ -274,43 +254,50 @@ $share_img_url = '';
             </div>
         <? endif; ?>
 
-        <? if(!empty($model->characteristics)) : ?>
+        <? if (!empty($model->characteristics)) : ?>
             <div class="specifications_wrapp">
-            <h2><?= Yii::t('app', 'Characteristics') ?></h2>
-            <div class="text_box text_box_shadow" id="slide_text_2" data-minheight="250">
-                <div class="inner_height">
-                    <div class="specifications offset_ziro">
-                     <? foreach($model->characteristics as $char) : ?>
-                        <div class="specification_thumb">
-                            <div class="col">
-                                <div class="icon_box">
-                                    <img src="/img/<?= $char->characteristic->img ?>" alt="" />
+                <h2><?= Yii::t('app', 'Characteristics') ?></h2>
+                <div class="text_box text_box_shadow" id="slide_text_2" data-minheight="250">
+                    <div class="inner_height">
+                        <div class="specifications offset_ziro">
+                            <? foreach ($model->characteristics as $char) : ?>
+                                <div class="specification_thumb">
+                                    <div class="col">
+                                        <div class="icon_box">
+                                            <img src="/img/<?= $char->characteristic->img ?>" alt=""/>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h3><?= getDefaultTranslate('name', $currentLanguage, $char->characteristic, true) ?></h3>
+                                        <p><?= getDefaultTranslate('value', $currentLanguage, $char, true) ?></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <h3><?= getDefaultTranslate('name', $currentLanguage, $char->characteristic, true) ?></h3>
-                                <p><?= getDefaultTranslate('value', $currentLanguage, $char, true) ?></p>
-                            </div>
+                            <? endforeach; ?>
                         </div>
-                      <? endforeach; ?>
                     </div>
                 </div>
-            </div>
-                <? if(count($model->characteristics)>6) : ?>
-            <div class="showmore_wrapp">
-                <a href="#" class="green_link show_text" data-slidebox-id="slide_text_2">
-                    <i class="plus"></i>
-                    <span class="show"><?= Yii::t('app', 'Show more') ?></span>
-                    <span class="hide"><?= Yii::t('app', 'Collapse') ?></span>
-                </a>
-            </div>
+                <? if (count($model->characteristics) > 6) : ?>
+                    <div class="showmore_wrapp">
+                        <a href="#" class="green_link show_text" data-slidebox-id="slide_text_2">
+                            <i class="plus"></i>
+                            <span class="show"><?= Yii::t('app', 'Show more') ?></span>
+                            <span class="hide"><?= Yii::t('app', 'Collapse') ?></span>
+                        </a>
+                    </div>
                 <? endif; ?>
 
             </div>
-    <? endif; ?>
+        <? endif; ?>
 
     </div>
 
+</section>
+
+<section>
+    <div class="row row_2">
+        <div class="inner_box">
+
+        </div>
 </section>
 
 <section class="sect_7_bc">

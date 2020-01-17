@@ -28,6 +28,7 @@ class BcItemsBrokers extends \yii\db\ActiveRecord
         return [
             [['item_id', 'user_id'], 'required'],
             [['item_id', 'user_id'], 'integer'],
+            [['model'], 'string']
         ];
     }
 
@@ -41,4 +42,15 @@ class BcItemsBrokers extends \yii\db\ActiveRecord
             'user_id' => Yii::t('app', 'User ID'),
         ];
     }
+
+    public function getUserInfo()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
 }
+
+
+/* запрос для заполнения поля model данными
+UPDATE `bc_items_brokers` SET `model`='bc_items'
+*/
+

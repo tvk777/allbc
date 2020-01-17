@@ -105,7 +105,7 @@ class BcItemsSearch extends BcItems
         //фильтрация БЦ
         if (!empty($params['user'])) {
             $query_bcitems->andWhere(['in', 'id', $this->getItemsByUser($params['user'])]);
-            //todo: сделать фильтрацию офисов, создать метод getOfficesByUser
+            $query_offices->andWhere(['in', 'id', $this->getItemsByUser($params['user'])]);
         }
 
         if (!empty($params['city'])) {
@@ -433,7 +433,7 @@ class BcItemsSearch extends BcItems
 
     protected function getItemsByUser($id)
     {
-        $userItems = BcItemsUsers::find()->where(['user_id' => $id])->asArray()->all();
+        $userItems = BcItemsOwners::find()->where(['user_id' => $id])->asArray()->all();
         $userItemsIds = ArrayHelper::getColumn($userItems, 'item_id');
         $brokerItems = BcItemsBrokers::find()->where(['user_id' => $id])->asArray()->all();
         $brokerItemsIds = ArrayHelper::getColumn($brokerItems, 'item_id');

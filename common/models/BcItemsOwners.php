@@ -5,19 +5,19 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "bc_items_users".
+ * This is the model class for table "bc_items_owners".
  *
  * @property int $item_id
  * @property int $user_id
  */
-class BcItemsUsers extends \yii\db\ActiveRecord
+class BcItemsOwners extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'bc_items_users';
+        return 'bc_items_owners';
     }
 
     /**
@@ -51,5 +51,5 @@ class BcItemsUsers extends \yii\db\ActiveRecord
 
 
 /* запрос для заполнения поля model данными
-UPDATE `bc_items_users` SET `model`='bc_items'
+UPDATE `bc_items_owners` SET `model`='bc_items'
 */

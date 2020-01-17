@@ -176,9 +176,19 @@ class BcItems extends ActiveRecord
         return $this->hasOne(BcClasses::className(), ['id' => 'class_id']);
     }
 
-    public function getUser()
+    public function getUsers()
     {
-        return $this->hasOne(BcItemsUsers::className(), ['item_id' => 'id']);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+    }
+
+    public function getBrokers()
+    {
+        return $this->hasMany(BcItemsBrokers::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+    }
+
+    public function getOwners()
+    {
+        return $this->hasMany(BcItemsOwners::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
     }
 
     public function getCharacteristics()

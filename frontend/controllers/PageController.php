@@ -40,7 +40,9 @@ class PageController extends Controller
     //страница бизнес-центра
     public function actionBc_items($slug)
     {
-        $model = BcItems::find()->joinWith(['slug'])->with('subways.subwayDetails', 'characteristics.characteristic')->where(['slug' => $slug])->multilingual()->one();
+        $model = BcItems::find()->joinWith(['slug'])
+            ->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners')
+            ->where(['slug' => $slug])->multilingual()->one();
         $target = Yii::$app->request->get('target');
         $targetId = $target == 'sell' ? 2 : 1;
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();

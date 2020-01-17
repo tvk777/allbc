@@ -100,6 +100,22 @@ class Offices extends ActiveRecord
         return $this->hasMany(BcItemsSubways::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
     }
 
+    public function getUsers()
+    {
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+    }
+
+    public function getBrokers()
+    {
+        return $this->hasMany(BcItemsBrokers::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+    }
+
+    public function getOwners()
+    {
+        return $this->hasMany(BcItemsOwners::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+    }
+
+
     public function beforeSave($insert)
     {
         $city_id = Geo::getCityValue($this->city_id);
