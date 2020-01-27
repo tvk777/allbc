@@ -72,7 +72,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                 </div>
                 <div class="left">
                     <div class="scroll_x">
-                        <table <?= $tablId ?> class="table_5 places_table"
+                        <table id="<?= $tablId ?>" class="table_5 places_table"
                                data-galleries-table="<?= $galleryId ?>">
                             <thead>
                             <tr class="table_row head">

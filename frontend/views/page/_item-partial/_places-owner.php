@@ -72,7 +72,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                 </div>
                 <div class="left">
                     <div class="scroll_x">
-                        <table <?= $tablId ?> class="table_5 places_table"
+                        <table id="<?= $tablId ?>" class="table_5 places_table"
                                data-galleries-table="<?= $galleryId ?>">
                             <thead>
                             <tr class="table_row head">
@@ -181,7 +181,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                                 <tr class="table_row" data-officegallery-index="<?= $index ?>" id="place<?= $place->id ?>">
                                     <td class="table_cell">
                                         <input type="radio" name="gallery_radio" id="r_2_2" />
-                                        <label for="r_2_2"><?= $place->updated_at ?></label>
+                                        <label for="r_2_2"><?= Yii::$app->formatter->asDate($place->updated_at, 'dd/MM/yyyy') ?></label>
                                     </td>
                                     <td class="table_cell" data-sort-value="<?= $sortValue ?>">
                                         <p><?= $place->m2range ?></p>
