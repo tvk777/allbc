@@ -190,6 +190,66 @@ class BcPlacesSell extends ActiveRecord
         return $this->hasOne(BcPeriodsSell::className(), ['id'  => 'price_period']);
     }
 
+    public function getPricePeriod($prices){
+        $pricesPeriod = [];
+        foreach($prices as $price){
+            if($price->valute_id ==1){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['uah']['m2'] = $price->price;
+                        break;
+                    case 2:
+                        $pricesPeriod['uah']['value'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['uah']['full'] = $price->price;
+                        break;
+                }
+            }
+            elseif ($price->valute_id ==2){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['usd']['m2'] = $price->price;
+                        break;
+                    case 2:
+                        $pricesPeriod['usd']['value'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['usd']['full'] = $price->price;
+                        break;
+                }
+            }
+            elseif ($price->valute_id ==3){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['eur']['m2'] = $price->price;
+                        break;
+                    case 2:
+                        $pricesPeriod['eur']['value'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['eur']['full'] = $price->price;
+                        break;
+                }
+            }
+            elseif ($price->valute_id ==4){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['rub']['m2'] = $price->price;
+                        break;
+                    case 2:
+                        $pricesPeriod['rub']['value'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['rub']['full'] = $price->price;
+                        break;
+                }
+            }
+        }
+        return $pricesPeriod;
+    }
+
+
     public function getShowPrice()
     {
         if($this->con_price!=1)

@@ -195,6 +195,77 @@ class BcPlaces extends ActiveRecord
         return $this->hasOne(BcPeriods::className(), ['id' => 'price_period']);
     }
 
+    public function getPricePeriod($prices){
+        $pricesPeriod = [];
+        foreach($prices as $price){
+            if($price->valute_id ==1){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['uah']['m2'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['uah']['month'] = $price->price;
+                        break;
+                    case 101:
+                        $pricesPeriod['uah']['year'] = $price->price;
+                        break;
+                    case 102:
+                        $pricesPeriod['uah']['m2_2'] = $price->price;
+                        break;
+                }
+            }
+            elseif ($price->valute_id ==2){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['usd']['m2'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['usd']['month'] = $price->price;
+                        break;
+                    case 101:
+                        $pricesPeriod['usd']['year'] = $price->price;
+                        break;
+                    case 102:
+                        $pricesPeriod['usd']['m2_2'] = $price->price;
+                        break;
+                }
+            }
+            elseif ($price->valute_id ==3){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['eur']['m2'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['eur']['month'] = $price->price;
+                        break;
+                    case 101:
+                        $pricesPeriod['eur']['year'] = $price->price;
+                        break;
+                    case 102:
+                        $pricesPeriod['eur']['m2_2'] = $price->price;
+                        break;
+                }
+            }
+            elseif ($price->valute_id ==4){
+                switch ($price->period_id){
+                    case 1:
+                        $pricesPeriod['rub']['m2'] = $price->price;
+                        break;
+                    case 100:
+                        $pricesPeriod['rub']['month'] = $price->price;
+                        break;
+                    case 101:
+                        $pricesPeriod['rub']['year'] = $price->price;
+                        break;
+                    case 102:
+                        $pricesPeriod['rub']['m2_2'] = $price->price;
+                        break;
+                }
+            }
+        }
+        return $pricesPeriod;
+    }
+
 
     public function getShowPrice()
     {

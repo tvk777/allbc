@@ -1,4 +1,6 @@
 <?php
+$this->registerJsFile('/js/stupidtable.min.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
+
 $currentLanguage = Yii::$app->language;
 //debug($model->characteristics);
 /* @var $this yii\web\View */
@@ -13,6 +15,9 @@ $this->registerCssFile('/css/jquery.mCustomScrollbar.css');
 
 
 $places = $target == 2 ? $model->placesSell : $model->places;
+$placesRent = $model->places;
+$placesSell = $model->placesSell;
+
 $city_url = $target == 2 ? $mainSell : $mainRent;
 $city_id = 0;
 //debug(count($model->district->items));
@@ -125,7 +130,8 @@ $share_img_url = '';
                                     <? foreach ($places as $index => $place) : ?>
                                         <? $m2 = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2;
                                         $check = $index == 0 ? 'checked="true"' : '';
-                                        $a = Html::a($m2 . ' м²', ['show-place', 'id' => $place->id, 'target' => $target], ['class' => 'modal-form']);
+                                        //$a = Html::a($m2 . ' м²', ['show-place', 'id' => $place->id, 'target' => $target], ['class' => 'modal-form']);
+                                        $a = Html::a($m2 . ' м²', '#place'.$place->id, ['class' => 'scroll_to']);
                                         ?>
                                         <div class="pill_checlbox pill_checkbox_2">
                                             <input type="radio" name="pill_checkboxes_2"
@@ -293,12 +299,20 @@ $share_img_url = '';
 
 </section>
 
-<section>
-    <div class="row row_2">
-        <div class="inner_box">
+<? if (count($placesRent) > 0) {
+    echo $this->render('_item-partial/_places', [
+        'target' => $target,
+        'places' => $placesRent,
+    ]);
+}?>
 
-        </div>
-</section>
+<? if (count($placesSell) > 0) {
+    echo $this->render('_item-partial/_places-sell', [
+        'target' => $target,
+        'places' => $placesSell,
+    ]);
+}?>
+
 
 <section class="sect_7_bc">
     <div class="row">

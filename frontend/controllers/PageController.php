@@ -40,11 +40,19 @@ class PageController extends Controller
     //страница бизнес-центра
     public function actionBc_items($slug)
     {
-        $model = BcItems::find()->joinWith(['slug'])
-            ->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners')
-            ->where(['slug' => $slug])->multilingual()->one();
         $target = Yii::$app->request->get('target');
         $targetId = $target == 'sell' ? 2 : 1;
+
+        $query = BcItems::find()->joinWith(['slug']);
+        if($targetId==2) {
+            $query->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners', 'placesSell.prices');
+        } else {
+            $query->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners', 'places.prices');
+        }
+
+
+        $model = $query->where(['slug' => $slug])->multilingual()->one();
+
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
         $mainRent = trim($seo->main_rent_link_href, '/');
         $mainSell = trim($seo->main_sell_link_href, '/');

@@ -1741,4 +1741,69 @@ $(document).ready(function () {
 
     });
 
+    $("input.currency").val('uah');
+
+    $(document).on({
+        click: function () {
+            var itemText = $(this).text(),
+                currencyId = $(this).data('currid'),
+                periodId, parentBlock, inputP, dataAtr, parentTable;
+            parentBlock = $(this).closest(".custom_select");
+            parentTable = $(this).closest("table");
+            periodId = parentTable.find("input.period").val(),
+            inputP = parentBlock.find(".select_input .sel_val");
+            parentBlock.find(".select_res.currency").val(currencyId);
+            inputP.html(itemText);
+            parentBlock.find(".dropdown_select").slideUp(200);
+
+            parentTable.find(".table_cell.m2").each(function(){
+                $(this).html('<p>' + $(this).data(currencyId) + ' </p>');
+            });
+
+            parentTable.find(".table_cell.period").each(function(){
+                dataAtr = periodId +'_' + currencyId; //'month_usd'
+                $(this).html('<p>' + $(this).data(dataAtr) + '</p>');
+            });
+        }
+    }, '.change-currency .select_item span');
+
+    $(document).on({
+        click: function () {
+            var itemText = $(this).text(),
+                periodId = $(this).data('period'),
+                currencyId, parentBlock, inputP, dataAtr, parentTable;
+            parentBlock = $(this).closest(".custom_select");
+            parentTable = $(this).closest("table");
+            currencyId = parentTable.find("input.currency").val(),
+            inputP = parentBlock.find(".select_input .sel_val");
+            parentBlock.find(".select_res.period").val(periodId);
+            inputP.html(itemText);
+            parentBlock.find(".dropdown_select").slideUp(200);
+
+            parentTable.find(".table_cell.period").each(function(){
+                dataAtr = periodId +'_' + currencyId; //'month_usd'
+                $(this).html('<p>' + $(this).data(dataAtr) + '</p>');
+            });
+        }
+    }, '.change-period .select_item span');
+
+    $('.scroll_to').click(function(e){
+        e.preventDefault();
+        var jump = $(this).attr('href');
+        var new_position = $(jump).offset();
+        $('html, body').stop().animate({ scrollTop: new_position.top-150 }, 1200);
+        $(jump).mouseover();
+    });
+
+    $( ".places_table tbody .table_row" ).hover(function(){
+        $(this).addClass('hover');
+    }, function(){
+        $(this).removeClass('hover');
+    });
+
+
+
+
+
+
 });

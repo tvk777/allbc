@@ -72,6 +72,18 @@
 
 @media only screen and (max-width: 1100px) {
 
+	/*-- Section 6 - Buisnes Center --*/
+
+	.two_cols_templ_2 > .left {
+	    width: 38%;
+	}
+
+	.two_cols_templ_2 > .right {
+	    width: 62%;
+	}
+
+	/*-- /Section 6 - Buisnes Center --*/
+
 	/*-- Footer --*/
 
 	.footer_templ .col:nth-child(1) {
@@ -225,6 +237,78 @@
 	}
 
 	/*-- /Section 3 - Info Side Page --*/
+
+	/*-- Section 6 - Buisnes Center --*/
+
+	.two_cols_templ_2 > .left {
+	    width: 45%;
+	}
+
+	.two_cols_templ_2 > .right {
+	    width: 55%;
+	}
+
+	.comments_form_wrapp > .left {
+	    width: 100%;
+	    padding-right: 0;
+	}
+
+	.comments_form_wrapp > .right {
+	    width: 100%;
+	    padding-left: 0;
+	}
+
+	.comment_form .green_pill {
+	    margin: 3px 0;
+	}
+
+	.comment_form textarea {
+	    height: 171px;
+	}
+
+	.comments_scroll_box {
+	    height: 171px;
+	}
+
+	.comment_thumb .descript p {
+	    line-height: 21px;
+	    font-size: 14px;
+	}
+
+	/*-- /Section 6 - Buisnes Center --*/
+
+	/*-- Section 5 - Buisnes Center 2 --*/
+
+	.title_wrapp_3_2 {
+		padding: 0 0 40px 0;
+	}
+
+	.title_wrapp_3_2 .green_pill {
+		top: auto;
+		bottom: 0;
+		right: auto;
+		left: 0;
+	}
+
+	.two_cols_3 .left {
+	    width: 100%;
+	    float: none;
+	    padding: 10px 0;
+	}
+
+	.two_cols_3 .right {
+	    width: 100%;
+	    float: none;
+	    padding: 10px 0;
+	}
+
+	.table_5,
+	.table_6 {
+		max-width: 700px;
+		margin: 10px auto;
+	}
+
+	/*-- Section 5 - Buisnes Center 2 --*/
 
 }
 
@@ -422,6 +506,83 @@
 
 	/*-- /Section 1 - Info Side Page --*/
 
+	/*-- Section 1 - Buisnes Center --*/
+
+	.object_center_templ {
+	    padding: 10px 0 20px 0;
+	}
+
+	.object_center_templ .left {
+	    width: 320px;
+	}
+
+	.object_center_templ .right {
+	    width: calc(100% - 320px);
+	}
+
+	.object_info .inner {
+	    padding: 5px 0;
+	}
+
+	.object_info {
+	    padding: 15px 15px;
+	}
+
+	.object_title h3 {
+	    font-size: 20px;
+	}
+
+	.free_office p {
+	    font-size: 13px;
+	}
+
+	.pill_checkbox_2 label {
+	    padding: 3px 8px;
+	    font-size: 12px;
+	    line-height: 16px;
+	}
+
+	.author_wrapp h3 {
+		font-size: 19px;
+	}
+
+	p.desc_p {
+	    padding-left: 10%;
+	    font-size: 15px;
+	}
+
+	.socials_list li {
+	    padding: 3px;
+	}
+
+	.green_link_3 {
+	    font-size: 14px;
+	}
+
+	/*-- /Section 1 - Buisnes Center --*/
+
+	/*-- Section 4 - Info Side Page --*/
+
+	.text_box_shadow {
+		position: relative;
+		padding-bottom: 10px;
+	}
+
+	.text_box_shadow:before {
+		content: "";
+		width: 100%;
+		height: 30px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+		background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+		background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
+	}
+
+	/*-- /Section 4 - Info Side Page --*/
+
 	/*-- Footer --*/
 
 	.footer_templ .col:nth-child(2) {
@@ -443,6 +604,14 @@
 
 	.content_resp {
 		padding-top: 48px;
+	}
+
+	.breadcrumbs_wrapp_2 {
+    	padding-top: 60px;
+	}
+
+	.content_3 {
+		padding-top: 60px;
 	}
 
 	/*-- Header --*/
@@ -614,6 +783,105 @@
 
 	/*-- /Section 1 - Info Side Page --*/
 
+	/*-- Section 1 - Buisnes Center --*/
+
+	.object_center_templ {
+	    padding: 10px 0 20px 0;
+	}
+
+	.object_center_templ .left {
+	    width: 100%;
+	    float: none;
+	    padding: 5px 0;
+	}
+
+	.object_center_templ .right {
+	    width: 100%;
+	    float: none;
+	    padding: 5px 0;
+	}
+
+	.object_slider_big .slide .img_box {
+	    height: 380px;
+	}
+
+	.slides_info p {
+	    font-size: 12px;
+	    line-height: 17px;
+	}
+
+	/*-- /Section 1 - Buisnes Center --*/
+
+	/*-- Section 2 - Buisnes Center* --*/
+	/*-- Section 3 - Buisnes Center* --*/
+
+	.table_3,
+	.table_4 {
+		min-width: 664px;
+	}
+
+	.table_3 .table_row .table_cell,
+	.table_4 .table_row .table_cell {
+	    padding: 12px 5px 8px 5px;
+	}
+
+	.table_3 .table_row .table_cell:nth-child(1) {
+	    padding-left: 10px;
+	}
+
+	.table_3 .table_row:nth-child(1) .table_cell:nth-child(1) {
+	    padding-left: 10px;
+	}
+
+	.table_3 .table_row .table_cell:nth-child(10) {
+	    padding-right: 10px;
+		padding-top: 3px;
+		padding-bottom: 3px;
+	}
+
+	.table_4 .table_row .table_cell:nth-child(1) {
+	    padding-left: 10px;
+	}
+
+	.table_4 .table_row:nth-child(1) .table_cell:nth-child(1) {
+	    padding-left: 10px;
+	}
+
+	.table_4 .table_row .table_cell:nth-child(8) {
+	    padding-right: 10px;
+	    padding-top: 3px;
+		padding-bottom: 3px;
+	}
+
+	.table_3 h4,
+	.table_4 h4 {
+	    font-size: 13px;
+	    line-height: 15px;
+	}
+
+	.table_3 p,
+	.table_4 p {
+	    font-size: 12px;
+	    line-height: 15px;
+	}
+
+	.green_pill_3 {
+	    font-size: 14px;
+	    line-height: 16px;
+	}
+
+	/*-- /Section 2 - Buisnes Center* --*/
+	/*-- /Section 3 - Buisnes Center* --*/
+
+	/*-- Popups --*/
+
+	.popup_office_header h3 {
+	    font-size: 22px;
+	    line-height: 30px;
+	}
+
+	/*-- /Popups --*/
+
 }
 
 @media only screen and (max-width: 767px) {
@@ -647,6 +915,11 @@
 
 	.header_1 .dropdown_title:before {
 	    top: 22px;
+	}
+
+	.breadcrumbs li,
+	.breadcrumbs li a {
+	    font-weight: normal;
 	}
 
 	/*-- Section 1 --*/
@@ -823,6 +1096,135 @@
 
 	/*-- /Section 3 - Info Side Page --*/
 
+	/*-- Section 5 - Buisnes Center --*/
+
+	.sect_5_bc {
+	    padding: 30px 0 20px 0;
+	}
+
+	.location_templ p {
+	    margin: 10px 0;
+	    line-height: 22px;
+	}
+
+	.locaton_thumbnails {
+	    margin: 0;
+	}
+
+	.location_thumb {
+	    width: 100%;
+	    margin: 15px 0;
+	}
+
+	/*-- /Section 5 - Buisnes Center --*/
+
+	/*-- Section 5 - Buisnes Center 2 --*/
+
+	.sect_7_2 {
+	    padding: 30px 0 20px 0;
+	}
+
+	.inner_box:nth-child(1) {
+	    padding-top: 15px;
+	}
+
+	.two_cols_3 .right {
+		display: none;
+	}
+
+	.table_5, .table_6 {
+		width: 100%;
+		min-width: 540px;
+	}
+
+	.table_5 .table_row:nth-child(1) .table_cell,
+	.table_6 .table_row:nth-child(1) .table_cell {
+	    padding: 7px 5px 9px 5px;
+	}
+
+	.table_5 .table_row .table_cell,
+	.table_6 .table_row .table_cell {
+	    padding: 9px 5px 5px 5px;
+	}
+
+	.table_5 h4,
+	.table_6 h4 {
+	    font-size: 13px;
+	    line-height: 17px;
+	}
+
+	.radio_2 label {
+	    font-size: 12px;
+	}
+
+	.table_5 p,
+	.table_6 p {
+	    font-size: 12px;
+	}
+
+	.table_row .photo_link {
+	    display: inline-block;
+	}
+
+	/*-- Section 5 - Buisnes Center 2 --*/
+
+	/*-- Popups --*/
+
+	.popup_office_header {
+	    padding: 0 50px 0 30px;
+	}
+
+	.two_cols_4 {
+		display: block;
+	    margin: 0;
+	}
+
+	.two_cols_4 .col:nth-child(1) {
+	    width: 100%;
+	    padding: 5px 0;
+	}
+
+	.two_cols_4 .col:nth-child(2) {
+	    width: 100%;
+	    padding: 5px 0;
+	}
+
+	.office_slider {
+	    margin: 15px 0;
+	}
+
+	.green_pill_fullwidth {
+	    font-size: 18px;
+	}
+
+	/*-- /Popups --*/
+
+}
+
+@media only screen and (max-width: 700px) {
+
+	/*-- Section 4 - Info Side Page --*/
+
+	.specification_thumb {
+	    width: 100%;
+	    margin: 10px 0;
+	}
+
+	.specification_thumb .col:nth-child(1) {
+	    width: 50px;
+	}
+
+	.specification_thumb .col:nth-child(2) {
+	    width: calc(100% - 50px);
+	}
+
+	.specification_thumb p {
+	    font-size: 14px;
+	    line-height: 21px;
+	}
+
+	/*-- /Section 4 - Info Side Page --*/
+
 }
 
 @media only screen and (max-width: 600px) {
@@ -900,6 +1302,187 @@
 	}
 
 	/*-- /Section 3 - Info Side Page --*/
+
+	/*-- Section 1 - Buisnes Center --*/
+
+	.author_wrapp {
+		display: block;
+	    width: 100%;
+	    margin: 10px 0;
+	}
+
+	.author_wrapp .col:nth-child(1) {
+		display: block;
+	    width: 100%;
+	}
+
+	.author_wrapp .col:nth-child(2) {
+		display: block;
+	    width: 100%;
+	    text-align: center;
+	}
+
+	.author_photo {
+	    width: 76px;
+	    height: 76px;
+	    margin: 10px auto;
+	}
+
+	.object_slider_big .slide .img_box {
+	    height: 280px;
+	}
+
+	.object_slider_miniatures .img_box {
+	    height: 90px;
+	}
+
+	.border_line {
+		display: none;
+	}
+
+	p.desc_p {
+	    padding-left: 0;
+	}
+
+	.tel_pill_wrapp_resp {
+		text-align: center;
+	}
+
+	.tel_pill_wrapp_resp .tel_pill {
+		margin: 0 auto;
+	}
+
+	/*-- /Section 1 - Buisnes Center --*/
+
+	/*-- Section 6 - Buisnes Center --*/
+
+	.two_cols_templ_2 {
+	    margin: 10px 0;
+	}
+
+	.two_cols_templ_2 > .left {
+	    width: 100%;
+	    float: none;
+	    padding: 5px 0;
+	}
+
+	.two_cols_templ_2 > .right {
+	    width: 100%;
+	    float: none;
+	    padding: 5px 0;
+	}
+
+	.h2_wrapp {
+	    margin-bottom: 20px;
+	}
+
+	.comments_form_wrapp {
+	    margin-top: 0;
+	}
+
+	/*-- /Section 6 - Buisnes Center --*/
+
+	/*-- Section 5 - Buisnes Center 2 --*/
+
+	.table_5, .table_6 {
+	    min-width: 520px;
+	}
+
+	.table_5 .table_row {
+	    padding-left: 35px;
+	}
+
+	.table_5 .table_row .table_cell:nth-child(1) {
+	    width: 20%;
+	    min-width: 90px;
+	}
+
+	.table_5 .table_row .table_cell:nth-child(2) {
+	    min-width: 45px;
+	}
+
+	.table_5 .table_row .table_cell:nth-child(3) {
+	    min-width: 55px;
+	}
+
+	.table_5 .table_row .table_cell:nth-child(5) {
+	    min-width: 50px;
+	}
+
+	.table_6 .table_row {
+	    padding-left: 35px;
+	}
+
+	.table_5_2, .table_6_2 {
+	    min-width: 410px;
+	}
+
+	.table_5_2 .table_row,
+	.table_6_2 .table_row {
+	    padding-left: 5px;
+	}
+
+	.table_5_2 .table_row .table_cell:nth-child(1) {
+		width: 15%;
+	    min-width: 60px;
+	}
+
+	.table_5_2 .table_row .table_cell:nth-child(3) {
+	    min-width: 80px;
+	}
+
+	.table_5_2 .table_row .table_cell:nth-child(5) {
+	    min-width: 90px;
+	}
+
+	.table_6_2 .table_row .table_cell:nth-child(1) {
+		width: 15%;
+	    min-width: 60px;
+	}
+
+	.table_6_2 .table_row .table_cell:nth-child(3) {
+	    min-width: 95px;
+	}
+
+	/*-- /Section 5 - Buisnes Center 2 --*/
+
+	/*-- Popups --*/
+
+	.popup_office_header {
+	    padding: 0 30px 0 20px;
+	}
+
+	.popup_office_header .close_black {
+	    right: 15px;
+	}
+
+	.two_cols_4 p {
+	    font-size: 15px;
+	    line-height: 21px;
+	}
+
+	.office_slider .slide .img_box {
+	    height: 200px;
+	}
+
+	.green_pill_fullwidth {
+	    padding: 10px;
+	}
+
+	.popup_office_content {
+	    padding: 0 20px;
+	}
+
+	/*-- /Popups --*/
+
+
+	/*-- Tell Button Responsive Fixed --*/
+
+	.tel_pill_wrapp_fixed {
+		display: block;
+	}
+
+	/*-- /Tell Button Responsive Fixed --*/
 
 }
 
@@ -1216,6 +1799,30 @@
 	}
 
 	/*-- /Header --*/
+
+	/*-- Section 1 - Buisnes Center --*/
+
+	.breadcrumbs li a {
+	    font-size: 14px;
+	    line-height: 23px;
+	}
+
+	.title_desc .col {
+		vertical-align: baseline;
+	    padding: 4px 0;
+	}
+
+	.title_desc .col:before {
+		display: none;
+	}
+
+	.title_desc p {
+	    font-size: 12px;
+    	line-height: 19px;
+	    font-weight: 600;
+	}
+
+	/*-- /Section 1 - Buisnes Center --*/
 
 }
 

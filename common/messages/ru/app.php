@@ -66,4 +66,6 @@ return [
     'Apply' => 'Применить',
     'Clear' => 'Очистить',
     'Characteristics' => 'Характеристики',
+    'Office sale - offers' => 'Продажа офиса - предложения',
+    'Office rental - offers' => 'Аренда офиса - предложения',
 ];
