@@ -303,13 +303,26 @@ $share_img_url = '';
     echo $this->render('_item-partial/_places', [
         'target' => $target,
         'places' => $placesRent,
+        'tablId' => 'placesTable',
+        'galleryId' =>'galleries_1'
     ]);
 }?>
+
+<? if (count($placesRent) > 0) {
+    echo $this->render('_item-partial/_places-owner', [
+        'target' => $target,
+        'places' => $placesRent,
+        'tablId' => 'placesOwnerTable',
+        'galleryId' =>'galleries_2'
+]);
+} ?>
+
 
 <? if (count($placesSell) > 0) {
     echo $this->render('_item-partial/_places-sell', [
         'target' => $target,
         'places' => $placesSell,
+        'tablId' => 'placesSellTable'
     ]);
 }?>
 

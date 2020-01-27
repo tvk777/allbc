@@ -1,7 +1,7 @@
 <?php
 $script = <<< JS
-var table = $("#simpleTable").stupidtable();
-table.on("aftertablesort", function (event, data) {
+var $tablId = $("#$tablId").stupidtable();
+$tablId.on("aftertablesort", function (event, data) {
         var th = $(this).find("th.thm2");
         th.find(".arrow").remove();
         var dir = $.fn.stupidtable.dir;
@@ -9,11 +9,11 @@ table.on("aftertablesort", function (event, data) {
         var arrow = data.direction === dir.ASC ? 
             '<span class="green">&uarr;</span>&darr;' : 
             '&uarr;<span class="green">&darr;</span>';
-        th.eq(data.column).append('<span class="arrow">' + arrow +'</span>');
+        th.append('<span class="arrow">' + arrow +'</span>');
       });
 
 JS;
-$this->registerJs($script, $this::POS_READY, 'stupidtable');
+$this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
 ?>
 
 <section>
@@ -24,7 +24,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable');
             </div>
             <div class="two_cols_3 two_cols_3_2 clearfix">
                 <div class="right">
-                    <div class="galleries_wrapp" data-galleries="galleries_1">
+                    <div class="galleries_wrapp" data-galleries="<?= $galleryId ?>">
                         <? foreach ($places as $index => $place) : ?>
                             <div class="office_gallery" data-officegallery-index="<?= $index ?>">
                                 <div class="gallery_2">
@@ -72,8 +72,8 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable');
                 </div>
                 <div class="left">
                     <div class="scroll_x">
-                        <table id="simpleTable" class="table_5 places_table"
-                               data-galleries-table="galleries_1">
+                        <table id="<?= $tablId ?>" class="table_5 places_table"
+                               data-galleries-table="<?= $galleryId ?>">
                             <thead>
                             <tr class="table_row head">
                                 <th data-sort="int" class="table_cell thm2">
