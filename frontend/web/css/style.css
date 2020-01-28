@@ -7390,6 +7390,43 @@ th.table_cell.thm2 .arrow .green{
     background-color: #F8F8F8;
 }
 
+
+.table_5.radio .table_row .table_cell:nth-child(1) {
+    width: 20%;
+    min-width: 120px;
+}
+
+.table_5.radio .table_row .table_cell:nth-child(2) {
+    width: 20%;
+    text-align: center;
+    min-width: 55px;
+}
+
+.table_5.radio .table_row .table_cell:nth-child(3) {
+    width: 10%;
+    min-width: 10px;
+}
+
+.table_5.radio .table_row .table_cell:nth-child(4) {
+    width: 15%;
+    min-width: 80px;
+}
+
+.table_5.radio .table_row .table_cell:nth-child(5) {
+    width: 10%;
+    min-width: 10px;
+}
+
+.table_5.radio .table_row .table_cell:nth-child(6) {
+    width: 15%;
+    min-width: 80px;
+}
+.table_5.radio .table_row .table_cell:nth-child(7) {
+    width: 10%;
+    min-width: 70px;
+}
+
+
 .checkbox_2 label {
     font-size: 12px;
     line-height: 17px;
@@ -7438,7 +7475,7 @@ th.table_cell.thm2 .arrow .green{
     border: 1px solid #cdcece;
     position: absolute;
     top: -2px;
-    left: -40px;
+    left: -30px;
 }
 
 .radio_2 input:checked + label:before {

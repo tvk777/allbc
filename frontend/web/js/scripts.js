@@ -265,11 +265,11 @@ $(document).scroll(function () {
 });
 
 $(document).on('pjax:complete', function (event) {
-    if(currency==1){
+    if (currency == 1) {
         var priceText = '₴ ' + minPrice.toString() + ' - ' + maxPrice.toString();
-    } else if(currency==2){
+    } else if (currency == 2) {
         var priceText = '$ ' + minPrice.toString() + ' - ' + maxPrice.toString();
-    } else if(currency==3) {
+    } else if (currency == 3) {
         var priceText = '€ ' + minPrice.toString() + ' - ' + maxPrice.toString();
     }
     $('.price-filter .item_title_text p').text(priceText);
@@ -348,7 +348,7 @@ $(document).on('pjax:complete', function (event) {
         });
         priceSlider2.noUiSlider.on('change', function (values, handle) {
             minVal = parseInt($("#input-number_1").val());
-                $("#minpricem2").val(minVal);
+            $("#minpricem2").val(minVal);
 
             maxVal = parseInt($("#input-number_2").val());
             $("#maxpricem2").val(maxVal);
@@ -360,7 +360,7 @@ $(document).on('pjax:complete', function (event) {
                 leftRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([leftRange, null]);
             }
-                $("#minpricem2").val(activeInputVal);
+            $("#minpricem2").val(activeInputVal);
         });
         $("#input-number_2").keyup(function () {
             activeInputVal = parseInt($(this).val());
@@ -368,7 +368,7 @@ $(document).on('pjax:complete', function (event) {
                 rightRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([null, rightRange]);
             }
-                $("#maxpricem2").val(activeInputVal);
+            $("#maxpricem2").val(activeInputVal);
         });
         getBarsChart();
     }
@@ -1115,7 +1115,7 @@ $(document).ready(function () {
             minVal = parseInt($("#input-number_1").val());
             $("#minpricem2").val(minVal);
             maxVal = parseInt($("#input-number_2").val());
-                $("#maxpricem2").val(maxVal);
+            $("#maxpricem2").val(maxVal);
         });
 
         $("#input-number_1").keyup(function () {
@@ -1124,7 +1124,7 @@ $(document).ready(function () {
                 leftRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([leftRange, null]);
             }
-                $("#minpricem2").val(activeInputVal);
+            $("#minpricem2").val(activeInputVal);
         });
         $("#input-number_2").keyup(function () {
             activeInputVal = parseInt($(this).val());
@@ -1132,7 +1132,7 @@ $(document).ready(function () {
                 rightRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([null, rightRange]);
             }
-                $("#maxpricem2").val(activeInputVal);
+            $("#maxpricem2").val(activeInputVal);
         });
     }
 
@@ -1230,7 +1230,7 @@ $(document).ready(function () {
 
         priceSlider4.noUiSlider.on('change', function (values, handle) {
             minVal = parseInt($("#input-number_5").val());
-                $("#minm2").val(minVal);
+            $("#minm2").val(minVal);
             maxVal = parseInt($("#input-number_6").val());
             $("#maxm2").val(maxVal);
         });
@@ -1510,6 +1510,23 @@ $(document).ready(function () {
 
     // ---------------------
 
+    var tableInputs = $("table .radio_2 input");
+    tableInputs.each(function (index) {
+        if ($(this).is(':checked')) {
+            $(this).prop('checked', false);
+        }
+    });
+
+    tableInputs.on("click", function () {
+     if ($(this).is(':checked')) {
+         $(this).prop('checked', false);
+         var tableName = $(this).closest("[data-table]").attr("data-table");
+         $("[data-table-list = '" + tableName + "']").css({
+             "display": "none"
+         });
+     }
+     });
+
     $(".radio_2 input").on("change", function () {
         if ($(this).checked) {
             $(this).prop("checked", "false");
@@ -1522,7 +1539,7 @@ $(document).ready(function () {
         }
     });
 
-    // ---------------------
+// ---------------------
 
     $(".show_tel").on("click", function (e) {
         e.preventDefault();
@@ -1548,7 +1565,7 @@ $(document).ready(function () {
         });
     });
 
-    // ---------------------
+// ---------------------
 
     $(".slide_socials").on("click", function (e) {
         e.preventDefault();
@@ -1563,7 +1580,7 @@ $(document).ready(function () {
         }
     });
 
-    // ----------
+// ----------
 
     $(".scroll_link").click(function (e) {
         e.preventDefault();
@@ -1574,7 +1591,7 @@ $(document).ready(function () {
         }, 500);
     });
 
-    // ----------
+// ----------
 
     $("[data-popup-link]").on("click", function (e) {
         e.preventDefault();
@@ -1640,7 +1657,7 @@ $(document).ready(function () {
         }
     });
 
-    // -----------------------
+// -----------------------
 
     if ($(".office_slider").length > 0) {
         $(".office_slider").not(".slick-initialized").slick({
@@ -1658,7 +1675,7 @@ $(document).ready(function () {
         });
     }
 
-    // ---------------------------
+// ---------------------------
 
     if ($(".slider_arendators").length > 0) {
         $(".slider_arendators").not(".slick-initialized").slick({
@@ -1708,7 +1725,7 @@ $(document).ready(function () {
 
     }
 
-    // ---------------------------
+// ---------------------------
 
     var galleryIndex;
     var galleriesBox;
@@ -1751,17 +1768,17 @@ $(document).ready(function () {
             parentBlock = $(this).closest(".custom_select");
             parentTable = $(this).closest("table");
             periodId = parentTable.find("input.period").val(),
-            inputP = parentBlock.find(".select_input .sel_val");
+                inputP = parentBlock.find(".select_input .sel_val");
             parentBlock.find(".select_res.currency").val(currencyId);
             inputP.html(itemText);
             parentBlock.find(".dropdown_select").slideUp(200);
 
-            parentTable.find(".table_cell.m2").each(function(){
+            parentTable.find(".table_cell.m2").each(function () {
                 $(this).html('<p>' + $(this).data(currencyId) + ' </p>');
             });
 
-            parentTable.find(".table_cell.period").each(function(){
-                dataAtr = periodId +'_' + currencyId; //'month_usd'
+            parentTable.find(".table_cell.period").each(function () {
+                dataAtr = periodId + '_' + currencyId; //'month_usd'
                 $(this).html('<p>' + $(this).data(dataAtr) + '</p>');
             });
         }
@@ -1775,35 +1792,32 @@ $(document).ready(function () {
             parentBlock = $(this).closest(".custom_select");
             parentTable = $(this).closest("table");
             currencyId = parentTable.find("input.currency").val(),
-            inputP = parentBlock.find(".select_input .sel_val");
+                inputP = parentBlock.find(".select_input .sel_val");
             parentBlock.find(".select_res.period").val(periodId);
             inputP.html(itemText);
             parentBlock.find(".dropdown_select").slideUp(200);
 
-            parentTable.find(".table_cell.period").each(function(){
-                dataAtr = periodId +'_' + currencyId; //'month_usd'
+            parentTable.find(".table_cell.period").each(function () {
+                dataAtr = periodId + '_' + currencyId; //'month_usd'
                 $(this).html('<p>' + $(this).data(dataAtr) + '</p>');
             });
         }
     }, '.change-period .select_item span');
 
-    $('.scroll_to').click(function(e){
+    $('.scroll_to').click(function (e) {
         e.preventDefault();
         var jump = $(this).attr('href');
         var new_position = $(jump).offset();
-        $('html, body').stop().animate({ scrollTop: new_position.top-150 }, 1200);
+        $('html, body').stop().animate({scrollTop: new_position.top - 150}, 1200);
         $(jump).mouseover();
     });
 
-    $( ".places_table tbody .table_row" ).hover(function(){
+    $(".places_table tbody .table_row").hover(function () {
         $(this).addClass('hover');
-    }, function(){
+    }, function () {
         $(this).removeClass('hover');
     });
 
 
-
-
-
-
-});
+})
+;

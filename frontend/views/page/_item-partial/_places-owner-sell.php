@@ -20,7 +20,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
     <div class="row row_2">
         <div class="inner_box">
             <div class="title_wrapp_3">
-                <h2><?= $blockTitle ?></h2>
+                <h2><?= Yii::t('app', 'Office sale - offers') ?></h2>
             </div>
             <div class="two_cols_3 two_cols_3_2 clearfix">
                 <div class="right">
@@ -72,10 +72,15 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                 </div>
                 <div class="left">
                     <div class="scroll_x">
-                        <table id="<?= $tablId ?>" class="table_5 places_table"
-                               data-galleries-table="<?= $galleryId ?>">
+                        <table id="<?= $tablId ?>" class="table_5 places_table radio"
+                               data-galleries-table="<?= $galleryId ?>"
+                               data-table="<?= $dataTable ?>"
+                        >
                             <thead>
                             <tr class="table_row head">
+                                <th class="table_cell">
+                                    <h4>Дата<br/> обновления</h4></span>
+                                </th>
                                 <th data-sort="int" class="table_cell thm2">
                                     <h4>м²</h4><span class="arrow">&uarr;&darr;</span>
                                 </th>
@@ -144,6 +149,13 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                                 ?>
 
                                 <tr class="table_row" data-officegallery-index="2 <?= $index ?>" id="place<?= $place->id ?>">
+                                    <td class="table_cell">
+                                        <div class="radio_2">
+                                            <input type="radio" name="place" id="r_2_<?= $place->id ?>" value="<?= $place->id ?>"/>
+                                            <label
+                                                for="r_2_<?= $place->id ?>"><?= Yii::$app->formatter->asDate($place->updated_at, 'dd/MM/yyyy') ?></label>
+                                        </div>
+                                    </td>
                                     <td class="table_cell" data-sort-value="<?= $sortValue ?>">
                                         <p><?= $place->m2range ?></p>
                                     </td>
@@ -176,6 +188,13 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                             </tbody>
                         </table>
                     </div>
+                    <ul class="green_links" data-table-list="<?= $dataTable ?>">
+                        <li><a href="#" class="green_link">Обновить</a></li>
+                        <li><a href="#" class="green_link">Активировать</a></li>
+                        <li><a href="#" class="green_link">Архив</a></li>
+                        <li><a href="#" class="green_link">Скрыть</a></li>
+                    </ul>
+
                 </div>
             </div>
         </div>

@@ -68,4 +68,6 @@ return [
     'Characteristics' => 'Характеристики',
     'Office sale - offers' => 'Продаж офісу - пропозиції',
     'Office rental - offers' => 'Оренда офісу - пропозиції',
+    'Office sale - archive' => 'Продаж офісу - архів',
+    'Office rental - archive' => 'Оренда офісу - архів',
 ];

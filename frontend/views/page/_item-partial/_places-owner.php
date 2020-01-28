@@ -13,14 +13,14 @@ $tablId.on("aftertablesort", function (event, data) {
       });
 
 JS;
-$this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
+$this->registerJs($script, $this::POS_READY, 'stupidtable' . $tablId);
 ?>
 
 <section>
     <div class="row row_2">
         <div class="inner_box">
             <div class="title_wrapp_3">
-                <h2><?= Yii::t('app', 'Office rental - offers') ?></h2>
+                <h2><?= $blockTitle ?></h2>
             </div>
             <div class="two_cols_3 two_cols_3_2 clearfix">
                 <div class="right">
@@ -31,7 +31,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                                     <? if (count($place->images) > 0) : ?>
                                         <? $hidden = ''; ?>
                                         <? foreach ($place->images as $k => $img) : ?>
-                                            <? if($k>2) $hidden='hidden'; ?>
+                                            <? if ($k > 2) $hidden = 'hidden'; ?>
                                             <a href="<?= $img->imgSrc ?>" class="img_box <?= $hidden ?>"
                                                style="background-image: url(<?= $img->imgSrc ?>);"
                                                data-fancybox="gallery_<?= $index ?>"></a>
@@ -72,12 +72,15 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                 </div>
                 <div class="left">
                     <div class="scroll_x">
-                        <table id="<?= $tablId ?>" class="table_5 places_table"
-                               data-galleries-table="<?= $galleryId ?>">
+                        <table id="<?= $tablId ?>" class="table_5 places_table radio"
+                               data-galleries-table="<?= $galleryId ?>"
+                               data-table="<?= $dataTable ?>"
+                        >
+
                             <thead>
                             <tr class="table_row head">
                                 <th class="table_cell">
-                                    <h4>Дата<br /> обновления</h4></span>
+                                    <h4>Дата<br/> обновления</h4></span>
                                 </th>
                                 <th data-sort="int" class="table_cell thm2">
                                     <h4>м²</h4><span class="arrow">&uarr;&darr;</span>
@@ -178,10 +181,14 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                                 $sortValue = $place->m2min > 0 ? $place->m2min : $place->m2;
                                 ?>
 
-                                <tr class="table_row" data-officegallery-index="<?= $index ?>" id="place<?= $place->id ?>">
+                                <tr class="table_row" data-officegallery-index="<?= $index ?>"
+                                    id="place<?= $place->id ?>">
                                     <td class="table_cell">
-                                        <input type="radio" name="gallery_radio" id="r_2_2" />
-                                        <label for="r_2_2"><?= Yii::$app->formatter->asDate($place->updated_at, 'dd/MM/yyyy') ?></label>
+                                        <div class="radio_2">
+                                            <input type="radio" name="place" id="r_2_<?= $place->id ?>" value="<?= $place->id ?>"/>
+                                            <label
+                                                for="r_2_<?= $place->id ?>"><?= Yii::$app->formatter->asDate($place->updated_at, 'dd/MM/yyyy') ?></label>
+                                        </div>
                                     </td>
                                     <td class="table_cell" data-sort-value="<?= $sortValue ?>">
                                         <p><?= $place->m2range ?></p>
@@ -229,6 +236,12 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                             </tbody>
                         </table>
                     </div>
+                    <ul class="green_links" data-table-list="<?= $dataTable ?>">
+                        <li><a href="#" class="green_link">Обновить</a></li>
+                        <li><a href="#" class="green_link">Активировать</a></li>
+                        <li><a href="#" class="green_link">Архив</a></li>
+                        <li><a href="#" class="green_link">Скрыть</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

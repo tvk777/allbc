@@ -17,6 +17,8 @@ $this->registerCssFile('/css/jquery.mCustomScrollbar.css');
 $places = $target == 2 ? $model->placesSell : $model->places;
 $placesRent = $model->places;
 $placesSell = $model->placesSell;
+$placesRentArhive = $model->archivePlaces;
+$placesSellArhive = $model->archivePlacesSell;
 
 $city_url = $target == 2 ? $mainSell : $mainRent;
 $city_id = 0;
@@ -131,7 +133,7 @@ $share_img_url = '';
                                         <? $m2 = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2;
                                         $check = $index == 0 ? 'checked="true"' : '';
                                         //$a = Html::a($m2 . ' м²', ['show-place', 'id' => $place->id, 'target' => $target], ['class' => 'modal-form']);
-                                        $a = Html::a($m2 . ' м²', '#place'.$place->id, ['class' => 'scroll_to']);
+                                        $a = Html::a($m2 . ' м²', '#place' . $place->id, ['class' => 'scroll_to']);
                                         ?>
                                         <div class="pill_checlbox pill_checkbox_2">
                                             <input type="radio" name="pill_checkboxes_2"
@@ -304,27 +306,67 @@ $share_img_url = '';
         'target' => $target,
         'places' => $placesRent,
         'tablId' => 'placesTable',
-        'galleryId' =>'galleries_1'
+        'galleryId' => 'galleries_1',
+        'blockTitle' => Yii::t('app', 'Office rental - offers')
     ]);
-}?>
+} ?>
 
 <? if (count($placesRent) > 0) {
     echo $this->render('_item-partial/_places-owner', [
         'target' => $target,
         'places' => $placesRent,
         'tablId' => 'placesOwnerTable',
-        'galleryId' =>'galleries_2'
-]);
+        'galleryId' => 'galleries_2',
+        'dataTable' => 'rent_table',
+        'blockTitle' => Yii::t('app', 'Office rental - offers')
+    ]);
 } ?>
+
+<? if (count($placesRentArhive) > 0) {
+    echo $this->render('_item-partial/_places-owner', [
+        'target' => $target,
+        'places' => $placesRentArhive,
+        'tablId' => 'placesRentArhiveTable',
+        'galleryId' => 'galleries_ar_2',
+        'dataTable' => 'rent_ar_table',
+        'blockTitle' => Yii::t('app', 'Office rental - archive')
+    ]);
+} ?>
+
 
 
 <? if (count($placesSell) > 0) {
     echo $this->render('_item-partial/_places-sell', [
         'target' => $target,
         'places' => $placesSell,
-        'tablId' => 'placesSellTable'
+        'tablId' => 'placesSellTable',
+        'galleryId' => 'galleries_3',
+        'blockTitle' => Yii::t('app', 'Office sale - offers')
     ]);
-}?>
+} ?>
+
+<? if (count($placesSell) > 0) {
+    echo $this->render('_item-partial/_places-owner-sell', [
+        'target' => $target,
+        'places' => $placesSell,
+        'tablId' => 'placesOwnerSellTable',
+        'galleryId' => 'galleries_4',
+        'dataTable' => 'sell_table',
+        'blockTitle' => Yii::t('app', 'Office sale - offers')
+]);
+} ?>
+
+<? if (count($placesSellArhive) > 0) {
+    echo $this->render('_item-partial/_places-owner-sell', [
+        'target' => $target,
+        'places' => $placesSellArhive,
+        'tablId' => 'placesSellArhiveTable',
+        'galleryId' => 'galleries_4',
+        'dataTable' => 'sell_ar_table',
+        'blockTitle' => Yii::t('app', 'Office sale - archive')
+    ]);
+} ?>
+
 
 
 <section class="sect_7_bc">

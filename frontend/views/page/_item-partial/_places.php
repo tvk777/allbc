@@ -20,7 +20,7 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
     <div class="row row_2">
         <div class="inner_box">
             <div class="title_wrapp_3">
-                <h2><?= Yii::t('app', 'Office rental - offers') ?></h2>
+                <h2><?= $blockTitle ?></h2>
             </div>
             <div class="two_cols_3 two_cols_3_2 clearfix">
                 <div class="right">
