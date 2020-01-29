@@ -4378,7 +4378,7 @@ img.logo_black {
     z-index: -1;
 }
 
-.pill_checlbox label {
+.pill_checlbox label, .pill_checlbox .place_pill {
     display: inline-block;
     vertical-align: top;
     padding: 3px 16px;
@@ -4392,7 +4392,7 @@ img.logo_black {
     color: #000000;
 }
 
-.pill_checlbox input:checked + label {
+.pill_checlbox input:checked + label, .pill_checlbox .place_pill:hover {
     background-color: #3eb060;
     color: #ffffff;
 }
@@ -5985,12 +5985,14 @@ img.logo_black {
     margin: 2px 0;
 }
 
-.pill_checkbox_2 label{
+.pill_checkbox_2 label,
+.pill_checkbox_2 .place_pill{
     padding: 3px 10px;
     font-size: 13px;
     line-height: 18px;
 }
-.pill_checkbox_2 label a {
+.pill_checkbox_2 label a,
+.pill_checkbox_2 .place_pill a{
     color:#000000;
     text-decoration: none;
     font-size: 13px;

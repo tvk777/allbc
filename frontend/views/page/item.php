@@ -131,14 +131,10 @@ $share_img_url = '';
                                 <? if (count($places) > 0) : ?>
                                     <? foreach ($places as $index => $place) : ?>
                                         <? $m2 = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2;
-                                        $check = $index == 0 ? 'checked="true"' : '';
-                                        //$a = Html::a($m2 . ' м²', ['show-place', 'id' => $place->id, 'target' => $target], ['class' => 'modal-form']);
                                         $a = Html::a($m2 . ' м²', '#place' . $place->id, ['class' => 'scroll_to']);
                                         ?>
                                         <div class="pill_checlbox pill_checkbox_2">
-                                            <input type="radio" name="pill_checkboxes_2"
-                                                   id="pill_ch_<?= $index ?>" <?= $check ?> >
-                                            <label for="pill_ch_<?= $index ?>"><?= $a ?></label>
+                                            <div class="place_pill"><?= $a ?></div>
                                         </div>
                                     <? endforeach ?>
                                 <? endif; ?>
