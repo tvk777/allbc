@@ -113,7 +113,7 @@ class BcItems extends ActiveRecord
             [['name', 'content', 'title', 'keywords', 'description', 'annons', 'mgr_content', 'shuttle', 'contacts'], 'string'],
             [['name_ru', 'content_ru', 'title_ru', 'keywords_ru', 'description_ru', 'annons_ru', 'mgr_content_ru', 'shuttle_ru', 'contacts_ru', 'name_ua', 'content_ua', 'title_ua', 'keywords_ua', 'description_ua', 'annons_ua', 'mgr_content_ua', 'shuttle_ua', 'contacts_ua', 'name_en', 'content_en', 'title_en', 'keywords_en', 'description_en', 'annons_en', 'mgr_content_en', 'shuttle_en', 'contacts_en', 'city_id', 'country_id', 'district_id'], 'safe'],
             [['created_at', 'updated_at', 'deleted_at', 'uploaded', 'deleted'], 'safe'],
-            [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
+            [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved', 'count_view'], 'integer'],
             [['city_id', 'country_id', 'street', 'lat', 'lng', 'sort_order', 'class_id', 'active', 'hide'], 'required'],
             [['lat', 'lng', 'total_m2'], 'number'],
             [['contacts_admin'], 'string'],
@@ -158,6 +158,7 @@ class BcItems extends ActiveRecord
             'countryName' => Yii::t('app', 'Страна'),
             'districtName' => Yii::t('app', 'Район'),
             'total_m2' => Yii::t('app', 'Общая площадь здания, кв.м.'),
+            'count_view' => 'Количество просмотров'
         ];
     }
 
@@ -510,6 +511,34 @@ class BcItems extends ActiveRecord
         $dir3 = substr($name, 6, 3) . '/';
         return $dir0 . $dir1 . $dir2 . $dir3 . $name;
     }
+
+    /**
+     * Счетчик просмотров страницы БЦ с записью id в сессию
+     * данный подход исключает накрутку просмотров за сессию
+     * @return bool
+     */
+    public function processCountViewBcItem()
+    {
+        $session = Yii::$app->session;
+        // Если в сессии отсутствуют данные,
+        // создаём, увеличиваем счетчик, и записываем в бд
+        if (!isset($session['bcitem_view'])) {
+            $session->set('bcitem_view', [$this->id]);
+            $this->updateCounters(['count_view' => 1]);
+            // Если в сессии уже есть данные то проверяем засчитывался ли данный пост
+            // если нет то увеличиваем счетчик, записываем в бд и сохраняем в сессию просмотр этого поста
+        } else {
+            if (!ArrayHelper::isIn($this->id, $session['bcitem_view'])) {
+                $array = $session['bcitem_view'];
+                array_push($array, $this->id);
+                $session->remove('bcitem_view');
+                $session->set('bcitem_view', $array);
+                $this->updateCounters(['count_view' => 1]);
+            }
+        }
+        return true;
+    }
+
 }
 
 

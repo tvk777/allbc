@@ -97,6 +97,18 @@ $share_img_url = '';
 
                     </div>
                 </div>
+                <div class="slides_info">
+                    <div class="col">
+                        <p><?= Yii::t('app', 'Posted') ?>: <?= Yii::$app->formatter->asDate($model->created_at, 'dd.MM.yyyy') ?></p>
+                    </div>
+                    <div class="col">
+                        <p><?= Yii::t('app', 'Updated') ?>: <?= Yii::$app->formatter->asDate($model->updated_at, 'dd.MM.yyyy') ?></p>
+                    </div>
+                    <div class="col">
+                        <p><?= Yii::t('app', 'Views') ?>: <?= $model->count_view ?></p>
+                    </div>
+                </div>
+
             </div>
             <div class="left">
                 <div class="object_info">

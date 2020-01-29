@@ -37,6 +37,7 @@ class PageController extends Controller
         ]);
     }
 
+
     //страница бизнес-центра
     public function actionBc_items($slug)
     {
@@ -52,6 +53,7 @@ class PageController extends Controller
 
 
         $model = $query->where(['slug' => $slug])->multilingual()->one();
+        $model->processCountViewBcItem(); //счетчик просмотра БЦ
 
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
         $mainRent = trim($seo->main_rent_link_href, '/');

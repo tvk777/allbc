@@ -70,4 +70,7 @@ return [
     'Office rental - offers' => 'Аренда офиса - предложения',
     'Office sale - archive' => 'Продажа офиса - архив',
     'Office rental - archive' => 'Аренда офиса - архив',
+    'Posted' => 'Опубликовано',
+    'Updated' => 'Обновлено',
+    'Views' => 'Просмотров',
 ];
