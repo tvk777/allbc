@@ -512,31 +512,9 @@ class BcItems extends ActiveRecord
         return $dir0 . $dir1 . $dir2 . $dir3 . $name;
     }
 
-    /**
-     * Счетчик просмотров страницы БЦ с записью id в сессию
-     * данный подход исключает накрутку просмотров за сессию
-     * @return bool
-     */
-    public function processCountViewBcItem()
+    public function getCountView()
     {
-        $session = Yii::$app->session;
-        // Если в сессии отсутствуют данные,
-        // создаём, увеличиваем счетчик, и записываем в бд
-        if (!isset($session['bcitem_view'])) {
-            $session->set('bcitem_view', [$this->id]);
-            $this->updateCounters(['count_view' => 1]);
-            // Если в сессии уже есть данные то проверяем засчитывался ли данный пост
-            // если нет то увеличиваем счетчик, записываем в бд и сохраняем в сессию просмотр этого поста
-        } else {
-            if (!ArrayHelper::isIn($this->id, $session['bcitem_view'])) {
-                $array = $session['bcitem_view'];
-                array_push($array, $this->id);
-                $session->remove('bcitem_view');
-                $session->set('bcitem_view', $array);
-                $this->updateCounters(['count_view' => 1]);
-            }
-        }
-        return true;
+        return $this->hasOne(ViewsCounter::className(), ['item_id' => 'id'])->andWhere(['model' => self::tableName()]);
     }
 
 }

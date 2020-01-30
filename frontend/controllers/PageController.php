@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use common\models\BcPlacesPrice;
 use common\models\BcPlacesSellPrice;
 use common\models\BcValutes;
+use common\models\ViewsCounter;
 use Yii;
 use yii\web\Controller;
 use common\models\Services;
@@ -51,9 +52,7 @@ class PageController extends Controller
             $query->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners', 'places.prices');
         }
 
-
         $model = $query->where(['slug' => $slug])->multilingual()->one();
-        $model->processCountViewBcItem(); //счетчик просмотра БЦ
 
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
         $mainRent = trim($seo->main_rent_link_href, '/');
@@ -67,6 +66,16 @@ class PageController extends Controller
             $cities = ArrayHelper::getColumn($cities, 'catalog_url_id');
             $seoClass = SeoCatalogUrls::find()->where(['target' => $targetId])->andWhere(['in', 'id', $cities])->multilingual()->one();
         }
+        
+        $viewCounter = ViewsCounter::find()->where(['item_id' => $model->id])->andWhere(['model' => 'bc_items'])->one();
+        if(!(count($viewCounter)>0)) {
+            $viewCounter = new ViewsCounter();
+            $viewCounter->item_id = $model->id;
+            $viewCounter->model = 'bc_items';
+            $viewCounter->count_view = 0;
+            $viewCounter->save();
+        }
+        $viewCounter->processCountViewItem();
 
         return $this->render('item', [
             'model' => $model,

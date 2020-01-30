@@ -105,7 +105,7 @@ $share_img_url = '';
                         <p><?= Yii::t('app', 'Updated') ?>: <?= Yii::$app->formatter->asDate($model->updated_at, 'dd.MM.yyyy') ?></p>
                     </div>
                     <div class="col">
-                        <p><?= Yii::t('app', 'Views') ?>: <?= $model->count_view ?></p>
+                        <p><?= Yii::t('app', 'Views') ?>: <?= $model->countView->count_view ?></p>
                     </div>
                 </div>
 
