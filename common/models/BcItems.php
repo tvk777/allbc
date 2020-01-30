@@ -113,7 +113,7 @@ class BcItems extends ActiveRecord
             [['name', 'content', 'title', 'keywords', 'description', 'annons', 'mgr_content', 'shuttle', 'contacts'], 'string'],
             [['name_ru', 'content_ru', 'title_ru', 'keywords_ru', 'description_ru', 'annons_ru', 'mgr_content_ru', 'shuttle_ru', 'contacts_ru', 'name_ua', 'content_ua', 'title_ua', 'keywords_ua', 'description_ua', 'annons_ua', 'mgr_content_ua', 'shuttle_ua', 'contacts_ua', 'name_en', 'content_en', 'title_en', 'keywords_en', 'description_en', 'annons_en', 'mgr_content_en', 'shuttle_en', 'contacts_en', 'city_id', 'country_id', 'district_id'], 'safe'],
             [['created_at', 'updated_at', 'deleted_at', 'uploaded', 'deleted'], 'safe'],
-            [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved', 'count_view'], 'integer'],
+            [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
             [['city_id', 'country_id', 'street', 'lat', 'lng', 'sort_order', 'class_id', 'active', 'hide'], 'required'],
             [['lat', 'lng', 'total_m2'], 'number'],
             [['contacts_admin'], 'string'],
@@ -158,7 +158,6 @@ class BcItems extends ActiveRecord
             'countryName' => Yii::t('app', 'Страна'),
             'districtName' => Yii::t('app', 'Район'),
             'total_m2' => Yii::t('app', 'Общая площадь здания, кв.м.'),
-            'count_view' => 'Количество просмотров'
         ];
     }
 
