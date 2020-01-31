@@ -73,5 +73,9 @@ return [
     'Posted' => 'Опубликовано',
     'Updated' => 'Обновлено',
     'Views' => 'Просмотров',
-    'Tenants' => 'Арендаторы'
+    'Tenants' => 'Арендаторы',
+    'Free Offices' => 'Свободные офисы',
+    'No' => 'Нет',
+    'Subscribe to updates' => 'Подписаться на обновления',
+    'Your email for subscription' => 'Ваш email для подписки',
 ];

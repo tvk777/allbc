@@ -51,6 +51,9 @@ $comission = $model->percent_commission == 0 ? '<span class="red">' . Yii::t('ap
 $this->title = getDefaultTranslate('title', $currentLanguage, $model);
 $this->params['breadcrumbs'][] = getDefaultTranslate('name', $currentLanguage, $model);
 $share_img_url = '';
+$objectTitle = getDefaultTranslate('name', $currentLanguage, $model);
+$cityName = getDefaultTranslate('name', $currentLanguage, $model->city, true);
+$adress = '';
 ?>
 <section class="grey_bg">
     <div class="row row_2">
@@ -120,7 +123,7 @@ $share_img_url = '';
                     <div class="inner">
                         <div class="object_title">
                             <div class="h3_wrapp">
-                                <h3><?= getDefaultTranslate('name', $currentLanguage, $model); ?></h3>
+                                <h3><?= $objectTitle; ?></h3>
                                 <div class="star_checkbox like_star">
                                     <input type="checkbox" name="star_1" id="star_title">
                                     <label for="star_title"></label>
@@ -141,11 +144,13 @@ $share_img_url = '';
                             </div>
                         </div>
                     </div>
+
+
+                <? if (count($places) > 0) : ?>
                     <div class="inner">
                         <div class="free_office">
-                            <p>Свободные оффисы:</p>
+                            <p><?= Yii::t('app', 'Free Offices') ?>:</p>
                             <div class="pills_wrapp_2 scroll">
-                                <? if (count($places) > 0) : ?>
                                     <? foreach ($places as $index => $place) : ?>
                                         <? $m2 = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2;
                                         $a = Html::a($m2 . ' м²', '#place' . $place->id, ['class' => 'scroll_to']);
@@ -154,17 +159,33 @@ $share_img_url = '';
                                             <div class="place_pill"><?= $a ?></div>
                                         </div>
                                     <? endforeach ?>
-                                <? endif; ?>
                             </div>
                         </div>
                     </div>
+                <? else: ?>
+                    <div class="inner">
+                        <div class="office_info">
+                            <p><b><?= Yii::t('app', 'Free Offices') ?>:  <span class="red"><?= Yii::t('app', 'No') ?></span></b></p>
+                            <p><?= Yii::t('app', 'Subscribe to updates') ?></p>
+                            <div class="notifications_form">
+                                <form>
+                                    <div class="input_wrapp_2 input_wrapp_2_2">
+                                        <input type="email" placeholder="<?= Yii::t('app', 'Your email for subscription') ?>">
+                                        <input class="submit_input" type="submit" value="" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <? endif; ?>
+
                     <div class="inner">
                         <div class="two_cols_2 two_cols_2_2">
                             <div class="two_cols_2_col">
                                 <div class="adres">
                                     <h5>
                                         <a target="_blank"
-                                           href="<?= $district_filter_href ?>"><?= getDefaultTranslate('name', $currentLanguage, $model->city, true) . $district ?></a>
+                                           href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
                                     </h5>
                                     <? if ($model->street) : ?>
                                         <p><?= $model->street ?></p>
@@ -387,7 +408,121 @@ $share_img_url = '';
     </div>
 </section>
 
+<section class="grey_bg">
+    <div class="row row_2">
+        <div class="two_cols_templ_2 clearfix" id="contacts">
+            <div class="left">
+                <div class="h2_wrapp">
+                    <h2><?= Yii::t('app', 'Contact') ?></h2>
+                </div>
+                <div class="contact_item">
+                    <div class="col">
+                        <img src="/img/green_marker.svg" alt="" />
+                    </div>
+                    <div class="col">
+                        <p><?= $objectTitle.', '.$model->street.'<br />'.$cityName ?></p>
+                    </div>
+                </div>
 
+                <? if (count($model->brokers) > 0) : ?>
+                    <? foreach ($model->brokers as $user) : ?>
+                        <?= $this->render('_partial/_user-contact', [
+                            'user' => $user,
+                            'role' => 'Брокер'
+                        ]); ?>
+                    <? endforeach; ?>
+                <? endif; ?>
+
+
+                <? if (count($model->owners) > 0) : ?>
+                    <? foreach ($model->owners as $user) : ?>
+                        <?= $this->render('_partial/_user-contact', [
+                            'user' => $user,
+                            'role' => 'Собственник'
+                        ]); ?>
+                    <? endforeach; ?>
+                <? endif; ?>
+
+                <div class="contact_item">
+                    <div class="col">
+                        <img src="/img/green_envelop.svg" alt="" />
+                    </div>
+                    <div class="col">
+                        <p><a href="mailto:office@gmail.com">office@gmail.com</a></p>
+                    </div>
+                </div>
+                <div class="contact_item">
+                    <div class="col">
+                        <img src="/img/green_globus.svg" alt="" />
+                    </div>
+                    <div class="col">
+                        <p><a href="#">www.atevilla.com.ua</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="h2_wrapp_2">
+                    <h2>Комментарии:</h2>
+                </div>
+                <div class="comments_form_wrapp clearfix">
+                    <div class="left">
+                        <div class="comment_form">
+                            <form>
+                                <div class="input_wrapp">
+                                    <textarea placeholder="Сообщение"></textarea>
+                                </div>
+                                <input type="submit" class="green_pill" value="Отправить сообщение" />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="comments_scroll_box scroll">
+                            <div class="comment_thumb">
+                                <div class="descript">
+                                    <p>Все офисы сданы до 2020 года, звонят не раньше чем через пол года.</p>
+                                </div>
+                                <div class="comment_thumb_footer">
+                                    <div class="col">
+                                        <div class="date">03/09/2019</div>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#" class="red_link">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment_thumb">
+                                <div class="descript">
+                                    <p>Все офисы сданы до 2020 года, звонят не раньше чем через пол года.</p>
+                                </div>
+                                <div class="comment_thumb_footer">
+                                    <div class="col">
+                                        <div class="date">03/09/2019</div>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#" class="red_link">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment_thumb">
+                                <div class="descript">
+                                    <p>Все офисы сданы до 2020 года, звонят не раньше чем через пол года.</p>
+                                </div>
+                                <div class="comment_thumb_footer">
+                                    <div class="col">
+                                        <div class="date">03/09/2019</div>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#" class="red_link">Удалить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="sect_7_bc">
     <div class="row">

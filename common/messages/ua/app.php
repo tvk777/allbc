@@ -73,5 +73,9 @@ return [
     'Posted' => 'Опубліковано',
     'Updated' => 'Оновлене',
     'Views' => 'Переглядів',
-    'Tenants' => 'Орендарі'
+    'Tenants' => 'Орендарі',
+    'Free Offices' => 'Вільні офіси',
+    'No' => 'Немає',
+    'Subscribe to updates' => 'Підписатися на оновлення',
+    'Your email for subscription' => 'Ваш email для підписки',
 ];
