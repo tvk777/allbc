@@ -74,6 +74,7 @@ $this->registerCssFile('/css/sliderResponsive.css');
 </section>
 <section class="sect_4">
     <div class="row">
+        <h2><?= Yii::t('app', 'Our Partners') ?></h2>
         <?= common\widgets\PartnersWidget::widget(); ?>
     </div>
 </section>

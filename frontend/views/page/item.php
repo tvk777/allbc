@@ -98,11 +98,16 @@ $share_img_url = '';
                     </div>
                 </div>
                 <div class="slides_info">
+                    <?php
+                    $created = !empty($model->created_at) ? Yii::$app->formatter->asDate($model->created_at, 'dd.MM.yyyy') :
+                        Yii::$app->formatter->asDate($model->updated_at, 'dd.MM.yyyy');
+                    $updated = Yii::$app->formatter->asDate($model->updated_at, 'dd.MM.yyyy');
+                    ?>
                     <div class="col">
-                        <p><?= Yii::t('app', 'Posted') ?>: <?= Yii::$app->formatter->asDate($model->created_at, 'dd.MM.yyyy') ?></p>
+                        <p><?= Yii::t('app', 'Posted') ?>: <?= $created ?></p>
                     </div>
                     <div class="col">
-                        <p><?= Yii::t('app', 'Updated') ?>: <?= Yii::$app->formatter->asDate($model->updated_at, 'dd.MM.yyyy') ?></p>
+                        <p><?= Yii::t('app', 'Updated') ?>: <?= $updated ?></p>
                     </div>
                     <div class="col">
                         <p><?= Yii::t('app', 'Views') ?>: <?= $model->countView->count_view ?></p>
@@ -374,6 +379,13 @@ $share_img_url = '';
         'blockTitle' => Yii::t('app', 'Office sale - archive')
     ]);
 } ?>
+
+<section class="sect_4_buisnes_center">
+    <div class="row">
+        <h2><?= Yii::t('app', 'Tenants') ?></h2>
+        <?= common\widgets\PartnersWidget::widget(); ?>
+    </div>
+</section>
 
 
 
