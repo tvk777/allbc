@@ -22,9 +22,11 @@ $placesSellArhive = $model->archivePlacesSell;
 
 $city_url = $target == 2 ? $mainSell : $mainRent;
 $city_id = 0;
+$zoom = 13;
 //debug(count($model->district->items));
 
 if (isset($model->city)) {
+    $zoom = $model->city->zoom;
     $city_id = $model->city->id;
     $rentLable = Yii::t('app', 'Office rental in') . ' ' . getLangInflect($model->city, $currentLanguage);
     $sellLable = Yii::t('app', 'Office for sale in') . ' ' . getLangInflect($model->city, $currentLanguage);
@@ -48,12 +50,23 @@ if ($model->district) {
 }
 $comission = $model->percent_commission == 0 ? '<span class="red">' . Yii::t('app', 'no commission') . ' </span>' : '<span class="red"> ' . Yii::t('app', 'commission') . ' ' . $model->percent_commission . '%</span>';
 
-$this->title = getDefaultTranslate('title', $currentLanguage, $model);
-$this->params['breadcrumbs'][] = getDefaultTranslate('name', $currentLanguage, $model);
-$share_img_url = '';
 $objectTitle = getDefaultTranslate('name', $currentLanguage, $model);
+$addres = $model->street;
+$coord = [$model->lng, $model->lat];
+$firstImage = isset($model->images[0]) ? $model->images[0]->imgSrc : '';
+$class = $model->class->short_name;
+
+$marker = [
+    'coordinates' => $coord,
+    'zoom' => $zoom
+];
+$this->registerJsVar('marker', $marker, $this::POS_HEAD);
+
+
+$this->title = getDefaultTranslate('title', $currentLanguage, $model);
+$this->params['breadcrumbs'][] = $objectTitle;
+$share_img_url = '';
 $cityName = getDefaultTranslate('name', $currentLanguage, $model->city, true);
-$adress = '';
 ?>
 <section class="grey_bg">
     <div class="row row_2">
@@ -146,11 +159,11 @@ $adress = '';
                     </div>
 
 
-                <? if (count($places) > 0) : ?>
-                    <div class="inner">
-                        <div class="free_office">
-                            <p><?= Yii::t('app', 'Free Offices') ?>:</p>
-                            <div class="pills_wrapp_2 scroll">
+                    <? if (count($places) > 0) : ?>
+                        <div class="inner">
+                            <div class="free_office">
+                                <p><?= Yii::t('app', 'Free Offices') ?>:</p>
+                                <div class="pills_wrapp_2 scroll">
                                     <? foreach ($places as $index => $place) : ?>
                                         <? $m2 = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2;
                                         $a = Html::a($m2 . ' м²', '#place' . $place->id, ['class' => 'scroll_to']);
@@ -159,25 +172,27 @@ $adress = '';
                                             <div class="place_pill"><?= $a ?></div>
                                         </div>
                                     <? endforeach ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <? else: ?>
-                    <div class="inner">
-                        <div class="office_info">
-                            <p><b><?= Yii::t('app', 'Free Offices') ?>:  <span class="red"><?= Yii::t('app', 'No') ?></span></b></p>
-                            <p><?= Yii::t('app', 'Subscribe to updates') ?></p>
-                            <div class="notifications_form">
-                                <form>
-                                    <div class="input_wrapp_2 input_wrapp_2_2">
-                                        <input type="email" placeholder="<?= Yii::t('app', 'Your email for subscription') ?>">
-                                        <input class="submit_input" type="submit" value="" />
-                                    </div>
-                                </form>
+                    <? else: ?>
+                        <div class="inner">
+                            <div class="office_info">
+                                <p><b><?= Yii::t('app', 'Free Offices') ?>: <span
+                                            class="red"><?= Yii::t('app', 'No') ?></span></b></p>
+                                <p><?= Yii::t('app', 'Subscribe to updates') ?></p>
+                                <div class="notifications_form">
+                                    <form>
+                                        <div class="input_wrapp_2 input_wrapp_2_2">
+                                            <input type="email"
+                                                   placeholder="<?= Yii::t('app', 'Your email for subscription') ?>">
+                                            <input class="submit_input" type="submit" value=""/>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <? endif; ?>
+                    <? endif; ?>
 
                     <div class="inner">
                         <div class="two_cols_2 two_cols_2_2">
@@ -215,7 +230,7 @@ $adress = '';
                                 <? endif; ?>
                             </div>
                             <div class="two_cols_2_col">
-                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link">на карте</a></p>
+                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на карте</a></p>
                             </div>
                         </div>
                     </div>
@@ -387,7 +402,7 @@ $adress = '';
         'galleryId' => 'galleries_4',
         'dataTable' => 'sell_table',
         'blockTitle' => Yii::t('app', 'Office sale - offers')
-]);
+    ]);
 } ?>
 
 <? if (count($placesSellArhive) > 0) {
@@ -417,10 +432,10 @@ $adress = '';
                 </div>
                 <div class="contact_item">
                     <div class="col">
-                        <img src="/img/green_marker.svg" alt="" />
+                        <img src="/img/green_marker.svg" alt=""/>
                     </div>
                     <div class="col">
-                        <p><?= $objectTitle.', '.$model->street.'<br />'.$cityName ?></p>
+                        <p><?= $objectTitle . ', ' . $model->street . '<br />' . $cityName ?></p>
                     </div>
                 </div>
 
@@ -445,7 +460,7 @@ $adress = '';
 
                 <div class="contact_item">
                     <div class="col">
-                        <img src="/img/green_envelop.svg" alt="" />
+                        <img src="/img/green_envelop.svg" alt=""/>
                     </div>
                     <div class="col">
                         <p><a href="mailto:office@gmail.com">office@gmail.com</a></p>
@@ -453,7 +468,7 @@ $adress = '';
                 </div>
                 <div class="contact_item">
                     <div class="col">
-                        <img src="/img/green_globus.svg" alt="" />
+                        <img src="/img/green_globus.svg" alt=""/>
                     </div>
                     <div class="col">
                         <p><a href="#">www.atevilla.com.ua</a></p>
@@ -471,7 +486,7 @@ $adress = '';
                                 <div class="input_wrapp">
                                     <textarea placeholder="Сообщение"></textarea>
                                 </div>
-                                <input type="submit" class="green_pill" value="Отправить сообщение" />
+                                <input type="submit" class="green_pill" value="Отправить сообщение"/>
                             </form>
                         </div>
                     </div>
@@ -535,4 +550,17 @@ $adress = '';
         <? echo common\widgets\DistrictsStatWidget::widget(['target' => $target, 'city' => $city_id]); ?>
     </div>
 </section>
+
+<section class="sect_7_2_bc">
+    <div id="item_map"></div>
+</section>
+
+
+<?
+$this->registerCssFile('https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css');
+$this->registerJsFile('https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js');
+$this->registerJsFile('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.10.1/mapbox-gl-language.js');
+$this->registerJsFile('/js/item-mapbox.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
+?>
+
 

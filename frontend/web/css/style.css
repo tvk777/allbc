@@ -8475,3 +8475,15 @@ th.table_cell.thm2 .arrow .green{
 html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper{
    right:-15px;
 }
+
+#item_map{
+    /*height: 340px;*/
+}
+
+#item_map .item-marker{
+    background-image: url('../img/marker_map.png');
+    background-size: cover;
+    width: 26px;
+    height: 35px;
+    z-index:9;
+}
