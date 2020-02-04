@@ -23,6 +23,8 @@ use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
 use common\models\BcItemsSearch;
 use kartik\mpdf\Pdf;
+use frontend\models\OrderForm;
+use common\models\User;
 
 /**
  * Page controller
@@ -84,6 +86,29 @@ class PageController extends Controller
             'mainRent' => $mainRent,
             'mainSell' => $mainSell,
         ]);
+    }
+
+    public function actionOrder($id)
+    {
+        $model = new OrderForm();
+        $broker = User::findOne($id);
+        $model->toEmail = $broker->email;
+        $model->subject = 'subject';//'Заявка на просмотр для '.$broker->name. ' '.$broker->surname;
+//debug($model->toEmail); die();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendOrder()) {
+                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+            } else {
+                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+            }
+
+            return $this->refresh();
+        } else {
+            return $this->renderAjax('order', [
+                'model' => $model,
+                'user' => $broker
+            ]);
+        }
     }
 
     public function actionPdf($id, $target)

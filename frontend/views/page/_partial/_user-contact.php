@@ -1,10 +1,13 @@
 <?
+use yii\helpers\Url;
+//debug($user->user_id);
 $phone = !empty($user->userInfo->broker_phone) ? $user->userInfo->broker_phone : $user->userInfo->phone;
 $short = substr($phone, 0, 3);
+$href = Url::to(['page/order', 'id' => $user->user_id]);
 ?>
 
 <div class="hide_btn_wrapp">
-    <p><a href="#" class="link_2" data-popup-link="popup_1"><?= $role.' - '.$user->userInfo->name ?></a></p>
+    <p><a href="<?= $href ?>" class="link_2 modal-form size-middle"><?= $role.' - '.$user->userInfo->name ?></a></p>
     <div class="tel_pill_wrapp">
         <div>
             <a href="tel:<?= $phone ?>" class="green_pill tel_pill tel_pill_2 tel_hide_pill" data-tel-pill = "tel_pill_2_<?= $user->user_id ?>">
@@ -17,5 +20,7 @@ $short = substr($phone, 0, 3);
         </div>
     </div>
 </div>
+
+
 
 
