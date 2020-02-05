@@ -6,8 +6,8 @@ use yii\helpers\Html;
 //debug($item->city);
 $paramTarget = $target==1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
+$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
 if($result=='bc') {
-    $href = '/' . $item->slug->slug . '?target=' . $paramTarget;
     $city = $item->city->name;
     $district = $item->district ? $item->district->name . ' р-н' : '';
     $street = $item->street;
@@ -20,7 +20,8 @@ if($result=='bc') {
     $slides = !empty($item->slides) ? $item->slides : null;
     $itemComission = $item->percent_commission;
 } else {
-    $href = '';
+    //debug($item->slug->slug);
+    //$href = '';
     if($item->no_bc === 1) {
         $office = $item->office;
     } else {
@@ -30,7 +31,8 @@ if($result=='bc') {
     $district = $office->district ? $office->district->name . ' р-н' : '';
     $street = $item->street;
     $minmax = !empty($item->m2minm2) ? Yii::t('app', 'from') . ' ' . $item->m2min . ' m² ...' . $item->m2 . ' m²' : $item->m2 . ' m²';
-    $minPrice = $item->con_price != 1 ? Yii::t('app', 'from') . ' ' . $item->priceSqm->price . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
+    //if(!empty($item->priceSqm->price)) debug($item->priceSqm->price);
+    $minPrice = ($item->con_price != 1 && !empty($item->priceSqm->price)) ? Yii::t('app', 'from') . ' ' . $item->priceSqm->price . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
     $itemPlaces = null;
     $placesInfo = null;
     $itemSubway = !empty($office->subways[0]) ? $office->subways[0] : null;
