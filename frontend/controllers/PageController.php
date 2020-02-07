@@ -40,6 +40,131 @@ class PageController extends Controller
         ]);
     }
 
+    public function officeData($slug, $target)
+    {
+        $data = [];
+
+        $targetId = $target == 'sell' ? 2 : 1;
+
+        if ($target == 'sell') {
+            $query = BcPlacesSell::find()->joinWith(['slug']);
+            $placeModel = 'bc_places_sell';
+        } else {
+            $query = BcPlaces::find()->joinWith(['slug']);
+            $placeModel = 'bc_places';
+        }
+
+        $model = $query->where(['slug' => $slug])->one();
+        //debug($model); die();
+        $item = $model->no_bc === 1 ? $model->office : $model->bcitem; //bc or office for this place
+
+        $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
+        $mainRent = trim($seo->main_rent_link_href, '/');
+        $mainSell = trim($seo->main_sell_link_href, '/');
+
+        if ($item->class) {
+            $class = $item->class->id;
+            $city = $item->city->id;
+            $classes = SeoCatalogUrlsBcclasses::find()->select('catalog_url_id')->where(['bc_class_id' => $class])->asArray()->all();
+            $classes = ArrayHelper::getColumn($classes, 'catalog_url_id');
+            $cities = SeoCatalogUrlsCities::find()->select('catalog_url_id')->where(['city_id' => $city])->andWhere(['in', 'catalog_url_id', $classes])->asArray()->all();
+            $cities = ArrayHelper::getColumn($cities, 'catalog_url_id');
+            $seoClass = SeoCatalogUrls::find()->where(['target' => $targetId])->andWhere(['in', 'id', $cities])->multilingual()->one();
+        }
+
+        $viewCounter = ViewsCounter::find()->where(['item_id' => $model->id])->andWhere(['model' => $placeModel])->one();
+        if (!(count($viewCounter) > 0)) {
+            $viewCounter = new ViewsCounter();
+            $viewCounter->item_id = $model->id;
+            $viewCounter->model = $placeModel;
+            $viewCounter->count_view = 0;
+            $viewCounter->save();
+        }
+        $viewCounter->processCountViewItem();
+
+        $data['model'] = $model;
+        $data['targetId'] = $targetId;
+        $data['seoClass'] = $seoClass;
+        $data['mainRent'] = $mainRent;
+        $data['mainSell'] = $mainSell;
+        $data['item'] = $item;
+
+        return $data;
+    }
+
+    public function actionBc_places($slug)
+    {
+        $data = $this->officeData($slug, 'rent');
+        return $this->render('place', [
+            'model' => $data['model'],
+            'target' => $data['targetId'],
+            'seoClass' => $data['seoClass'],
+            'mainRent' => $data['mainRent'],
+            'mainSell' => $data['mainSell'],
+            'item' => $data['item'],
+        ]);
+    }
+
+    public function actionBc_places_sell($slug)
+    {
+        $data = $this->officeData($slug, 'sell');
+        return $this->render('place', [
+            'model' => $data['model'],
+            'target' => $data['targetId'],
+            'seoClass' => $data['seoClass'],
+            'mainRent' => $data['mainRent'],
+            'mainSell' => $data['mainSell'],
+            'item' => $data['item'],
+        ]);
+    }
+
+    //страница офиса
+    /*public function actionBc_places($slug)
+    {
+        $target = Yii::$app->request->get('target');
+        $targetId = $target == 'sell' ? 2 : 1;
+
+        $query = BcPlaces::find()->joinWith(['slug']);
+        $model = $query->where(['slug' => $slug])->one();
+        $item = $model->no_bc === 1 ? $model->office : $model->bcitem; //bc or office for this place
+
+
+        $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
+        $mainRent = trim($seo->main_rent_link_href, '/');
+        $mainSell = trim($seo->main_sell_link_href, '/');
+
+        if ($item->class) {
+            $class = $item->class->id;
+            $city = $item->city->id;
+            $classes = SeoCatalogUrlsBcclasses::find()->select('catalog_url_id')->where(['bc_class_id' => $class])->asArray()->all();
+            $classes = ArrayHelper::getColumn($classes, 'catalog_url_id');
+            $cities = SeoCatalogUrlsCities::find()->select('catalog_url_id')->where(['city_id' => $city])->andWhere(['in', 'catalog_url_id', $classes])->asArray()->all();
+            $cities = ArrayHelper::getColumn($cities, 'catalog_url_id');
+            $seoClass = SeoCatalogUrls::find()->where(['target' => $targetId])->andWhere(['in', 'id', $cities])->multilingual()->one();
+        }
+
+        $viewCounter = ViewsCounter::find()->where(['item_id' => $model->id])->andWhere(['model' => 'bc_places'])->one();
+        if (!(count($viewCounter) > 0)) {
+            $viewCounter = new ViewsCounter();
+            $viewCounter->item_id = $model->id;
+            $viewCounter->model = 'bc_places';
+            $viewCounter->count_view = 0;
+            $viewCounter->save();
+        }
+        //debug($viewCounter); die();
+        $viewCounter->processCountViewItem();
+
+
+        return $this->render('place', [
+            'model' => $model,
+            'target' => $targetId,
+            'seoClass' => $seoClass,
+            'mainRent' => $mainRent,
+            'mainSell' => $mainSell,
+            'item' => $item
+        ]);
+    }*/
+
 
     //страница бизнес-центра
     public function actionBc_items($slug)
@@ -48,7 +173,7 @@ class PageController extends Controller
         $targetId = $target == 'sell' ? 2 : 1;
 
         $query = BcItems::find()->joinWith(['slug']);
-        if($targetId==2) {
+        if ($targetId == 2) {
             $query->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners', 'placesSell.prices');
         } else {
             $query->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners', 'places.prices');
@@ -68,9 +193,9 @@ class PageController extends Controller
             $cities = ArrayHelper::getColumn($cities, 'catalog_url_id');
             $seoClass = SeoCatalogUrls::find()->where(['target' => $targetId])->andWhere(['in', 'id', $cities])->multilingual()->one();
         }
-        
+
         $viewCounter = ViewsCounter::find()->where(['item_id' => $model->id])->andWhere(['model' => 'bc_items'])->one();
-        if(!(count($viewCounter)>0)) {
+        if (!(count($viewCounter) > 0)) {
             $viewCounter = new ViewsCounter();
             $viewCounter->item_id = $model->id;
             $viewCounter->model = 'bc_items';
@@ -88,13 +213,13 @@ class PageController extends Controller
         ]);
     }
 
+    //записаться на просмотр
     public function actionOrder($id)
     {
         $model = new OrderForm();
         $broker = User::findOne($id);
         $model->toEmail = $broker->email;
         $model->subject = 'subject';//'Заявка на просмотр для '.$broker->name. ' '.$broker->surname;
-//debug($model->toEmail); die();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendOrder()) {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
@@ -190,7 +315,7 @@ class PageController extends Controller
             $searchParams['walk_dist'] = '';
             $searchParams['subway'] = '';
         } else {
-            
+
             $params['m2min'] = isset($params['m2min']) ? $params['m2min'] : '';
             $params['m2max'] = isset($params['m2max']) ? $params['m2max'] : '';
             $params['districts'] = isset($params['districts']) ? $params['districts'] : [];
@@ -321,7 +446,7 @@ class PageController extends Controller
     }
 
     public function actionBars()
-    {        
+    {
         if (Yii::$app->request->isPjax) {
             $bars = unserialize(Yii::$app->request->post('bars')[0]);
             $type = Yii::$app->request->post('type');
@@ -420,7 +545,7 @@ class PageController extends Controller
 
 
                 $pr1 = ArrayHelper::getColumn($type1, 'price');
-                if(count($pr1)>0) {
+                if (count($pr1) > 0) {
                     $minType1 = min($pr1);
                     $maxType1 = max($pr1);
                     $delta = round($maxType1 / 30);
@@ -430,7 +555,7 @@ class PageController extends Controller
                 }
 
                 $pr2 = ArrayHelper::getColumn($type3, 'price');
-                if(count($pr2)>0) {
+                if (count($pr2) > 0) {
                     $minType3 = min($pr2);
                     $maxType3 = max($pr2);
                     $delta3 = round($maxType3 / 30);
@@ -450,7 +575,7 @@ class PageController extends Controller
         $countVal = array_fill(0, 30, 0);
         foreach ($arr as $k => $val) {
             $index = floor($val / $delta);
-            if($index>=30) $index=29;
+            if ($index >= 30) $index = 29;
             $countVal[$index] += 1;
         }
         return $countVal;

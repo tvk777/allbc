@@ -11,6 +11,7 @@ use yii\captcha\Captcha;
 $this->title = 'Заявка на просмотр';
 $this->params['breadcrumbs'][] = $this->title;
 $phone = !empty($user->broker_phone) ? $user->broker_phone : $user->phone;
+$src = !empty($user->avatar) ? $user->avatar->thumb260x260Src : '';
 ?>
 <div class="contact_popup">
     <div class="contact_popup_header">
@@ -19,7 +20,7 @@ $phone = !empty($user->broker_phone) ? $user->broker_phone : $user->phone;
         <div class="contact_person_desc">
             <div class="col">
                 <div class="author_photo author_photo_2">
-                    <img src="<?= $user->avatar->thumb260x260Src ?>" alt=""/>
+                    <img src="<?= $src ?>" alt=""/>
                 </div>
             </div>
             <div class="col">

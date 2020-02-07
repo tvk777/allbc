@@ -529,5 +529,11 @@ class BcPlaces extends ActiveRecord
         }
     }
 
+    public function getCountView()
+    {
+        return $this->hasOne(ViewsCounter::className(), ['item_id' => 'id'])->andWhere(['model' => self::tableName()]);
+    }
+
+
 
 }

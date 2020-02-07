@@ -35,7 +35,6 @@
             var target = $('#item_map'), new_position;
             target.height('340px');
             new_position = target.offset();
-            console.log(new_position);
             $('html, body').stop().animate({scrollTop: new_position.top}, 600);
         }
     }, '.showOnmap');

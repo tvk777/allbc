@@ -78,4 +78,6 @@ return [
     'No' => 'Нет',
     'Subscribe to updates' => 'Подписаться на обновления',
     'Your email for subscription' => 'Ваш email для подписки',
+    'Price' => 'Цена',
+    'Office area' => 'Площадь офиса',
 ];

@@ -1,6 +1,6 @@
 <?
 use yii\helpers\Url;
-//debug($user->user_id);
+//debug($user->userInfo->avatar);
 $phone = !empty($user->userInfo->broker_phone) ? $user->userInfo->broker_phone : $user->userInfo->phone;
 $short = substr($phone, 0, 3);
 $href = Url::to(['page/order', 'id' => $user->user_id]);

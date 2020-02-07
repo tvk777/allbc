@@ -1,3 +1,6 @@
+<?php
+$url = strpos($city_url, 'filter[') ? $city_url . '&filter[user]=' . $user->user_id : $city_url . '?filter[user]=' . $user->user_id;
+?>
 <div class="inner">
     <div class="author_wrapp">
         <? if (!empty($user->userInfo->avatar->thumb260x260Src)) : ?>
@@ -12,7 +15,7 @@
             <h3><? echo $user->userInfo->name ?></h3>
             <p class="desc_p_2"><b><?= $role ?></b><span
                     class="border_line_2"> |</span><?= $comission ?></p>
-            <p><a href="<?= $city_url . '?filter[user]=' . $user->user_id ?>"
+            <p><a href="<?= $url ?>"
                   class="green_link_3">Другие объявления автора</a></p>
         </div>
     </div>

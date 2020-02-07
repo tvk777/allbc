@@ -43,8 +43,10 @@ class Offices extends ActiveRecord
             [['target', 'city_id', 'country_id'], 'required'],
             [['target', 'percent_commission'], 'integer'],
             [['city_id', 'country_id', 'district_id', 'class_id'], 'safe'],
-            [['shuttle', 'shuttle_ua', 'shuttle_en'], 'string'],];
-    }
+            [['shuttle', 'shuttle_ua', 'shuttle_en', 'street'], 'string'],
+            [['lat', 'lng'], 'number'],
+        ];
+}
 
     /**
      * {@inheritdoc}
@@ -72,7 +74,6 @@ class Offices extends ActiveRecord
     {
         return $this->hasOne(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0]);
     }
-
 
 
     public function getClass()
