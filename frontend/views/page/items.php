@@ -8,7 +8,8 @@ use yii\helpers\Url;
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
-if ($city !== 0) {
+
+if (!empty($city)) {
     $sellHref = $city->slug_sell;
     $rentHref = $city->slug;
     $city = $city->id;

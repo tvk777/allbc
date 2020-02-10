@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 
-$city_url = $target == 2 ? $mainSell : $mainRent;
+$city_url = $target == 2 ? $mainSell . '?filter[result]=offices' : $mainRent . '?filter[result]=offices';
 $city_id = 0;
 $zoom = 13;
 
@@ -28,11 +28,20 @@ if ($seoClass) {
         'url' => $seoClass->slug->slug . '?filter[result]=offices'
     ];
 }
+
+if ($city_id !== 0) {
+    $sellHref = $item->city->slug_sell . '?filter[result]=offices';
+    $rentHref = $item->city->slug . '?filter[result]=offices';
+} else {
+    $sellHref = $mainSell . '?filter[result]=offices';
+    $rentHref = $mainRent . '?filter[result]=offices';
+}
+
 $district = '';
 $district_filter_href = $city_url;
 if ($item->district) {
     $district = ', ' . $item->district->name . ' р-н';
-    $district_filter_href .= '?filter[districts][]=' . $item->district->id . '&filter[result]=offices';
+    $district_filter_href .= '&filter[districts][]=' . $item->district->id;
 }
 
 $comission = $item->percent_commission == 0 ? '<span class="red">' . Yii::t('app', 'no commission') . ' </span>' : '<span class="red"> ' . Yii::t('app', 'commission') . ' ' . $item->percent_commission . '%</span>';
@@ -42,21 +51,20 @@ $firstImage = isset($model->images[0]) ? $model->images[0]->imgSrc : '';
 $class = $item->class->short_name;
 
 
-
 $this->title = getDefaultTranslate('title', $currentLanguage, $model);
 $this->params['breadcrumbs'][] = $objectTitle;
 $share_img_url = '';
 $cityName = getDefaultTranslate('name', $currentLanguage, $item->city, true);
 
-if($model->no_bc!==1){
+if ($model->no_bc !== 1) {
     $itemName = getDefaultTranslate('name', $currentLanguage, $item);
     $targetLink = $target == 2 ? '?target=sell' : '?target=rent';
-    $itemHref = $item->slug->slug.$targetLink;
-    $itemHtml = '<p><a href="/'.$itemHref.'">'.$itemName.'</a></p>';
-} else{
+    $itemHref = $item->slug->slug . $targetLink;
+    $itemHtml = '<p><a href="/' . $itemHref . '">' . $itemName . '</a></p>';
+} else {
     $itemHtml = '';
 }
-$itemName = $model->no_bc==1 ? $objectTitle : getDefaultTranslate('name', $currentLanguage, $item);
+$itemName = $model->no_bc == 1 ? $objectTitle : getDefaultTranslate('name', $currentLanguage, $item);
 
 $addres = $item->street;
 $coord = [$item->lng, $item->lat];
@@ -73,24 +81,50 @@ $placePrices = $model->prices;
 $prices = count($placePrices) > 0 ? $model->getPricePeriod($placePrices) : Yii::t('app', 'con.');
 if (count($placePrices) > 0) {
     $uah = $prices['uah']['m2'];
-    if($target == 1) {
+    if ($target == 1) {
         $m2_uah = $prices['uah']['m2_2'];
         if ($uah < $m2_uah) $plus = ' ++';
-        $price = Yii::t('app', 'Price').': '.$uah.' '.Yii::t('app', '&#8372;/m²/month').$plus;
+        $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '&#8372;/m²/month') . $plus;
     } else {
         $value = $prices['uah']['value'];
         $full = $prices['uah']['full'];
         if ($value < $full) $plus = ' ++';
-        $price = Yii::t('app', 'Price').': '.$uah.' '.Yii::t('app', '&#8372;/m²').$plus;
+        $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '&#8372;/m²') . $plus;
     }
 } else {
     $price = Yii::t('app', 'con.');
 }
 
+$script = <<< JS
+var city = $city_id, 
+    cityTitle = $(".choose-city .dropdown_title p"), 
+    cities = $(".choose-city li a"),
+    filter = '?filter[result]=offices';
+cities.removeClass('active');
+if(city!=0) {
+   cities.each(function () {
+    $(this).data('valuesell', $(this).data('valuesell')+filter);
+    $(this).data('value', $(this).data('value')+filter);
+console.log($(this).data('value'));
+    if ($(this).data('id') == city) {
+      $(this).addClass('active');
+      cityTitle.text($(this).text());
+    }
+    });
+ }
+JS;
+$this->registerJs($script, $this::POS_READY, 'city-handler');
+
 ?>
 
 <section class="grey_bg">
-    <?= $addres ?>
+    <form action="" id="main_form">
+        <input name="city_link" type="hidden" id="city_link" value="<?= $rentHref ?>"
+               data-valuesell="<?= $sellHref ?>">
+        <input name="main_type" type="hidden" id="main_type" value="<?= $target ?>">
+        <input id="submit_main_form" type="hidden">
+    </form>
+
     <div class="row row_2">
         <div class="breadcrumbs_wrapp">
             <?= Breadcrumbs::widget([
@@ -179,13 +213,13 @@ if (count($placePrices) > 0) {
                             </div>
                         </div>
                     </div>
-                        <div class="inner">
-                            <div class="office_info">
-                                <p><b><?= Yii::t('app', 'Office area').': '. $model->m2range ?> м²</b></p>
-                                <p><b><?= $price ?></b></p>
-                                <?= $itemHtml ?>
-                            </div>
+                    <div class="inner">
+                        <div class="office_info">
+                            <p><b><?= Yii::t('app', 'Office area') . ': ' . $model->m2range ?> м²</b></p>
+                            <p><b><?= $price ?></b></p>
+                            <?= $itemHtml ?>
                         </div>
+                    </div>
 
                     <div class="inner">
                         <div class="two_cols_2 two_cols_2_2">
@@ -223,7 +257,8 @@ if (count($placePrices) > 0) {
                                 <? endif; ?>
                             </div>
                             <div class="two_cols_2_col">
-                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на карте</a></p>
+                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
+                                        карте</a></p>
                             </div>
                         </div>
                     </div>
@@ -287,8 +322,8 @@ if (count($placePrices) > 0) {
     </div>
 </section>
 <? if (!empty($content = getDefaultTranslate('comment', $currentLanguage, $model))) : ?>
-<section class="sect_7_2">
-    <div class="row row_2">
+    <section class="sect_7_2">
+        <div class="row row_2">
             <h2><?= Yii::t('app', 'Description') ?></h2>
             <div class="text_box" id="slide_text" data-minheight="142">
                 <div class="inner_height">
@@ -302,12 +337,9 @@ if (count($placePrices) > 0) {
                     <span class="hide"><?= Yii::t('app', 'Collapse') ?></span>
                 </a>
             </div>
-    </div>
-</section>
+        </div>
+    </section>
 <? endif; ?>
-
-
-
 
 
 <section class="sect_7_bc">

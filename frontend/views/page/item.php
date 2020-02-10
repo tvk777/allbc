@@ -36,6 +36,16 @@ if (isset($model->city)) {
         'url' => $city_url
     ];
 }
+
+if ($city_id !== 0) {
+    $sellHref = $model->city->slug_sell;
+    $rentHref = $model->city->slug;
+} else {
+    $sellHref = $mainSell;
+    $rentHref = $mainRent;
+}
+
+
 if ($seoClass) {
     $this->params['breadcrumbs'][] = [
         'label' => $seoClass->name,
@@ -51,7 +61,7 @@ if ($model->district) {
 $comission = $model->percent_commission == 0 ? '<span class="red">' . Yii::t('app', 'no commission') . ' </span>' : '<span class="red"> ' . Yii::t('app', 'commission') . ' ' . $model->percent_commission . '%</span>';
 
 $objectTitle = getDefaultTranslate('name', $currentLanguage, $model);
-$addres = $model->street;
+$addres = ''; //$model->street;
 $coord = [$model->lng, $model->lat];
 $firstImage = isset($model->images[0]) ? $model->images[0]->imgSrc : '';
 $class = $model->class->short_name;
@@ -67,8 +77,32 @@ $this->title = getDefaultTranslate('title', $currentLanguage, $model);
 $this->params['breadcrumbs'][] = $objectTitle;
 $share_img_url = '';
 $cityName = getDefaultTranslate('name', $currentLanguage, $model->city, true);
+
+$script = <<< JS
+var city = $city_id, 
+    cityTitle = $(".choose-city .dropdown_title p"), 
+    cities = $(".choose-city li a");
+cities.removeClass('active');
+if(city!=0) {
+   cities.each(function () {
+    if ($(this).data('id') == city) {
+     $(this).addClass('active');
+     cityTitle.text($(this).text());
+     }
+    });
+ }
+JS;
+$this->registerJs($script, $this::POS_READY, 'city-handler');
+
 ?>
 <section class="grey_bg">
+    <form action="" id="main_form">
+        <input name="city_link" type="hidden" id="city_link" value="<?= $rentHref ?>"
+               data-valuesell="<?= $sellHref ?>">
+        <input name="main_type" type="hidden" id="main_type" value="<?= $target ?>">
+        <input id="submit_main_form" type="hidden">
+    </form>
+
     <div class="row row_2">
         <div class="breadcrumbs_wrapp">
             <?= Breadcrumbs::widget([

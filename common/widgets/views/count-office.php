@@ -28,7 +28,7 @@ $kiev_name = $currentLanguage=='ru' ? $cities[0]->name : getDefaultTranslate('na
                             $inflect = $name;
                     }
                     ?>
-                    <li><a data-id="<?= $city->id ?>" data-value="<?= $city->slug ?>" data-valuesell="<?= $city->slug_sell ?>" data-count="<?= $city->bc_count ?>" data-inflect="<?= $inflect ?>" href="#" <?= $class ?>/><?= $name ?></a></li>
+                    <li><a data-id="<?= $city->id ?>" data-value="<?= $city->slug.$result ?>" data-valuesell="<?= $city->slug_sell.$result ?>" data-count="<?= $city->bc_count ?>" data-inflect="<?= $inflect ?>" href="#" <?= $class ?>/><?= $name ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
