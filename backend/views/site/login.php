@@ -5,7 +5,11 @@ use yii\bootstrap\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \common\models\LoginForm */
-
+//var_dump(Yii::$app->user->identity);
+$user = Yii::$app->user;
+$message = !empty($user->identity) && !$user->can('admin') ?
+    'Для входа в административную зону необходимы права администратора' :
+    'Авторизуйтесь для входа в административную зону';
 $this->title = 'Sign In';
 
 $fieldOptions1 = [
@@ -25,9 +29,9 @@ $fieldOptions2 = [
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+        <p class="login-box-msg"><?= $message ?></p>
 
-        <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
+        <?php $form = ActiveForm::begin(['action' =>'login', 'id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <?= $form
             ->field($model, 'username', $fieldOptions1)
@@ -52,18 +56,6 @@ $fieldOptions2 = [
 
 
         <?php ActiveForm::end(); ?>
-
-        <div class="social-auth-links text-center">
-            <p>- OR -</p>
-            <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in
-                using Facebook</a>
-            <a href="#" class="btn btn-block btn-social btn-google-plus btn-flat"><i class="fa fa-google-plus"></i> Sign
-                in using Google+</a>
-        </div>
-        <!-- /.social-auth-links -->
-
-        <a href="#">I forgot my password</a><br>
-        <a href="register.html" class="text-center">Register a new membership</a>
 
     </div>
     <!-- /.login-box-body -->

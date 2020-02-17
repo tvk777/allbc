@@ -20,12 +20,12 @@ $this->title = 'My Yii Application';
             <div class="col-lg-6">
                 <h2>Партнеры</h2>
 
-                <p><a class="btn btn-default" href="site/partners">Партнеры</a></p>
+                <p><a class="btn btn-default" href="partners">Партнеры</a></p>
             </div>
             <div class="col-lg-6">
                 <h2>Слайдер</h2>
 
-                <p><a class="btn btn-default" href="site/slider">Слайдер</a></p>
+                <p><a class="btn btn-default" href="slider">Слайдер</a></p>
             </div>
         </div>
 

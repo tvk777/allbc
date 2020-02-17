@@ -12,23 +12,45 @@ use yii\imagine\Image;
 use Imagine\Image\Box;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 
 
 
 /**
  * Site controller
  */
-class SiteController extends AdminController
+class SiteController extends Controller
 {
     /**
      * {@inheritdoc}
      */
-   public function behaviors()
+    public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+                    'delete' => ['POST'],
                     'logout' => ['post'],
                     'delete-image' => ['POST'],
                     'upload-image' => ['POST'],
@@ -60,6 +82,13 @@ class SiteController extends AdminController
      */
     public function actionIndex()
     {
+        //var_dump(Yii::$app->user->identity);
+        if(!Yii::$app->user->can('admin')){
+        $model = new LoginForm();
+            return $this->render('login', [
+                'model' => $model,
+            ]);
+        }
         return $this->render('index');
     }
 
@@ -71,7 +100,8 @@ class SiteController extends AdminController
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
+        
+        if (!Yii::$app->user->isGuest && Yii::$app->user->can('admin')) {
             return $this->goHome();
         }
 
@@ -80,7 +110,7 @@ class SiteController extends AdminController
             return $this->goBack();
         } else {
             $model->password = '';
-
+//debug($model);
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -95,8 +125,10 @@ class SiteController extends AdminController
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        $model = new LoginForm();
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
 
     public function actionPartners()

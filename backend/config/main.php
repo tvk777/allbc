@@ -54,6 +54,9 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '' => 'site/index',
+                'login' => 'site/login',
+                'partners' => 'site/partners',
+                'slider' => 'site/slider',
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
