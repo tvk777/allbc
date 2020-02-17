@@ -6,32 +6,15 @@ use Yii;
 use common\models\InfoblocksHowtouse;
 use common\models\SystemFiles;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 
 /**
  * InfoblocksHowtouseController implements the CRUD actions for InfoblocksHowtouse model.
  */
-class InfoblocksHowtouseController extends Controller
+class InfoblocksHowtouseController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all InfoblocksHowtouse models.
      * @return mixed

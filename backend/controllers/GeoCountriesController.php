@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\GeoCountries;
 use common\models\GeoCountriesSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GeoCountriesController implements the CRUD actions for GeoCountries model.
  */
-class GeoCountriesController extends Controller
+class GeoCountriesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all GeoCountries models.
      * @return mixed

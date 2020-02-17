@@ -7,31 +7,13 @@ use common\models\Experts;
 use common\models\Texts;
 use common\models\UserSearch;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ExpertsController implements the CRUD actions for Experts model.
  */
-class ExpertsController extends Controller
+class ExpertsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Experts models.
      * @return mixed

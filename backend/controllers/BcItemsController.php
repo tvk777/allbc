@@ -10,10 +10,8 @@ use common\models\BcItemsSearch;
 use common\models\BcPlaces;
 use common\models\Geo;
 use common\models\GeoSubways;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\base\ErrorException;
-use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 use common\models\SystemFiles;
@@ -21,23 +19,8 @@ use common\models\SystemFiles;
 /**
  * BcItemsController implements the CRUD actions for BcItems model.
  */
-class BcItemsController extends Controller
+class BcItemsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all BcItems models.
      * @return mixed

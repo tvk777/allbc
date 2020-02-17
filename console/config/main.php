@@ -32,4 +32,7 @@ return [
         ],
     ],
     'params' => $params,
+    'modules' => [
+        'gii' => 'yii\gii\Module',
+    ],
 ];

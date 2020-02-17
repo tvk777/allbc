@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\GeoDistricts;
 use common\models\GeoDistrictsSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GeoDistrictsController implements the CRUD actions for GeoDistricts model.
  */
-class GeoDistrictsController extends Controller
+class GeoDistrictsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all GeoDistricts models.
      * @return mixed

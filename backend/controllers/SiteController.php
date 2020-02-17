@@ -2,12 +2,9 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use common\models\LoginForm;
 use common\models\SystemFiles;
-use common\models\UploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 use Imagine\Image\Point;
@@ -21,28 +18,14 @@ use yii\helpers\ArrayHelper;
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends AdminController
 {
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+   public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index', 'partners', 'upload-image', 'delete-image', 'sort-image', 'slider', 'upload-slide', 'delete-slide', 'sort-slide'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -315,6 +298,34 @@ class SiteController extends Controller
             return true;
         }
         throw new MethodNotAllowedHttpException();
+    }
+
+   public function actionRoles(){
+        /*$admin = Yii::$app->authManager->createRole('admin');
+        $admin->description = 'Администратор';
+        Yii::$app->authManager->add($admin);
+
+        $broker = Yii::$app->authManager->createRole('broker');
+        $broker->description = 'Брокер';
+        Yii::$app->authManager->add($broker);
+
+        $manager = Yii::$app->authManager->createRole('manager');
+        $manager->description = 'Менеджер БЦ';
+        Yii::$app->authManager->add($manager);
+
+        $content = Yii::$app->authManager->createRole('content');
+        $content->description = 'Контент менеджер';
+        Yii::$app->authManager->add($content);
+
+        $user = Yii::$app->authManager->createRole('user');
+        $user->description = 'Пользователь';
+        Yii::$app->authManager->add($user);*/
+
+       /*$userRole = Yii::$app->authManager->getRole('admin');
+       Yii::$app->authManager->assign($userRole, 1);*/
+
+
+    return 'roles done';
     }
 
 

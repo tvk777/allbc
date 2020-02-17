@@ -5,10 +5,9 @@ namespace backend\controllers;
 use Yii;
 use common\models\InfoblocksHowtouse;
 use common\models\SystemFiles;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class ToolsController extends Controller
+class ToolsController extends AdminController
 {
     /*public function actionTimestampToUnix()
     {

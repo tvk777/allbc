@@ -6,35 +6,16 @@ use Yii;
 use common\models\Post;
 use common\models\PostSearch;
 use common\models\SystemFiles;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 use Imagine\Image\Point;
-use yii\helpers\Html;
 
 
 /**
  * PostController implements the CRUD actions for Post model.
  */
-class PostController extends Controller
+class PostController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Post models.
      * @return mixed

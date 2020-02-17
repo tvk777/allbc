@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\BcValutes;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ValutesController implements the CRUD actions for BcValutes model.
  */
-class ValutesController extends Controller
+class ValutesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all BcValutes models.
      * @return mixed

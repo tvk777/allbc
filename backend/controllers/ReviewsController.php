@@ -5,9 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\Reviews;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use common\models\SystemFiles;
 
@@ -15,23 +13,8 @@ use common\models\SystemFiles;
 /**
  * ReviewsController implements the CRUD actions for Reviews model.
  */
-class ReviewsController extends Controller
+class ReviewsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Reviews models.
      * @return mixed

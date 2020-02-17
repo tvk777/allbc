@@ -6,9 +6,7 @@ use common\models\Slugs;
 use Yii;
 use common\models\Services;
 use common\models\ServicesSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use common\models\SystemFiles;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
@@ -16,23 +14,8 @@ use yii\helpers\FileHelper;
 /**
  * ServicesController implements the CRUD actions for Services model.
  */
-class ServicesController extends Controller
+class ServicesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Services models.
      * @return mixed

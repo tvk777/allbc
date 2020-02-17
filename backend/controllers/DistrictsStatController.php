@@ -4,37 +4,15 @@ namespace backend\controllers;
 
 use common\models\BcItems;
 use common\models\BcPlaces;
-use common\models\BcPlacesPrice;
-use common\models\BcPlacesSell;
-use common\models\BcPlacesSellPrice;
 use Yii;
 use common\models\DistrictsStat;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use common\models\GeoDistricts;
-use yii\helpers\ArrayHelper;
 /**
  * DistrictsStatController implements the CRUD actions for DistrictsStat model.
  */
-class DistrictsStatController extends Controller
+class DistrictsStatController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all DistrictsStat models.
      * @return mixed

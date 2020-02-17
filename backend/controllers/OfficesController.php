@@ -9,30 +9,13 @@ use common\models\Geo;
 use common\models\GeoSubways;
 use common\models\Offices;
 use common\models\OfficesSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * OfficesController implements the CRUD actions for Offices model.
  */
-class OfficesController extends Controller
+class OfficesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Offices models.
      * @return mixed

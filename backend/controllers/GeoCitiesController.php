@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\GeoCities;
 use common\models\GeoCitiesSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GeoCitiesController implements the CRUD actions for GeoCities model.
  */
-class GeoCitiesController extends Controller
+class GeoCitiesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all GeoCities models.
      * @return mixed

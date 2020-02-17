@@ -2,13 +2,10 @@
 
 namespace backend\controllers;
 
-use common\models\Slugs;
 use Yii;
 use common\models\News;
 use common\models\NewsSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use common\models\SystemFiles;
 
@@ -17,23 +14,8 @@ use common\models\SystemFiles;
 /**
  * NewsController implements the CRUD actions for News model.
  */
-class NewsController extends Controller
+class NewsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all News models.
      * @return mixed

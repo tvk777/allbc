@@ -4,36 +4,15 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\BcPlaces;
-use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use common\models\SystemFiles;
-use yii\helpers\Html;
-use common\models\Slugs;
 
 /**
  * BcPlacesController implements the CRUD actions for BcPlaces model.
  */
-class BcPlacesController extends Controller
+class BcPlacesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
-
     /**
      * Creates a new BcPlaces model.
      * If creation is successful, the browser will be redirected to the 'view' page.

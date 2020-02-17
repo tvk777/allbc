@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\GeoBranch;
 use common\models\GeoBranchSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GeoBranchController implements the CRUD actions for GeoBranch model.
  */
-class GeoBranchController extends Controller
+class GeoBranchController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all GeoBranch models.
      * @return mixed

@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\GeoSubways;
 use common\models\GeoSubwaysSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GeoSubwaysController implements the CRUD actions for GeoSubways model.
  */
-class GeoSubwaysController extends Controller
+class GeoSubwaysController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all GeoSubways models.
      * @return mixed

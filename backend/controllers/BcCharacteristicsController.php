@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\BcCharacteristics;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * BcCharacteristicsController implements the CRUD actions for BcCharacteristics model.
  */
-class BcCharacteristicsController extends Controller
+class BcCharacteristicsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all BcCharacteristics models.
      * @return mixed

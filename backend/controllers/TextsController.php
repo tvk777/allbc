@@ -5,30 +5,13 @@ namespace backend\controllers;
 use Yii;
 use common\models\Texts;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * TextsController implements the CRUD actions for Texts model.
  */
-class TextsController extends Controller
+class TextsController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Texts models.
      * @return mixed

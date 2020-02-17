@@ -4,32 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\SystemFiles;
-use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * SystemFilesController implements the CRUD actions for SystemFiles model.
  */
-class SystemFilesController extends Controller
+class SystemFilesController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    //'update' => ['Ajax'],
-                ],
-            ],
-        ];
-    }
-
-
     /**
      * Updates an existing SystemFiles model.
      * If update is successful, the browser will be redirected to the 'view' page.

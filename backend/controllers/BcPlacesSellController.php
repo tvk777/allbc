@@ -4,33 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\BcPlacesSell;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
-use common\models\SystemFiles;
-use common\models\Slugs;
 
 /**
  * BcPlacesSellController implements the CRUD actions for BcPlacesSell model.
  */
-class BcPlacesSellController extends Controller
+class BcPlacesSellController extends AdminController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
 
     /**
      * Creates a new BcPlacesSell model.
