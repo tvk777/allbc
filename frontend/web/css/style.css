@@ -8608,3 +8608,20 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     height: 35px;
     z-index: 9;
 }
+
+.alert{
+    text-align: center;
+    width: 100%;
+    clear: both;
+}
+.alert button{
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.alert-success, .alert-success button{
+    color:#76c258;
+}
+

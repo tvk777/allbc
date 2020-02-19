@@ -175,6 +175,7 @@ if ($action != 'index') {
                     <div class="append-elem" data-append-elem="1"></div>
                 </div>
             </div>
+            <?= Alert::widget() ?>
         </div>
     </header>
 

@@ -20,6 +20,7 @@ use common\models\GeoCities;
 use common\models\SeoCatalogUrls;
 use common\models\Pages;
 use common\models\SystemFiles;
+use common\services\auth\SignupService;
 
 /**
  * Site controller
