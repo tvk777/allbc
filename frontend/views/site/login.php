@@ -7,35 +7,46 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$login = Yii::t('app', 'Login');
+$signin = Yii::t('app', 'Sign in');
+$signup = Yii::t('app', 'Sign up');
+$resetpass = Yii::t('app', 'Reset password');
+
+$this->title = $signin;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="contact_popup">
+    <div class="contact_popup_header">
+        <button type="button" class="close close_btn" data-dismiss="modal" aria-label="Close"><i
+                class="close_white"></i></button>
 
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
+        <div class="contact_person_desc">
+                <h1><?= Html::encode($this->title) ?></h1>
+        </div>
+    </div>
+    <div class="contact_form_wrapp">
+        <div class="contact_form2">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <div class="input_wrapp_2">
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'placeholder' => 'E-mail'])->label(false) ?>
+            </div>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+            <div class="input_wrapp_2">
+                <?= $form->field($model, 'password')->passwordInput(['placeholder' => $model->getAttributeLabel('password')])->label(false) ?>
+            </div>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                <?= $form->field($model, 'rememberMe')->checkbox(['template' => '<div class="checkbox">{input}{label}{error}{hint}</div>']) ?>
 
-                <div style="color:#999;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+            <div class="input_buttons">
+                <?= Html::submitButton($login, ['class' => 'green_pill', 'name' => 'login-button']) ?>
+                <?= Html::a($signup, ['site/signup'], ['class' => 'green_pill modal-form size-middle']) ?>
+            </div>
 
             <?php ActiveForm::end(); ?>
+            <div>
+                <?= Html::a($resetpass, ['site/request-password-reset'], ['class' => 'pass_link']) ?>
+            </div>
         </div>
     </div>
 </div>

@@ -15,7 +15,7 @@ AppAsset::register($this);
 $controller = Yii::$app->controller->id;
 $action = Yii::$app->controller->action->id;
 
-if($controller=='site' && $action != 'index') {
+if ($controller == 'site' && $action != 'index') {
     $bodyClass = 'class="' . $controller . ' ' . $action . ' pages"';
 } else {
     $bodyClass = 'class="' . $controller . ' ' . $action . '"';
@@ -32,7 +32,7 @@ $blackClass = '';
 if ($action != 'index') {
     $headerClass = 'header_site_inner header_1';
     $logoClass = 'logo_wrapp_2';
-    $logoImg = Html::a(Html::img('@web/img/logo_2.svg', ['alt' => 'Логотип', 'class' => 'logo_black']),[Url::home()]);
+    $logoImg = Html::a(Html::img('@web/img/logo_2.svg', ['alt' => 'Логотип', 'class' => 'logo_black']), [Url::home()]);
     $dropdowmClass = 'dropdowm_wrapp_2';
     $dropdowmClass2 = 'dropdowm_wrapp_2 dropdowm_wrapp_2_2';
     $contentClass = 'content_2 content_resp';
@@ -69,7 +69,7 @@ if ($action != 'index') {
             <div class="row clearfix">
                 <div class="left">
                     <div class="logo_wrapp <?= $logoClass ?>">
-                            <?= $logoImg ?>
+                        <?= $logoImg ?>
                     </div>
                     <?= common\widgets\CountOfficeWidget::widget() ?>
                 </div>
@@ -103,11 +103,34 @@ if ($action != 'index') {
                             </a>
                         </div>
                     </div>
-                    <div class="inline append-elem" data-append-desktop-elem="4" data-min-screen="600">
-                        <div class="user_wrapp">
-                            <a href="#" class="icon_link">
-                                <i class="user_icon<?= $blackClass ?>"></i>
-                            </a>
+                    <div class="top_menu append-elem" data-append-desktop-elem="4" data-min-screen="600">
+                        <div class="dropdowm_wrapp">
+                            <div class="dropdown_title user_wrapp">
+                                <a href="login" class="icon_link">
+                                    <i class="user_icon<?= $blackClass ?>"></i>
+                                </a>
+                            </div>
+                            <div class="dropdown_menu">
+                                <ul>
+                                    <? if (Yii::$app->user->isGuest) : ?>
+                                    <li>
+                                        <?= Html::a(
+                                            Yii::t('app', 'Login'),
+                                            ['/login'],
+                                            ['class' => 'link_2 modal-form size-middle']
+                                        ) ?>
+                                    </li>
+                                    <? else : ?>
+                                    <li>
+                                        <?= Html::a(
+                                            Yii::t('app', 'Logout'),
+                                            ['/logout'],
+                                            ['data-method' => 'post']
+                                        ) ?>
+                                    </li>
+                                    <? endif; ?>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="top_menu append-elem" data-append-desktop-elem="5" data-min-screen="450">

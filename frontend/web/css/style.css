@@ -3315,6 +3315,15 @@ img.logo_black {
 
 .green_pill {
     position: relative;
+    font-family: "Proxima Nova";
+}
+a.green_pill{
+    line-height: normal;
+}
+.pass_link {
+    text-decoration: underline;
+    margin-top: 10px;
+    display: block;
 }
 
 .green_pill .arrow_down_white {
@@ -8134,6 +8143,14 @@ th.table_cell.thm2 .arrow .green {
 .contact_popup_header h3 {
     color: #ffffff;
 }
+.contact_popup_header h1 {
+    color: #ffffff;
+    font-family: "Proxima Nova";
+    font-size: 22px;
+    line-height: 27px;
+    font-weight: bold;
+}
+
 
 .tel_link_2_wrapp {
     padding-left: 20px;

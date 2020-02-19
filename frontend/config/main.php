@@ -60,6 +60,9 @@ return [
             'enableLanguagePersistence' => false,
             'rules' => [
                 '' => 'site/index',
+                'login' => 'site/login',
+                'logout' => 'site/logout',
+                'signup' => 'site/signup',
                 'pages' => 'site/pages',
                 'pages/sitemap' => 'site/sitemap',
                 'pages/contacts' => 'site/contacts',
