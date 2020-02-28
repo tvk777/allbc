@@ -496,6 +496,7 @@ class BcItems extends ActiveRecord
                     $placesInfo[$v['id']]['for_m2'] = Yii::t('app', 'con.');
                     $placesInfo[$v['id']]['for_all'] = Yii::t('app', 'con.');
                 }
+                $placesInfo[$v['id']]['model'] = $v;
             }
             return $placesInfo;
         }

@@ -759,6 +759,7 @@ textarea:focus {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    cursor:pointer;
 }
 
 .metro {
@@ -783,7 +784,7 @@ textarea:focus {
     background-size: contain;
 }
 
-.star_2 {
+.star_2, .star_place .star_icon_2 {
     display: inline-block;
     vertical-align: top;
     width: 12px;
@@ -793,6 +794,7 @@ textarea:focus {
     background-repeat: no-repeat;
     background-size: contain;
 }
+
 
 .tel_icon_white {
     display: inline-block;
@@ -7536,7 +7538,8 @@ th.table_cell.thm2 .arrow .green {
     left: -40px;
 }
 
-.star_checkbox {
+.star_checkbox,
+.star_place {
     display: inline-block;
     vertical-align: top;
     margin: 0 2px;
@@ -7557,7 +7560,8 @@ th.table_cell.thm2 .arrow .green {
     left: 0;
 }
 
-.star_checkbox label {
+.star_checkbox label,
+i.fav{
     display: block;
     width: 15px;
     height: 15px;
@@ -7568,7 +7572,10 @@ th.table_cell.thm2 .arrow .green {
     background-size: contain;
 }
 
-.star_checkbox input:checked + label {
+.star_checkbox input:checked + label,
+i.fav.rem,
+i.star_icon_2.rem,
+i.star_2.rem{
     background-image: url(../img/star_yellow.svg);
 }
 

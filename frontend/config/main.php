@@ -66,6 +66,7 @@ return [
                 'pages' => 'site/pages',
                 'pages/sitemap' => 'site/sitemap',
                 'pages/contacts' => 'site/contacts',
+                'favorite' => 'page/favorite',
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
@@ -97,7 +98,16 @@ return [
                 ],
             ],
         ],
-
+        'wishlist' => [
+            'class' => 'kriptograf\wishlist\Wishlist'
+        ],
+    ],
+    'modules' => [
+        'wishlist' => [
+            'class' => 'kriptograf\wishlist\Module',
+            'dbDateExpired' => 'CURDATE() + INTERVAL 7 DAY', //дата истечения срока действия избранного в БД
+            'cokieDateExpired' => time() + 86400 * 365, //Время жизни куки с токеном
+        ],
     ],
     'params' => $params,
 ];

@@ -14,6 +14,7 @@ $tablId.on("aftertablesort", function (event, data) {
 
 JS;
 $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
+use kriptograf\wishlist\widgets\WishlistButton;
 ?>
 
 <section>
@@ -179,9 +180,15 @@ $this->registerJs($script, $this::POS_READY, 'stupidtable'.$tablId);
                                     <td class="table_cell">
                                         <a href="#" class="photo_link"></a>
                                         <div class="star_checkbox">
-                                            <input type="checkbox" name="star_<?= $index ?>" id="star_<?= $index ?>">
-                                            <label for="star_<?= $index ?>"></label>
-                                        </div>
+                                            <div class="star_checkbox">
+                                                <?= WishlistButton::widget([
+                                                    'model' => $place,
+                                                    'anchorActive' => '<i class="fav rem"></i>',
+                                                    'anchorUnactive' => '<i class="fav"></i>',
+                                                    'cssClass' => 'out-wish',
+                                                    'cssClassInList' => 'in-wish'
+                                                ]); ?>
+                                            </div>                                        </div>
                                     </td>
                                 </tr>
                             <? endforeach; ?>

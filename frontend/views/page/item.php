@@ -1,4 +1,8 @@
 <?php
+
+//echo 'fav='.\Yii::$app->wishlist->getUserWishlistAmount();
+//debug(\Yii::$app->wishlist->getUserWishList());
+
 $this->registerJsFile('/js/stupidtable.min.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
 
 $currentLanguage = Yii::$app->language;
@@ -9,6 +13,7 @@ use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use kriptograf\wishlist\widgets\WishlistButton;
 
 $this->registerJsFile('/js/jquery.mCustomScrollbar.concat.min.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
 $this->registerCssFile('/css/jquery.mCustomScrollbar.css');
@@ -172,9 +177,15 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                             <div class="h3_wrapp">
                                 <h3><?= $objectTitle; ?></h3>
                                 <div class="star_checkbox like_star">
-                                    <input type="checkbox" name="star_1" id="star_title">
-                                    <label for="star_title"></label>
+                                    <?= WishlistButton::widget([
+                                        'model' => $model,
+                                        'anchorActive' => '<i class="fav rem"></i>',
+                                        'anchorUnactive' => '<i class="fav"></i>',
+                                        'cssClass' => 'multi out-wish',
+                                        'cssClassInList' => 'in-wish'
+                                    ]); ?>
                                 </div>
+
                             </div>
                             <div class="title_desc">
                                 <div class="col">

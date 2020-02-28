@@ -1,7 +1,6 @@
 <?php
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 use yii\helpers\Html;
+use kriptograf\wishlist\widgets\WishlistButton;
 
 //debug($item->city);
 $paramTarget = $target==1 ? 'rent' : 'sell';
@@ -82,7 +81,13 @@ if (!empty($itemSubway)) {
                     </div>
                     <div class="inline">
                         <div class="black_circle_2">
-                            <i class="star_icon_2"></i>
+                            <?= WishlistButton::widget([
+                                'model' => $item,
+                                'anchorActive' => '<i class="star_icon_2 rem"></i>',
+                                'anchorUnactive' => '<i class="star_icon_2"></i>',
+                                'cssClass' => 'card out-wish',
+                                'cssClassInList' => 'in-wish'
+                            ]); ?>
                         </div>
                     </div>
                 </div>
@@ -156,7 +161,8 @@ if (!empty($itemSubway)) {
                 </div>
                 <? if ($placesInfo): ?>
                     <? foreach ($placesInfo as $k => $place): ?>
-                        <? $pluses = '';
+                        <? //debug($place);
+                        $pluses = '';
                         if (isset($place['for_m2']) && isset($place['all_for_m2']) && $place['for_m2'] < $place['all_for_m2']) $pluses = '<span class="pluses">++</span>';
                         ?>
                         <div class="table_row">
@@ -180,7 +186,15 @@ if (!empty($itemSubway)) {
                                         <? endforeach; ?>
                                     </div>
                                 <? endif; ?>
-                                <a href="#" class="icon_link_2"><i class="star_2"></i></a>
+                                <div class="star_place">
+                                    <?= WishlistButton::widget([
+                                        'model' => $place['model'],
+                                        'anchorActive' => '<i class="star_icon_2 rem"></i>',
+                                        'anchorUnactive' => '<i class="star_icon_2"></i>',
+                                        'cssClass' => 'out-wish',
+                                        'cssClassInList' => 'in-wish'
+                                    ]); ?>
+                                </div>
                             </div>
                         </div>
                     <? endforeach; ?>

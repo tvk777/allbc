@@ -48,7 +48,8 @@ if ($action != 'index') {
         //'tabindex' => false
     ]
 ]);
-
+$wishAmount = \Yii::$app->wishlist->getUserWishlistAmount();
+$countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'</span>' : '';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -97,9 +98,9 @@ if ($action != 'index') {
                     </div>
                     <div class="inline append-elem" data-append-desktop-elem="3" data-min-screen="600">
                         <div class="favorite_box">
-                            <a href="#" class="icon_link">
+                            <a href="/favorite" class="icon_link">
                                 <i class="star_icon<?= $blackClass ?>"></i>
-                                <div class="count_circle">1</div>
+                                <div id="count-wishlist-badge"><?= $countCircle ?></div>
                             </a>
                         </div>
                     </div>

@@ -1049,7 +1049,7 @@ $(document).ready(function () {
             minPrice = parseInt(minPrice);
             maxTotalPrice = parseInt(maxTotalPrice);
             start = [minPrice, maxPrice];
-            console.log(start);
+            //console.log(start);
         }
 
         priceSlider2 = document.getElementById("range_slider_2");
@@ -1516,14 +1516,14 @@ $(document).ready(function () {
     });
 
     tableInputs.on("click", function () {
-     if ($(this).is(':checked')) {
-         $(this).prop('checked', false);
-         var tableName = $(this).closest("[data-table]").attr("data-table");
-         $("[data-table-list = '" + tableName + "']").css({
-             "display": "none"
-         });
-     }
-     });
+        if ($(this).is(':checked')) {
+            $(this).prop('checked', false);
+            var tableName = $(this).closest("[data-table]").attr("data-table");
+            $("[data-table-list = '" + tableName + "']").css({
+                "display": "none"
+            });
+        }
+    });
 
     $(".radio_2 input").on("change", function () {
         if ($(this).checked) {
@@ -1815,6 +1815,70 @@ $(document).ready(function () {
     }, function () {
         $(this).removeClass('hover');
     });
+
+    //favorit-box
+    var places = $('.out-wish');
+    $('.multi').click(function (e) {
+        if ($(this).hasClass('in-wish')) {
+            places.each(function (index) {
+                var self = this,
+                    model = $(self).data('model'),
+                    itemId = $(self).data('item-id'),
+                    action = 'remove',
+                    url = '/wishlist/element/remove';
+                if(index+1===places.length) {
+                    wishlist.removeElement(model, itemId, url, self);
+                } else {
+                    wishlist.removeElement(model, itemId, url, self, 'multi');
+                }
+            });
+        } else {
+            places.each(function (index) {
+                var self = this,
+                    model = $(self).data('model'),
+                    itemId = $(self).data('item-id'),
+                    action = 'add',
+                    url = '/wishlist/element/add';
+                if(index+1===places.length) {
+                    wishlist.addElement(model, itemId, url, self);
+                } else {
+                    wishlist.addElement(model, itemId, url, self, 'multi');
+                }
+            });
+        }
+    });
+
+    $('.card.out-wish').click(function (e) {
+        var cardPlaces = $(this).closest('.object_card').find('.object_table .out-wish');
+        if ($(this).hasClass('in-wish')) {
+            cardPlaces.each(function (index) {
+                var self = this,
+                    model = $(self).data('model'),
+                    itemId = $(self).data('item-id'),
+                    action = 'remove',
+                    url = '/wishlist/element/remove';
+                if(index+1===cardPlaces.length) {
+                    wishlist.removeElement(model, itemId, url, self);
+                } else {
+                    wishlist.removeElement(model, itemId, url, self, 'multi');
+                }
+            });
+        } else {
+            cardPlaces.each(function (index) {
+                var self = this,
+                    model = $(self).data('model'),
+                    itemId = $(self).data('item-id'),
+                    action = 'add',
+                    url = '/wishlist/element/add';
+                if(index+1===cardPlaces.length) {
+                    wishlist.addElement(model, itemId, url, self);
+                } else {
+                    wishlist.addElement(model, itemId, url, self, 'multi');
+                }
+            });
+        }
+    });
+
 
 
 })

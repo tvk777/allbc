@@ -45,11 +45,11 @@ if (isset($item->subways[0])) {
                             <p><?= $item->class->name ?></p>
                         </div>
                     </div>
-                    <div class="inline">
+                    <!--<div class="inline">
                         <div class="black_circle_2">
                             <i class="star_icon_2"></i>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="object_slider">
                     <? if ($item->slides) : ?>

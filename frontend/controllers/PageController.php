@@ -213,6 +213,18 @@ class PageController extends Controller
         ]);
     }
 
+    public function actionFavorite()
+    {
+        //$model = \Yii::$app->wishlist->getUserWishList();
+        $model = \Yii::$app->wishlist->getItemsForPage();
+        $targetUrls = \Yii::$app->wishlist->getTargetUrls();
+
+        return $this->render('favorite', [
+            'model' => $model,
+            'targetUrls' => $targetUrls
+        ]);
+    }
+
     //записаться на просмотр
     public function actionOrder($id)
     {
