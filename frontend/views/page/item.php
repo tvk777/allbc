@@ -1,5 +1,4 @@
 <?php
-
 //echo 'fav='.\Yii::$app->wishlist->getUserWishlistAmount();
 //debug(\Yii::$app->wishlist->getUserWishList());
 
@@ -182,7 +181,8 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                         'anchorActive' => '<i class="fav rem"></i>',
                                         'anchorUnactive' => '<i class="fav"></i>',
                                         'cssClass' => 'multi out-wish',
-                                        'cssClassInList' => 'in-wish'
+                                        'cssClassInList' => 'in-wish',
+                                        'building' => 'bc'
                                     ]); ?>
                                 </div>
 
@@ -275,7 +275,8 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                 <? endif; ?>
                             </div>
                             <div class="two_cols_2_col">
-                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на карте</a></p>
+                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
+                                        карте</a></p>
                             </div>
                         </div>
                     </div>

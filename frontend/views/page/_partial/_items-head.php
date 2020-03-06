@@ -176,7 +176,7 @@ switch ($currency){
                         <div class="dropdow_item_wrapp">
                             <div class="dropdown_item_title dropdown_item_title_2  price-filter <?= $activePrice ?>">
                                 <div class="item_title_text">
-                                    <p><?= $min_max ?></p>
+                                    <?= $min_max ?>
                                 </div>
                             </div>
                             <div class="dropdown_item_menu price_w">

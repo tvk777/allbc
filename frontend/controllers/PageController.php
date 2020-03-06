@@ -218,11 +218,23 @@ class PageController extends Controller
         //$model = \Yii::$app->wishlist->getUserWishList();
         $model = \Yii::$app->wishlist->getItemsForPage();
         $targetUrls = \Yii::$app->wishlist->getTargetUrls();
+        \yii\helpers\Url::remember();
 
         return $this->render('favorite', [
             'model' => $model,
             'targetUrls' => $targetUrls
         ]);
+    }
+
+    public function actionRemoveFavorites()
+    {
+        if (Yii::$app->request->post() && \Yii::$app->wishlist->removeAll()) {
+            $link = '/'.Yii::$app->request->post('link');
+            return $this->redirect($link);
+        } else {
+            Yii::$app->session->setFlash('error', "Ошибка при удалении");
+            return $this->goBack();
+        }
     }
 
     //записаться на просмотр

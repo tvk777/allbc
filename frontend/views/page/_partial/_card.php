@@ -18,6 +18,7 @@ if($result=='bc') {
     $itemClass = $item->class->name;
     $slides = !empty($item->slides) ? $item->slides : null;
     $itemComission = $item->percent_commission;
+    $building = 'bc';
 } else {
     //debug($item->slug->slug);
     //$href = '';
@@ -45,6 +46,7 @@ if($result=='bc') {
         $slides = null;
     }
     $itemComission = $office->percent_commission;
+    $building = 'office';
 }
 
 if (!empty($itemSubway)) {
@@ -86,7 +88,8 @@ if (!empty($itemSubway)) {
                                 'anchorActive' => '<i class="star_icon_2 rem"></i>',
                                 'anchorUnactive' => '<i class="star_icon_2"></i>',
                                 'cssClass' => 'card out-wish',
-                                'cssClassInList' => 'in-wish'
+                                'cssClassInList' => 'in-wish',
+                                'building' => $building
                             ]); ?>
                         </div>
                     </div>

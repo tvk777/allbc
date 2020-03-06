@@ -194,15 +194,16 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                         <div class="object_title">
                             <div class="h3_wrapp">
                                 <h3><?= $objectTitle; ?></h3>
-                                    <div class="star_checkbox like_star">
-                                        <?= WishlistButton::widget([
-                                            'model' => $model,
-                                            'anchorActive' => '<i class="fav rem"></i>',
-                                            'anchorUnactive' => '<i class="fav"></i>',
-                                            'cssClass' => 'out-wish',
-                                            'cssClassInList' => 'in-wish'
-                                        ]); ?>
-                                    </div>
+                                <div class="star_checkbox like_star">
+                                    <?= WishlistButton::widget([
+                                        'model' => $model,
+                                        'anchorActive' => '<i class="fav rem"></i>',
+                                        'anchorUnactive' => '<i class="fav"></i>',
+                                        'cssClass' => 'out-wish',
+                                        'cssClassInList' => 'in-wish',
+                                        'building' => 'office'
+                                    ]); ?>
+                                </div>
                             </div>
                             <div class="title_desc">
                                 <div class="col">

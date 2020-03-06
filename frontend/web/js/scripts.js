@@ -1825,11 +1825,13 @@ $(document).ready(function () {
                     model = $(self).data('model'),
                     itemId = $(self).data('item-id'),
                     action = 'remove',
-                    url = '/wishlist/element/remove';
+                    url = '/wishlist/element/remove',
+                    building = $(self).data('building');
+
                 if(index+1===places.length) {
-                    wishlist.removeElement(model, itemId, url, self);
+                    wishlist.removeElement(model, itemId, url, self, building);
                 } else {
-                    wishlist.removeElement(model, itemId, url, self, 'multi');
+                    wishlist.removeElement(model, itemId, url, self, building, 'multi');
                 }
             });
         } else {
@@ -1838,11 +1840,12 @@ $(document).ready(function () {
                     model = $(self).data('model'),
                     itemId = $(self).data('item-id'),
                     action = 'add',
-                    url = '/wishlist/element/add';
+                    url = '/wishlist/element/add',
+                    building = $(self).data('building');
                 if(index+1===places.length) {
-                    wishlist.addElement(model, itemId, url, self);
+                    wishlist.addElement(model, itemId, url, self, building);
                 } else {
-                    wishlist.addElement(model, itemId, url, self, 'multi');
+                    wishlist.addElement(model, itemId, url, self, building, 'multi');
                 }
             });
         }
@@ -1856,11 +1859,12 @@ $(document).ready(function () {
                     model = $(self).data('model'),
                     itemId = $(self).data('item-id'),
                     action = 'remove',
-                    url = '/wishlist/element/remove';
+                    url = '/wishlist/element/remove',
+                    building = $(self).data('building');
                 if(index+1===cardPlaces.length) {
-                    wishlist.removeElement(model, itemId, url, self);
+                    wishlist.removeElement(model, itemId, url, self, building);
                 } else {
-                    wishlist.removeElement(model, itemId, url, self, 'multi');
+                    wishlist.removeElement(model, itemId, url, self, building, 'multi');
                 }
             });
         } else {
@@ -1869,11 +1873,12 @@ $(document).ready(function () {
                     model = $(self).data('model'),
                     itemId = $(self).data('item-id'),
                     action = 'add',
-                    url = '/wishlist/element/add';
+                    url = '/wishlist/element/add',
+                    building = $(self).data('building');
                 if(index+1===cardPlaces.length) {
-                    wishlist.addElement(model, itemId, url, self);
+                    wishlist.addElement(model, itemId, url, self, building);
                 } else {
-                    wishlist.addElement(model, itemId, url, self, 'multi');
+                    wishlist.addElement(model, itemId, url, self, building, 'multi');
                 }
             });
         }
