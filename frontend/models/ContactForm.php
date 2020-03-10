@@ -28,7 +28,7 @@ class ContactForm extends Model
             // email has to be a valid email address
             ['email', 'email'],
             // verifyCode needs to be entered correctly
-            ['verifyCode', 'captcha'],
+            //['verifyCode', 'captcha'],
         ];
     }
 
@@ -39,6 +39,10 @@ class ContactForm extends Model
     {
         return [
             'verifyCode' => 'Verification Code',
+            'email' => 'Email',
+            'name' => Yii::t('app', 'Name'),
+            'subject' => Yii::t('app', 'Subject'),
+            'body' => Yii::t('app', 'Message'),
         ];
     }
 

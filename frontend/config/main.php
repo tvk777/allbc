@@ -63,6 +63,7 @@ return [
                 'login' => 'site/login',
                 'logout' => 'site/logout',
                 'signup' => 'site/signup',
+                'support' => 'site/support',
                 'pages' => 'site/pages',
                 'pages/sitemap' => 'site/sitemap',
                 'pages/contacts' => 'site/contacts',

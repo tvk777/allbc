@@ -140,7 +140,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    /*public function actionContact()
+    public function actionSupport()
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -150,13 +150,17 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
 
-            return $this->refresh();
+            //if(Yii::$app->user->returnUrl != '/')
+                //return $this->goBack();
+            //else return
+            return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
+
         } else {
-            return $this->render('contact', [
+            return $this->renderAjax('support', [
                 'model' => $model,
             ]);
         }
-    }*/
+    }
 
     /**
      * Displays about page.

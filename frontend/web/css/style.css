@@ -167,6 +167,11 @@ img {
     outline: none;
 }
 
+a:hover, a:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
 select {
     -webkit-appearance: none;
     appearance: none;
@@ -2438,7 +2443,8 @@ img.logo_black {
     text-align: center;
 }
 
-.green_link {
+.green_link,
+.green_link:hover{
     color: #3eb060;
     font-size: 16px;
     font-weight: bold;
@@ -2537,10 +2543,11 @@ img.logo_black {
     left: 0;
 }
 
-.green_pill {
+.green_pill, .green_pill:hover {
     display: inline-block;
     vertical-align: top;
     min-width: 143px;
+    min-height:41px;
     cursor: pointer;
     margin: 2px 0;
     padding: 8px 20px;
@@ -8028,6 +8035,13 @@ i.star_2.rem{
     border: 1px solid #44ba95;
     background-color: #44ba95;
 }
+.modal.transparent_pill_2{
+    border: none;
+}
+.modal.transparent_pill_2:hover {
+    border: none;
+    background-color: transparent;
+}
 
 .corp_wrapp {
     padding: 14px 0 14px 0;
@@ -8692,4 +8706,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 
 .remove-fav .remove-link{
     color:red;
+}
+.transparent_pill_2:hover,
+.transparent_pill_2:focus,
+.transparent_pill_2:active{
+    color:white;
 }

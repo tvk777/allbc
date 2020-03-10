@@ -45,7 +45,13 @@ $currentLanguage = Yii::$app->language;
     </ul>
     <div class="contacts_wrapp">
         <p><a href="tel:+380670088200" class="tel_link">+380(67)00-882-00</a></p>
-        <p><a href="#" class="transparent_pill_2">Написать в поддержку</a></p>
+        <p>
+            <?= Html::a(
+                Yii::t('app', 'Mail to support'),
+                ['/support'],
+                ['class' => 'transparent_pill_2 modal-form size-middle']
+            ) ?>
+        </p>
     </div>
 </div>
 

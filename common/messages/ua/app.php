@@ -86,5 +86,10 @@ return [
     'Your email for subscription' => 'Ваш email для підписки',
     'Price' => 'Ціна',
     'Office area' => 'Площа офісу',
-    'Favorite' => 'Вибране'
+    'Favorite' => 'Вибране',
+    'Mail to support' => 'Написати в підтримку',
+    'Subject' => 'Тема листа',
+    'Message' => 'Повідомлення',
+    'Name' => "Им'я",
+    'Send' => 'Відправити',
 ];
