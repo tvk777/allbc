@@ -166,23 +166,29 @@ class SiteController extends Controller
     //Форма подписки из виджета
     public function actionSubscription(){
         $model = new \common\models\Subscription();
+        $str = '<div class="contact_popup_header">
+                      <button type="button" class="close close_btn" data-dismiss="modal" aria-label="Close">
+                      <i class="close_white"></i></button>
+                      <div class="contact_person_desc">';
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()){
             $email = Html::encode($model->email);
             $model->email = $email;
             $model->addtime = (string) time();
             if ($model->save()) {
                 Yii::$app->response->refresh(); //очистка данных из формы
-                echo "<p style='color:green'>Подписка оформлена!</p>";
-                exit;
+                $str .='<p style="color:white">Подписка оформлена!</p>';
             }
         } else {
             //Проверяем наличие фразы в массиве ошибки
             if(strpos($model->errors['email'][0], 'already') !== false) {
-                echo "<p style='color:red'>Вы уже подписаны!</p>";
+                $str .='<p style="color:red">Вы уже подписаны!</p>';
             } else {
-                echo "<p style='color:red'>Ошибка оформления подписки.</p>";
+                $str .='<p style="color:red">Ошибка оформления подписки.</p>';
             }
         }
+        $str .='</div></div>';
+        echo $str;
         exit;
     }
 
