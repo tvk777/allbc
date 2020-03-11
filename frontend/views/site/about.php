@@ -14,3 +14,5 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <code><?= __FILE__ ?></code>
 </div>
+
+<?= common\widgets\SubscriptionWidget::widget() ?>

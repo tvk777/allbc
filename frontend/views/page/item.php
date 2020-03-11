@@ -225,16 +225,11 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                             <div class="office_info">
                                 <p><b><?= Yii::t('app', 'Free Offices') ?>: <span
                                             class="red"><?= Yii::t('app', 'No') ?></span></b></p>
-                                <p><?= Yii::t('app', 'Subscribe to updates') ?></p>
-                                <div class="notifications_form">
-                                    <form>
-                                        <div class="input_wrapp_2 input_wrapp_2_2">
-                                            <input type="email"
-                                                   placeholder="<?= Yii::t('app', 'Your email for subscription') ?>">
-                                            <input class="submit_input" type="submit" value=""/>
-                                        </div>
-                                    </form>
-                                </div>
+                                <?= Html::a(
+                                    Yii::t('app', 'Subscribe to updates'),
+                                    ['site/subscribe'],
+                                    ['class' => 'green_pill green_pill_2 modal-form size-middle']
+                                ) ?>
                             </div>
                         </div>
                     <? endif; ?>

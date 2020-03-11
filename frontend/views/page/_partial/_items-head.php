@@ -268,7 +268,12 @@ switch ($currency){
                     </div>
                     <div class="item_wrapp append-elem novisible_767" data-append-desktop-elem="8"
                          data-min-screen="767">
-                        <a href="#" class="green_pill green_pill_2">Подписаться на обновления</a>
+                        <?= Html::a(
+                            Yii::t('app', 'Subscribe to updates'),
+                            ['site/subscribe'],
+                            ['class' => 'green_pill green_pill_2 modal-form size-middle']
+                        ) ?>
+
                     </div>
                 </div>
                 <div class="right">

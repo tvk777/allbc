@@ -21,6 +21,7 @@ use common\models\SeoCatalogUrls;
 use common\models\Pages;
 use common\models\SystemFiles;
 use common\services\auth\SignupService;
+use yii\helpers\Html;
 
 /**
  * Site controller
@@ -160,6 +161,34 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    //Форма подписки из виджета
+    public function actionSubscription(){
+        $model = new \common\models\Subscription();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()){
+            $email = Html::encode($model->email);
+            $model->email = $email;
+            $model->addtime = (string) time();
+            if ($model->save()) {
+                Yii::$app->response->refresh(); //очистка данных из формы
+                echo "<p style='color:green'>Подписка оформлена!</p>";
+                exit;
+            }
+        } else {
+            //Проверяем наличие фразы в массиве ошибки
+            if(strpos($model->errors['email'][0], 'already') !== false) {
+                echo "<p style='color:red'>Вы уже подписаны!</p>";
+            } else {
+                echo "<p style='color:red'>Ошибка оформления подписки.</p>";
+            }
+        }
+        exit;
+    }
+
+    public function actionSubscribe()
+    {
+        return $this->renderAjax('subscribe');
     }
 
     /**

@@ -2581,6 +2581,10 @@ img.logo_black {
     transition-timing-function: ease;
 }
 
+.office_info .green_pill, .office_info .green_pill:hover{
+    margin:0;
+}
+
 .green_pill:link,
 .green_pill:visited {
     box-shadow: none;
@@ -8035,10 +8039,12 @@ i.star_2.rem{
     border: 1px solid #44ba95;
     background-color: #44ba95;
 }
-.modal.transparent_pill_2{
+.modal.transparent_pill_2,
+.modal.green_pill.green_pill_2{
     border: none;
 }
-.modal.transparent_pill_2:hover {
+.modal.transparent_pill_2:hover,
+.modal.green_pill.green_pill_2{
     border: none;
     background-color: transparent;
 }
