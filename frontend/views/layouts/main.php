@@ -10,7 +10,10 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
-
+use kartik\typeahead\Typeahead;
+use yii\jui\AutoComplete;
+use yii\web\JsExpression;
+//echo 'result='.Yii::$app->controller->result;
 AppAsset::register($this);
 $controller = Yii::$app->controller->id;
 $action = Yii::$app->controller->action->id;
@@ -76,6 +79,7 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'
                 </div>
                 <div class="right">
                     <div class="search_sect inline append-elem" data-append-desktop-elem="2" data-min-screen="600">
+
                         <a href="#" class="search_open">
                             <i class="<?= $searchIconClass ?>"></i>
                         </a>
@@ -144,27 +148,9 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'
                     </button>
                 </div>
             </div>
-            <div class="search_popup">
-                <form class="search_form" method="post">
-                    <input type="text" placeholder="Что ищем" class="search_input"/>
-                    <input type="submit" class="search_submit" value=" "/>
-                    <button type="button" class="close_x"></button>
-                </form>
-                <div class="search_result">
-                    <a href="#" class="res_item">
-                        <h4>Поисковый результат</h4>
-                        <p>Текст найденного контента. Текст найденного контента. Текст найденного контента.</p>
-                    </a>
-                    <a href="#" class="res_item">
-                        <h4>Поисковый результат</h4>
-                        <p>Текст найденного контента. Текст найденного контента. Текст найденного контента.</p>
-                    </a>
-                    <a href="#" class="res_item">
-                        <h4>Поисковый результат</h4>
-                        <p>Текст найденного контента. Текст найденного контента. Текст найденного контента.</p>
-                    </a>
-                </div>
-            </div>
+            <?= $this->render('_partial/_search',[
+                'result' => Yii::$app->controller->result 
+            ]); ?>
             <div class="main_nav_wrapp" id="resp_nav">
                 <div class="inline_blocks">
                     <div class="append-elem" data-append-elem="2"></div>

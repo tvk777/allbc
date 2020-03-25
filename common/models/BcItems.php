@@ -517,6 +517,26 @@ class BcItems extends ActiveRecord
         return $this->hasOne(ViewsCounter::className(), ['item_id' => 'id'])->andWhere(['model' => self::tableName()]);
     }
 
+    static function searchItems($str, $city){
+        $idsQuery = (new \yii\db\Query())
+            ->select(['item_id'])
+            ->from('bc_itemsLang')
+            ->where(['like', 'name', $str])
+            ->all();
+        $itemIds = ArrayHelper::getColumn($idsQuery, 'item_id');
+
+        $bcitems = BcItems::find()
+            ->where(['active' => 1])
+            ->andWhere(['hide' => 0])
+            ->andWhere(['city_id' => $city])
+            ->andWhere(['or', ['like', 'street', $str], ['in', 'id', $itemIds]])
+            ->limit(10)
+            ->orderBy('updated_at DESC')
+            ->multilingual()->all();
+
+        return $bcitems;
+    }
+
 }
 
 

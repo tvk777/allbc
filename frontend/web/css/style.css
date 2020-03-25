@@ -1372,7 +1372,7 @@ textarea:focus {
 .res_item {
     display: block;
     padding: 10px 20px;
-    border-bottom: 1px solid #ededed;
+    /*border-bottom: 1px solid #ededed;*/
     -webkit-transition-property: background;
     -webkit-transition-duration: .3s;
     -webkit-transition-timing-function: ease;
@@ -4018,6 +4018,28 @@ a.green_pill{
     background-repeat: no-repeat;
     background-position: 0 0;
 }
+
+.green_marker {
+    display: inline-block;
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/green_marker.svg);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+
+.green_apartment {
+    display: inline-block;
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/apartment.svg);
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-size: 100%;
+}
+
 
 .metro_two_cols {
     display: flex;
@@ -8717,4 +8739,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 .transparent_pill_2:focus,
 .transparent_pill_2:active{
     color:white;
+}
+.sub-result{
+    padding-top: 10px;
+    border-bottom: 1px solid #ededed;
 }

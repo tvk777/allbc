@@ -22,11 +22,17 @@ use common\models\Pages;
 use common\models\SystemFiles;
 use common\services\auth\SignupService;
 use yii\helpers\Html;
+use common\models\BcItems;
+use common\models\BcPlaces;
+use common\models\BcPlacesSell;
+use common\models\GeoDistricts;
+use common\models\GeoSubways;
+use yii\helpers\ArrayHelper;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends FrontendController
 {
     public $title_main;
 
@@ -82,7 +88,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-        public function actionIndex()
+    public function actionIndex()
     {
         $city = GeoCities::find(1)->one();
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
@@ -98,8 +104,8 @@ class SiteController extends Controller
 
         $slides = SystemFiles::find()->where(['attachment_type' => 'slide'])->orderBy('sort_order')->all();
         $images = [];
-        if(!empty($slides)){
-            foreach($slides as $index => $slide){
+        if (!empty($slides)) {
+            foreach ($slides as $index => $slide) {
                 $images[$index]['url'] = $slide->imgSrc;
                 $images[$index]['href'] = $slide->description;
                 $images[$index]['title'] = $slide->title;
@@ -111,7 +117,7 @@ class SiteController extends Controller
         }
         //debug($images); die();
         //$bc_count = $city->bc_count;
-        switch (Yii::$app->language){
+        switch (Yii::$app->language) {
             case 'ru':
                 $inflect = $city->inflect;
                 break;
@@ -135,7 +141,6 @@ class SiteController extends Controller
     }
 
 
-
     /**
      * Displays contact page.
      *
@@ -152,7 +157,7 @@ class SiteController extends Controller
             }
 
             //if(Yii::$app->user->returnUrl != '/')
-                //return $this->goBack();
+            //return $this->goBack();
             //else return
             return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
 
@@ -164,30 +169,31 @@ class SiteController extends Controller
     }
 
     //Форма подписки из виджета
-    public function actionSubscription(){
+    public function actionSubscription()
+    {
         $model = new \common\models\Subscription();
         $str = '<div class="contact_popup_header">
                       <button type="button" class="close close_btn" data-dismiss="modal" aria-label="Close">
                       <i class="close_white"></i></button>
                       <div class="contact_person_desc">';
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()){
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $email = Html::encode($model->email);
             $model->email = $email;
-            $model->addtime = (string) time();
+            $model->addtime = (string)time();
             if ($model->save()) {
                 Yii::$app->response->refresh(); //очистка данных из формы
-                $str .='<p style="color:white">Подписка оформлена!</p>';
+                $str .= '<p style="color:white">Подписка оформлена!</p>';
             }
         } else {
             //Проверяем наличие фразы в массиве ошибки
-            if(strpos($model->errors['email'][0], 'already') !== false) {
-                $str .='<p style="color:red">Вы уже подписаны!</p>';
+            if (strpos($model->errors['email'][0], 'already') !== false) {
+                $str .= '<p style="color:red">Вы уже подписаны!</p>';
             } else {
-                $str .='<p style="color:red">Ошибка оформления подписки.</p>';
+                $str .= '<p style="color:red">Ошибка оформления подписки.</p>';
             }
         }
-        $str .='</div></div>';
+        $str .= '</div></div>';
         echo $str;
         exit;
     }
@@ -250,7 +256,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            if(Yii::$app->user->returnUrl != '/')
+            if (Yii::$app->user->returnUrl != '/')
                 return $this->goBack();
             else return
                 Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
@@ -285,7 +291,7 @@ class SiteController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             $model->username = $model->email;
-            if($model->signup()) {
+            if ($model->signup()) {
                 Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
                 return $this->goHome();
             }
@@ -390,5 +396,55 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+    public function actionSearch()
+    {
+        if (Yii::$app->request->isAjax && Yii::$app->request->post()) {
+            $referal = Yii::$app->request->post('referal');
+            $target = Yii::$app->request->post('target');
+            $result = Yii::$app->request->post('result');
+            $city = Yii::$app->request->post('city');
+//echo $target; die();
+
+            $bcitems = $result=='bc' ? BcItems::searchItems($referal, $city) : null;
+            //$bcitems = ArrayHelper::getColumn($bcitems, 'id'); //tmp for debugging
+
+            $placesQuery = $target==1 ? BcPlaces::find() : BcPlacesSell::find();
+            
+            $places = $result=='offices'
+            ? $placesQuery
+                ->where(['archive' => 0])
+                ->andWhere(['hide' => 0])
+                ->andWhere(['or',
+                    ['like', 'name', $referal],
+                    ['like', 'name_ua', $referal],
+                    ['like', 'name_en', $referal],
+                    ['=', 'id',$referal]
+                ])
+                ->limit(10)
+                ->orderBy('updated_at DESC')
+                ->all()
+            : null;
+            //$places = ArrayHelper::getColumn($places, 'id'); //tmp for debugging
+
+            $subways = GeoSubways::find()->where(['like', 'name', $referal])
+                ->andWhere(['city_id' => $city])
+                ->all();
+
+            $districts = GeoDistricts::find()->where(['like', 'name', $referal])->andWhere(['city_id' => $city])->all();
+
+
+            $target = $target===1 ? 'rent' : 'sell';
+            return $this->renderPartial('_partial/_search-result', [
+                'target' => $target,
+                'bcitems' => $bcitems,
+                'places' => $places,
+                'subways' => $subways,
+                'districts' => $districts,
+            ]);
+        }
+       return false;
+    }
+
 
 }

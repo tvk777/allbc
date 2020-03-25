@@ -84,6 +84,11 @@ class GeoSubways extends ActiveRecord
         return $this->hasOne(GeoBranch::className(), ['id' => 'branch_id']);
     }
 
+    public function getCity()
+    {
+        return $this->hasOne(GeoCities::className(), ['id' => 'city_id']);
+    }
+
 
     public function beforeValidate()
     {

@@ -106,7 +106,6 @@ if(city!=0) {
    cities.each(function () {
     $(this).data('valuesell', $(this).data('valuesell')+filter);
     $(this).data('value', $(this).data('value')+filter);
-console.log($(this).data('value'));
     if ($(this).data('id') == city) {
       $(this).addClass('active');
       cityTitle.text($(this).text());

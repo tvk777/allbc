@@ -456,11 +456,16 @@ $(document).ready(function () {
         $(".search_result").css({
             "display": "none"
         });
+        $(".search_input").val('');
+        $(".search_result").html('');
+
     });
 
     $(this).keydown(function (eventObject) {
         if (eventObject.which == 27) {
             $(".search_popup").removeClass("active");
+            $(".search_result").hide();
+
         }
     });
 
@@ -469,6 +474,7 @@ $(document).ready(function () {
         if (!hide_element.is(e.target)
             && hide_element.has(e.target).length === 0) {
             $(".search_popup").removeClass("active");
+            $(".search_result").hide();
         }
     });
 
@@ -1828,7 +1834,7 @@ $(document).ready(function () {
                     url = '/wishlist/element/remove',
                     building = $(self).data('building');
 
-                if(index+1===places.length) {
+                if (index + 1 === places.length) {
                     wishlist.removeElement(model, itemId, url, self, building);
                 } else {
                     wishlist.removeElement(model, itemId, url, self, building, 'multi');
@@ -1842,7 +1848,7 @@ $(document).ready(function () {
                     action = 'add',
                     url = '/wishlist/element/add',
                     building = $(self).data('building');
-                if(index+1===places.length) {
+                if (index + 1 === places.length) {
                     wishlist.addElement(model, itemId, url, self, building);
                 } else {
                     wishlist.addElement(model, itemId, url, self, building, 'multi');
@@ -1861,7 +1867,7 @@ $(document).ready(function () {
                     action = 'remove',
                     url = '/wishlist/element/remove',
                     building = $(self).data('building');
-                if(index+1===cardPlaces.length) {
+                if (index + 1 === cardPlaces.length) {
                     wishlist.removeElement(model, itemId, url, self, building);
                 } else {
                     wishlist.removeElement(model, itemId, url, self, building, 'multi');
@@ -1875,7 +1881,7 @@ $(document).ready(function () {
                     action = 'add',
                     url = '/wishlist/element/add',
                     building = $(self).data('building');
-                if(index+1===cardPlaces.length) {
+                if (index + 1 === cardPlaces.length) {
                     wishlist.addElement(model, itemId, url, self, building);
                 } else {
                     wishlist.addElement(model, itemId, url, self, building, 'multi');
@@ -1885,6 +1891,4 @@ $(document).ready(function () {
     });
 
 
-
-})
-;
+});

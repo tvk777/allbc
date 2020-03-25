@@ -27,6 +27,7 @@ class AppAsset extends AssetBundle
         'vendors/js/nouislider.min.js',
         'vendors/js/wNumb.js',
         'js/scripts.js',
+        'js/search.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

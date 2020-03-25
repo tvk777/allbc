@@ -29,7 +29,7 @@ use common\models\User;
 /**
  * Page controller
  */
-class PageController extends Controller
+class PageController extends FrontendController
 {
 
     public function actionServices($slug)
@@ -95,6 +95,7 @@ class PageController extends Controller
     public function actionBc_places($slug)
     {
         $data = $this->officeData($slug, 'rent');
+        $this->result ='offices';
         return $this->render('place', [
             'model' => $data['model'],
             'target' => $data['targetId'],
@@ -108,6 +109,7 @@ class PageController extends Controller
     public function actionBc_places_sell($slug)
     {
         $data = $this->officeData($slug, 'sell');
+        $this->result ='offices';
         return $this->render('place', [
             'model' => $data['model'],
             'target' => $data['targetId'],
@@ -437,11 +439,13 @@ class PageController extends Controller
 
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearch($whereCondition);
-
+//debug($params); die();
         //$countPlacesNum = $params['result']=='bc' ? count($result['places']) : count($result['places']);
         $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [
             'countPlaces' => count($result['places']),
         ]);
+
+        $this->result = !empty($params)&&!empty($params['result']) ? $params['result'] : 'bc';
 
         $targetLinks = SeoCatalogUrls::find()->where(['id' => 88])->one();
         $mainRent = trim($targetLinks->main_rent_link_href, '/');
