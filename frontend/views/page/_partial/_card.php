@@ -9,7 +9,7 @@ $href = '/' . $item->slug->slug . '?target=' . $paramTarget;
 if($result=='bc') {
     $city = $item->city->name;
     $district = $item->district ? $item->district->name . ' р-н' : '';
-    $street = $item->street;
+    $address = $item->address;
     $minmax = $item->minm2 != $item->maxm2 ? Yii::t('app', 'from') . ' ' . $item->minm2 . ' m² ...' . $item->maxm2 . ' m²' : $item->minm2 . ' m²';
     $minPrice = $item->minprice != 'z' ? Yii::t('app', 'from') . ' ' . $item->minprice . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
     $itemPlaces = $item->getFilteredPlaces($places, $target);
@@ -29,7 +29,7 @@ if($result=='bc') {
     }
     $city = $office->city->name;
     $district = $office->district ? $office->district->name . ' р-н' : '';
-    $street = $item->street;
+    $address = $office->street;
     $minmax = !empty($item->m2minm2) ? Yii::t('app', 'from') . ' ' . $item->m2min . ' m² ...' . $item->m2 . ' m²' : $item->m2 . ' m²';
     //if(!empty($item->priceSqm->price)) debug($item->priceSqm->price);
     $minPrice = ($item->con_price != 1 && !empty($item->priceSqm->price)) ? Yii::t('app', 'from') . ' ' . $item->priceSqm->price . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
@@ -114,7 +114,7 @@ if (!empty($itemSubway)) {
                     <div class="two_cols_2_col">
                         <div class="adres">
                             <h5>г. <?= $city ?>, <?= $district ?></h5>
-                            <p><?= $street ?></p>
+                            <p><?= $address ?></p>
                         </div>
                         <div class="metro_wrapp">
                             <p><?= $subway ?></p>

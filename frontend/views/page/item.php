@@ -25,6 +25,7 @@ $placesRentArhive = $model->archivePlaces;
 $placesSellArhive = $model->archivePlacesSell;
 
 $city_url = $target == 2 ? $mainSell : $mainRent;
+$city_url .='?filter[result]=bc';
 $city_id = 0;
 $zoom = 13;
 //debug(count($model->district->items));
@@ -35,6 +36,7 @@ if (isset($model->city)) {
     $rentLable = Yii::t('app', 'Office rental in') . ' ' . getLangInflect($model->city, $currentLanguage);
     $sellLable = Yii::t('app', 'Office for sale in') . ' ' . getLangInflect($model->city, $currentLanguage);
     $city_url = $target == 2 ? $model->city->slug_sell : $model->city->slug;
+    $city_url .='?filter[result]=bc';
     $this->params['breadcrumbs'][] = [
         'label' => $target == 2 ? $sellLable : $rentLable,
         'url' => $city_url
@@ -60,12 +62,12 @@ $district = '';
 $district_filter_href = $city_url;
 if ($model->district) {
     $district = ', ' . $model->district->name . ' р-н';
-    $district_filter_href .= '?filter[districts][]=' . $model->district->id;
+    $district_filter_href .= '&filter[districts][]=' . $model->district->id;
 }
 $comission = $model->percent_commission == 0 ? '<span class="red">' . Yii::t('app', 'no commission') . ' </span>' : '<span class="red"> ' . Yii::t('app', 'commission') . ' ' . $model->percent_commission . '%</span>';
 
 $objectTitle = getDefaultTranslate('name', $currentLanguage, $model);
-$addres = ''; //$model->street;
+$addres = ''; //$model->address;
 $coord = [$model->lng, $model->lat];
 $firstImage = isset($model->images[0]) ? $model->images[0]->imgSrc : '';
 $class = $model->class->short_name;
@@ -192,7 +194,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                     <p>Тип:</p>
                                 </div>
                                 <div class="col">
-                                    <p><a href="<?= $city_url . '?filter[classes][]=' . $model->class->id ?>"
+                                    <p><a href="<?= $city_url . '&filter[classes][]=' . $model->class->id ?>"
                                           class="green_link_3"><?= Yii::t('app', 'Business center') . ' ' . getDefaultTranslate('name', $currentLanguage, $model->class, true) ?> </a>
                                     </p>
                                 </div>
@@ -242,8 +244,8 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                         <a target="_blank"
                                            href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
                                     </h5>
-                                    <? if ($model->street) : ?>
-                                        <p><?= $model->street ?></p>
+                                    <? if ($model->address) : ?>
+                                        <p><?= $model->address ?></p>
                                     <? endif; ?>
                                 </div>
                                 <? if (count($model->subways) > 0) : ?>
@@ -262,7 +264,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                                 $subwayIco = '<i class="metro"></i>';
                                         }
 
-                                        $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '?filter[subway]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
+                                        $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subway]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
                                         <div class="metro_wrapp">
                                             <p><?= $subway; ?></p>
                                         </div>
@@ -476,7 +478,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                         <img src="/img/green_marker.svg" alt=""/>
                     </div>
                     <div class="col">
-                        <p><?= $objectTitle . ', ' . $model->street . '<br />' . $cityName ?></p>
+                        <p><?= $objectTitle . ', ' . $model->address . '<br />' . $cityName ?></p>
                     </div>
                 </div>
 

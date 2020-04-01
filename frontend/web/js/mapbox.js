@@ -141,29 +141,34 @@
             zoom: zoom,
         });
 
-
+        var lang = geojson.lang !=='ua' ? geojson.lang : 'mul';
         map.addControl(new MapboxLanguage({
-            //defaultLanguage: 'mul'
+            defaultLanguage: lang
             //defaultLanguage: 'en'
-            defaultLanguage: 'ru'
+            //defaultLanguage: 'ru'
         }));
 
         geojson.features.forEach(function (marker) {
-            var el = document.createElement('div'), html = '';
+            var el = document.createElement('div'), html = '', id = marker.properties.id;
 
-            html += '<div class="map-img">';
-            html += '<img src="' + marker.properties.img + '"/>';
-            html += '<div class="green_circle">' + marker.properties.class + '</div>';
-            html += '</div>';
-            html +='<h4>' + marker.properties.title + '</h4>';
-            html += '<p>' + marker.properties.address + '</p>';
-
-            id = marker.properties.id;
             el.className = 'marker ' + id;
-            mar = new mapboxgl.Marker(el)
-                .setLngLat(marker.geometry.coordinates)
-                .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(html))
-                .addTo(map);
+            if(geojson.result!='offices') {
+                html += '<div class="map-img">';
+                html += '<img src="' + marker.properties.img + '"/>';
+                html += '<div class="green_circle">' + marker.properties.class + '</div>';
+                html += '</div>';
+                html +='<h4>' + marker.properties.title + '</h4>';
+                html += '<p>' + marker.properties.address + '</p>';
+
+                mar = new mapboxgl.Marker(el)
+                    .setLngLat(marker.geometry.coordinates)
+                    .setPopup(new mapboxgl.Popup({offset: 25}).setHTML(html))
+                    .addTo(map);
+            } else {
+                mar = new mapboxgl.Marker(el)
+                    .setLngLat(marker.geometry.coordinates)
+                    .addTo(map);
+            }
             markers[id] = mar;
         });
 
@@ -176,7 +181,7 @@
                 },
                 cluster: true,
                 clusterRadius: 40,
-                clusterMaxZoom: 8
+                clusterMaxZoom: 20
             });
 
             map.loadImage('./img/newmarker5.png', function(error, image) {
@@ -198,7 +203,7 @@
                 id: "cluster",
                 type: "circle",
                 source: "bcAllbc",
-                filter: [">=", "point_count", 2],
+                filter: [">=", "point_count", 1],
                 paint: {
                     "circle-color": "#3eb060",
                     "circle-radius": [
@@ -253,5 +258,10 @@
         map.on('zoomstart', function() {
             $('.marker.hover').removeClass('hover');
         });
+
+        /*map.on('zoomend', function() {
+            console.log(map.getZoom());
+        });*/
+
     }
 })(jQuery);

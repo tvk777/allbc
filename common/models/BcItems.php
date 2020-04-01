@@ -23,7 +23,7 @@ use yii\helpers\ArrayHelper;
  * @property int $city_id
  * @property int $country_id
  * @property int $district_id
- * @property string $street
+ * @property string $address
  * @property string $lat
  * @property string $lng
  * @property int $sort_order
@@ -114,10 +114,10 @@ class BcItems extends ActiveRecord
             [['name_ru', 'content_ru', 'title_ru', 'keywords_ru', 'description_ru', 'annons_ru', 'mgr_content_ru', 'shuttle_ru', 'contacts_ru', 'name_ua', 'content_ua', 'title_ua', 'keywords_ua', 'description_ua', 'annons_ua', 'mgr_content_ua', 'shuttle_ua', 'contacts_ua', 'name_en', 'content_en', 'title_en', 'keywords_en', 'description_en', 'annons_en', 'mgr_content_en', 'shuttle_en', 'contacts_en', 'city_id', 'country_id', 'district_id'], 'safe'],
             [['created_at', 'updated_at', 'deleted_at', 'uploaded', 'deleted'], 'safe'],
             [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
-            [['city_id', 'country_id', 'street', 'lat', 'lng', 'sort_order', 'class_id', 'active', 'hide'], 'required'],
-            [['lat', 'lng', 'total_m2'], 'number'],
+            [['city_id', 'country_id', 'address', 'lat', 'lng', 'sort_order', 'class_id', 'active', 'hide'], 'required'],
+            [['lat', 'lng', 'lat_str', 'lng_str',  'total_m2'], 'number'],
             [['contacts_admin'], 'string'],
-            [['street', 'redirect', 'email', 'email_name'], 'string', 'max' => 255],
+            [['address', 'redirect', 'email', 'email_name', 'street', 'street_ua', 'street_en'], 'string', 'max' => 255],
             [['minm2', 'maxm2', 'minprice', 'maxprice'], 'safe'],
         ];
     }
@@ -135,7 +135,7 @@ class BcItems extends ActiveRecord
             'city_id' => Yii::t('app', 'City ID'),
             'country_id' => Yii::t('app', 'Country ID'),
             'district_id' => Yii::t('app', 'District ID'),
-            'street' => Yii::t('app', 'Street'),
+            'address' => Yii::t('app', 'Address'),
             'lat' => Yii::t('app', 'Lat'),
             'lng' => Yii::t('app', 'Lng'),
             'sort_order' => Yii::t('app', 'Sort Order'),
@@ -529,7 +529,7 @@ class BcItems extends ActiveRecord
             ->where(['active' => 1])
             ->andWhere(['hide' => 0])
             ->andWhere(['city_id' => $city])
-            ->andWhere(['or', ['like', 'street', $str], ['in', 'id', $itemIds]])
+            ->andWhere(['or', ['like', 'address', $str], ['in', 'id', $itemIds]])
             ->limit(10)
             ->orderBy('updated_at DESC')
             ->multilingual()->all();

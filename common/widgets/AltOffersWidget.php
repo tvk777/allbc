@@ -18,13 +18,15 @@ class AltOffersWidget extends Widget{
     public function run() {
         //debug($this->item->className()); die();
         $m2 = [];
-        if($this->item->className()=='common\models\Offices'){
-            $lat = $this->target==1 ? $this->item->place->lat : $this->item->placesell->lat;
-            $lng = $this->target==1 ? $this->item->place->lng : $this->item->placesell->lng;
+        /*if($this->item->className()=='common\models\Offices'){
+            $lat = $this->target==1 ? $this->item->lat : $this->item->lat;
+            $lng = $this->target==1 ? $this->item->lng : $this->item->lng;
         } else {
             $lat = $this->item->lat;
             $lng = $this->item->lng;
-        }
+        }*/
+        $lat = $this->item->lat;
+        $lng = $this->item->lng;
 
         $query = BcItems::find()->select('*,  SQRT(POW(69.1 * (`lat` - '.$lat.'), 2) + POW(69.1 * ('.$lng.' - `lng`) * COS(`lat` / 57.3), 2)) AS `distance`');
 

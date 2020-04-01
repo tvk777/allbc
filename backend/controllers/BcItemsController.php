@@ -85,7 +85,7 @@ class BcItemsController extends AdminController
             $data = array_filter($data);
             $model->formCharacteristics = $data;
 
-            if($model->save()) {
+            if ($model->save()) {
                 if ((Yii::$app->request->post('save')) == 1) {
                     return $this->redirect(['update', 'id' => $model->id]);
                 }
@@ -133,22 +133,22 @@ class BcItemsController extends AdminController
             $data = array_filter($data);
             $model->formCharacteristics = $data;
 
-           if($model->save()) {
-               if ((Yii::$app->request->post('save')) == 1) {
-                   $characteristics = $this->getAllCharacteristics($id);
+            if ($model->save()) {
+                if ((Yii::$app->request->post('save')) == 1) {
+                    $characteristics = $this->getAllCharacteristics($id);
 
-                   return $this->render('update', [
-                       'model' => $model,
-                       'dataProvider' => $dataProvider,
-                       'dataProviderArh' => $dataProviderArh,
-                       'characteristics' => $characteristics
-                   ]);
-               }
+                    return $this->render('update', [
+                        'model' => $model,
+                        'dataProvider' => $dataProvider,
+                        'dataProviderArh' => $dataProviderArh,
+                        'characteristics' => $characteristics
+                    ]);
+                }
 
-               if (null !== (Yii::$app->request->post('close'))) {
-                   return $this->redirect(['index']);
-               }
-           }
+                if (null !== (Yii::$app->request->post('close'))) {
+                    return $this->redirect(['index']);
+                }
+            }
         }
 
         return $this->render('update', [
@@ -291,5 +291,50 @@ class BcItemsController extends AdminController
             'errors' => $errors,
         ]);
     }
+
+    //вставка названия улицы из адреса
+    //после автоматической вставки просмотреть и втсавить вручную те адреса, которые не вставились
+    /*public function actionStreets()
+    {
+        $model = BcItems::find()->all();
+        foreach ($model as $item) {
+            $item->street = $this->clearStreet($item->address);
+            $item->save();
+        }
+
+        return '123';
+    }
+
+    private function clearStreet($str)
+    {
+
+        $string = preg_replace("/^(.+?)[0-9].+$/", '\\1', $str);
+        $string = preg_replace('/\d/', '', $string);
+        $code_match = array('-', ',', '.', '/');
+        $string = str_replace($code_match, '', $string);
+        return $string;
+    }*/
+
+    //проверить координаты адресов, в которых кроме улицы включен город (Мариуполь, Краматорск и т.п.)
+    //для вставки англ. названий поменять язык в параметрах ф-ции и в поле модели
+    /*public function actionCoordinates()
+    {
+        $models = BcItems::find()->where(['>', 'id', 32265])->limit(300)->all();
+
+        $adresses = [];
+        foreach ($models as $item) {
+            $adress = $item->city->name . ' ' . $item->street;
+            $adresses[] = $adress;
+            $geo = Geo::getStreetLocationByAddress($adress, 'en');
+            if (!empty($geo)) {
+                $item->street_en = $geo['name'];
+                //$item->lat_str = $geo['lat'];
+                //$item->lng_str = $geo['lng'];
+                $item->save();
+            }
+        }
+
+        return debug($adresses);
+    }*/
 
 }

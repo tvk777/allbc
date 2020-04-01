@@ -53,7 +53,7 @@ $currentLanguage = Yii::$app->language;
                         </div>
                         <div class="two_cols_2 two_cols_2_2">
                             <div class="two_cols_2_col">
-                                <p><?= $one->street ?></p>
+                                <p><?= $one->address ?></p>
                             </div>
                             <div class="two_cols_2_col align_right">
                                 <div class="green_circle">

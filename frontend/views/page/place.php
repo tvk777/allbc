@@ -12,6 +12,8 @@ $city_url = $target == 2 ? $mainSell . '?filter[result]=offices' : $mainRent . '
 $city_id = 0;
 $zoom = 13;
 
+//debug($item);
+
 if (isset($item->city)) {
     $zoom = $item->city->zoom;
     $city_id = $item->city->id;
@@ -57,7 +59,7 @@ $this->params['breadcrumbs'][] = $objectTitle;
 $share_img_url = '';
 $cityName = getDefaultTranslate('name', $currentLanguage, $item->city, true);
 
-if ($model->no_bc !== 1) {
+if ($model->no_bc !== 1 && !Yii::$app->user->isGuest) { //прописать условие для брокера
     $itemName = getDefaultTranslate('name', $currentLanguage, $item);
     $targetLink = $target == 2 ? '?target=sell' : '?target=rent';
     $itemHref = $item->slug->slug . $targetLink;
@@ -68,7 +70,7 @@ if ($model->no_bc !== 1) {
 $itemName = $model->no_bc == 1 ? $objectTitle : getDefaultTranslate('name', $currentLanguage, $item);
 
 $addres = $item->street;
-$coord = [$item->lng, $item->lat];
+$coord = [$item->lng_str, $item->lat_str];
 $marker = [
     'coordinates' => $coord,
     'zoom' => $zoom
@@ -76,7 +78,6 @@ $marker = [
 $this->registerJsVar('marker', $marker, $this::POS_HEAD);
 
 
-//debug($item);
 $plus = '';
 $placePrices = $model->prices;
 $prices = count($placePrices) > 0 ? $model->getPricePeriod($placePrices) : Yii::t('app', 'con.');
@@ -209,8 +210,8 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                     <p>Тип:</p>
                                 </div>
                                 <div class="col">
-                                    <p><a href="<?= $city_url . '?filter[classes][]=' . $item->class->id ?>"
-                                          class="green_link_3"><?= Yii::t('app', 'Business center') . ' ' . getDefaultTranslate('name', $currentLanguage, $item->class, true) ?> </a>
+                                    <p><a href="<?= $city_url . '&filter[classes][]=' . $item->class->id ?>"
+                                          class="green_link_3"><?= Yii::t('app', 'Office') . ' ' . getDefaultTranslate('name', $currentLanguage, $item->class, true) ?> </a>
                                     </p>
                                 </div>
                                 <div class="col">
@@ -235,9 +236,13 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                         <a target="_blank"
                                            href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
                                     </h5>
-                                    <? if ($model->street) : ?>
-                                        <p><?= $model->street ?></p>
+                                    <? if ($item->street && Yii::$app->user->isGuest) : ?>
+                                        <p><?= $item->street ?></p>
                                     <? endif; ?>
+                                    <? if ($item->address && !Yii::$app->user->isGuest) : ?>
+                                        <p><?= $item->address ?></p>
+                                    <? endif; ?>
+
                                 </div>
                                 <? if (count($item->subways) > 0) : ?>
                                     <? foreach ($item->subways as $sub) : ?>

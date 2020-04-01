@@ -51,8 +51,8 @@ foreach ($offices as $office) : ?>
                 <span class="bc-name"><?= $objectTitle ?></span>
             </a>
             <div class="adres">
-                <? if ($item->street) : ?>
-                    <p><?= $item->street ?></p>
+                <? if ($item->address) : ?>
+                    <p><?= $item->address ?></p>
                 <? endif; ?>
             </div>
             <? if (count($item->subways) > 0) : ?>

@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'city_id',
             'country_id',
             'district_id',
-            'street',
+            'address',
             'lat',
             'lng',
             'sort_order',

@@ -24,6 +24,7 @@ if(count($model->subways)>0) {
 </div>
 
 <div class="col-sm-6">
+    <? echo urlencode('Гринченко') ?>
     <label class="control-label" for="place">Поиск (адрес)</label>
     <input type="text" value="" class="form-control" id="address_autocomplate_name">
     <input type="hidden" id="address_autocomplate_value" name="address_location">
@@ -31,7 +32,7 @@ if(count($model->subways)>0) {
     <?= $form->field($model, 'cityName')->textInput(['id' => 'city_autocomplate_name']) ?>
     <?= $form->field($model, 'city_id')->hiddenInput(['id' => 'city_autocomplate_value'])->label(false) ?>
 
-    <?= $form->field($model, 'street')->textInput(['id' => 'street_autocomplate_name']) ?>
+    <?= $form->field($model, 'address')->textInput(['id' => 'address2_autocomplate_name']) ?>
 </div>
 <div class="col-sm-6">
     <?= $form->field($model, 'countryName')->textInput(['id' => 'country_autocomplate_name']) ?>

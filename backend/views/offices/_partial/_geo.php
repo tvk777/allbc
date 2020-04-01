@@ -31,7 +31,7 @@ if(count($office->subways)>0) {
     <?= $form->field($office, 'cityName')->textInput(['id' => 'city_autocomplate_name']) ?>
     <?= $form->field($office, 'city_id')->hiddenInput(['id' => 'city_autocomplate_value'])->label(false) ?>
 
-    <?= $form->field($place, 'street')->textInput(['id' => 'street_autocomplate_name']) ?>
+    <?= $form->field($place, 'address')->textInput(['id' => 'address_autocomplate_name']) ?>
 </div>
 <div class="col-sm-6">
     <?= $form->field($office, 'countryName')->textInput(['id' => 'country_autocomplate_name']) ?>

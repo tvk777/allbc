@@ -57,8 +57,8 @@ if($model->district){
                                     <h5>
                                         <a target="_blank" href="#"><?= getDefaultTranslate('name', $currentLanguage, $model->city) . $district ?></a>
                                     </h5>
-                                    <? if($model->street) : ?>
-                                    <p><?= $model->street ?></p>
+                                    <? if($model->address) : ?>
+                                    <p><?= $model->address ?></p>
                                     <?endif; ?>
                                 </div>
                                 <? if (count($model->subways) > 0) : ?>

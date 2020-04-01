@@ -25,7 +25,7 @@ class BcItemsSearch extends BcItems
     {
         return [
             [['id', 'sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
-            [['created_at', 'updated_at', 'deleted_at', 'street', 'slug', 'contacts_admin', 'redirect', 'email', 'email_name'], 'safe'],
+            [['created_at', 'updated_at', 'deleted_at', 'address', 'slug', 'contacts_admin', 'redirect', 'email', 'email_name'], 'safe'],
             [['lat', 'lng'], 'number'],
             [['city_id', 'country_id', 'district_id', 'm2', 'city'], 'safe'],
         ];
@@ -49,6 +49,7 @@ class BcItemsSearch extends BcItems
      */
     public function search($params)
     {
+
         $query = BcItems::find()->localized('ru');
         // add conditions that should always apply here
 
@@ -83,7 +84,7 @@ class BcItemsSearch extends BcItems
             'approved' => $this->approved,
         ]);
 
-        $query->andFilterWhere(['like', 'street', $this->street])
+        $query->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'contacts_admin', $this->contacts_admin])
             ->andFilterWhere(['like', 'redirect', $this->redirect])
             ->andFilterWhere(['like', 'email', $this->email])
@@ -96,8 +97,7 @@ class BcItemsSearch extends BcItems
     public function seoSearch($params)
     {
         $target = !empty($params['target']) && $params['target'] === 2 ? 2 : 1;
-        $result = !empty($params['result']) && $params['result'] === 'offices' ? 'offices' : 'bc';
-
+        $result = !empty($params['result']) && $params['result'] === 'bc' ? 'bc' : 'offices';
 
         $query_bcitems = BcItems::find()->where(['active' => 1])->andWhere(['hide' => 0])->multilingual();
         $query_offices = Offices::find()->where(['target' => $target]); //запрос для отбора отдельных офисов
@@ -228,16 +228,20 @@ class BcItemsSearch extends BcItems
         //debug($markersItems);
 
         //формирование маркеров для карты
+        $currentLanguage = $params['lang'];
         $markers = [];
         $markers['type'] = 'FeatureCollection';
+        $markers['result'] = $result;
+        $markers['lang'] = $currentLanguage;
         $markers['features'] = [];
-        $currentLanguage = $params['lang'];
         //debug(ArrayHelper::getColumn($items, 'id'));
+        //debug($params['result']); die();
         foreach ($markersItems as $item) {
             $id = $item->id;
             //$coord = [$item->lng, $item->lat]; //координат пока нет в БД (надо решить что делать с точным адресом)
-            $addres = $item->street;
-            if ($params['result'] === 'bc') {
+            //$addres = $item->address;
+            if ($result === 'bc') {
+                $addres = $item->address;
                 $coord = [$item->lng, $item->lat]; 
                 $img = isset($item->images[0]) ? $item->images[0]->imgSrc : '';
                 $class = $item->class->short_name;
@@ -252,10 +256,12 @@ class BcItemsSearch extends BcItems
                     $img = '';
                 }
                 if ($item->no_bc === 1) {
-                    $coord = [$item->lng, $item->lat]; //временно -  пока нет в БД
+                    $addres = $item->office->street;
+                    $coord = [$item->office->lng_str, $item->office->lat_str]; 
                     $class = $item->office->class->short_name;
                 } else {
-                    $coord = [$item->bcitem->lng, $item->bcitem->lat]; //временно -  пока нет в БД
+                    $addres = $item->bcitem->street;
+                    $coord = [$item->bcitem->lng_str, $item->bcitem->lat_str]; 
                     $class = $item->bcitem->class->short_name;
                 }
             }

@@ -256,4 +256,38 @@ class OfficesController extends AdminController
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
+
+    /*public function actionCoordinates()
+    {
+        $models = Offices::find()->limit(300)->all();
+
+        $adresses = [];
+        foreach ($models as $item) {
+            $adress = $item->city->name . ' ' . $item->street;
+            $adresses[] = $adress;
+            $geo = Geo::getStreetLocationByAddress($adress, 'en');
+            if (!empty($geo)) {
+                $item->street_en = $geo['name'];
+                $item->lat_str = $geo['lat'];
+                $item->lng_str = $geo['lng'];
+                $item->save();
+            }
+        }
+
+        return debug($adresses);
+    }
+
+    public function actionCoord()
+    {
+        $model = Offices::findOne(51);
+        $address = $model->city->name . ' ' . $model->address;
+        $geo = Geo::getStreetLocationByAddress($address, 'en');
+        if (!empty($geo)) {
+            $model->lat = $geo['lat'];
+            $model->save();
+        }
+
+        return debug($address);
+    }*/
 }

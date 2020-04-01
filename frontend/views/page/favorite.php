@@ -68,8 +68,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Favorite');
                             <span class="bc-name"><?= $bcName ?></span>
                         </a>
                         <div class="adres">
-                            <? if ($one['bc']->street) : ?>
-                                <p><?= $one['bc']->street ?></p>
+                            <? if ($one['bc']->address) : ?>
+                                <p><?= $one['bc']->address ?></p>
                             <? endif; ?>
                         </div>
                         <? if (count($one['bc']->subways) > 0) : ?>

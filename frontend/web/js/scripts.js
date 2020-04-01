@@ -241,7 +241,7 @@ var filtersCoord,
 var innerWrapp;
 
 $(window).on("load", function () {
-    //console.log($(".scroll").length + ' ' + $(".scroll").attr('class'));
+    console.log($(".scroll").length + ' ' + $(".scroll").attr('class'));
     if ($(".scroll").length > 0) {
         $(".scroll").mCustomScrollbar();
     }
@@ -1409,8 +1409,8 @@ $(document).ready(function () {
         priceSlider3.noUiSlider.set(defaultDist);
         $("#walk_dist").val('');
         $("#subway").val('');
-        $("#pill_ch_1").attr('checked', false);
-        $("#pill_ch_2").attr('checked', true);
+        $("#pill_ch_1").attr('checked', true);
+        $("#pill_ch_2").attr('checked', false);
         $(".filter-form").submit();
     });
 

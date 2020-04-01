@@ -56,7 +56,7 @@ if (!empty($conditions) && !empty($conditions['sort'])) {
             break;
     }
 }
-$result = !empty($params['result']) && $params['result'] == 'offices' ? 'offices' : 'bc';
+$result = !empty($params['result']) && $params['result'] == 'bc' ? 'bc' : 'offices';
 ?>
 <section class="object_map_sect">
     <form action="" id="main_form">

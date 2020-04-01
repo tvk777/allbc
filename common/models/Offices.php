@@ -43,8 +43,8 @@ class Offices extends ActiveRecord
             [['target', 'city_id', 'country_id'], 'required'],
             [['target', 'percent_commission'], 'integer'],
             [['city_id', 'country_id', 'district_id', 'class_id'], 'safe'],
-            [['shuttle', 'shuttle_ua', 'shuttle_en', 'street'], 'string'],
-            [['lat', 'lng'], 'number'],
+            [['shuttle', 'shuttle_ua', 'shuttle_en', 'address', 'street', 'street_ua', 'street_en'], 'string'],
+            [['lat', 'lng', 'lat_str', 'lng_str'], 'number'],
         ];
 }
 

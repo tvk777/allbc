@@ -174,7 +174,7 @@
         $('#country_autocomplate_name').val('');
         $('#city_autocomplate_name').val('');
         $('#district_autocomplate_name').val('');
-        $('#street_autocomplate_name').val('');
+        $('#address2_autocomplate_name').val('');
 
         for (var i = 0; i < result.address_components.length; i += 1) {
             if (result.address_components[i].types[0] == 'country' && result.address_components[i].types[1] == 'political') {
@@ -190,7 +190,7 @@
                 $('#district_autocomplate_value').val(result.geometry.location.lat() + ',' + result.geometry.location.lng());
             }
             else if (result.address_components[i].types[0] == 'street_number' && result.address_components[i + 1].types[0] == 'route') {
-                $('#street_autocomplate_name').val(result.address_components[i + 1].long_name + " " + result.address_components[i].long_name);
+                $('#address2_autocomplate_name').val(result.address_components[i + 1].long_name + " " + result.address_components[i].long_name);
             }
         }
         set_latlng(result.geometry.location.lat() + ',' + result.geometry.location.lng());

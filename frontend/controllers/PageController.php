@@ -306,9 +306,10 @@ class PageController extends FrontendController
 
     public function getFilter($seo, $params)
     {
+        //debug($params);
         $currentLanguage = Yii::$app->language;
         $searchParams = [];
-        $searchParams['result'] = !empty($params['result']) ? $params['result'] : 'bc';
+        $searchParams['result'] = !empty($params['result']) ? $params['result'] : 'offices';
         $searchParams['lang'] = $currentLanguage;
         $searchParams['m2min'] = '';
         $searchParams['m2max'] = '';
@@ -321,6 +322,8 @@ class PageController extends FrontendController
         $searchParams['type'] = 1;
         $searchParams['pricemin'] = '';
         $searchParams['pricemax'] = '';
+
+        //debug($searchParams);
 
 
         if (empty($params)) {

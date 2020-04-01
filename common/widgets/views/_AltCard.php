@@ -5,7 +5,7 @@ $paramTarget = $target==1 ? 'rent' : 'sell';
 $href = '/'.$item->slug->slug.'?target='.$paramTarget;
 $city = $item->city->name;
 $district = $item->district ? $item->district->name . ' р-н' : '';
-$street = $item->street;
+$address = $item->address;
 $itemPlaces = $item->getFilteredPlaces($places, $target);
 $minmax = $item->getMinMaxM2($itemPlaces);
 $minmax = is_array($minmax) ? Yii::t('app', 'from') . ' ' . $minmax['min'] . ' m² ...' . $minmax['max'] . ' m²' : $minmax . ' m²';
@@ -71,7 +71,7 @@ if (isset($item->subways[0])) {
                     <div class="two_cols_2_col">
                         <div class="adres">
                             <h5>г. <?= $city ?>, <?= $district ?></h5>
-                            <p><?= $street ?></p>
+                            <p><?= $address ?></p>
                         </div>
                         <div class="metro_wrapp">
                             <p><?= $subway ?></p>
