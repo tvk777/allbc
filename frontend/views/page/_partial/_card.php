@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 use kriptograf\wishlist\widgets\WishlistButton;
 
-//debug($item->city);
 $paramTarget = $target==1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
 $href = '/' . $item->slug->slug . '?target=' . $paramTarget;

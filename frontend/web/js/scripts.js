@@ -1862,6 +1862,8 @@ $(document).ready(function () {
         $(jump).mouseover();
     });
 
+
+
     $(".places_table tbody .table_row").hover(function () {
         $(this).addClass('hover');
     }, function () {

@@ -100,6 +100,7 @@ if(city!=0) {
 JS;
 $this->registerJs($script, $this::POS_READY, 'city-handler');
 
+$minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' . $model->getMinPrice($places)['price'] . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
 ?>
 <section class="grey_bg">
     <form action="" id="main_form">
@@ -209,17 +210,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                     <? if (count($places) > 0) : ?>
                         <div class="inner">
                             <div class="free_office">
-                                <p><?= Yii::t('app', 'Free Offices') ?>:</p>
-                                <div class="pills_wrapp_2 scroll">
-                                    <? foreach ($places as $index => $place) : ?>
-                                        <? $m2 = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2;
-                                        $a = Html::a($m2 . ' м²', '#place' . $place->id, ['class' => 'scroll_to']);
-                                        ?>
-                                        <div class="pill_checlbox pill_checkbox_2">
-                                            <div class="place_pill"><?= $a ?></div>
-                                        </div>
-                                    <? endforeach ?>
-                                </div>
+                                <a href="#places" class="scroll_to grey_pill"><?= Yii::t('app', 'Free Offices').': '.count($places).' - '.$minPrice ?>:</a>
                             </div>
                         </div>
                     <? else: ?>

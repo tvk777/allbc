@@ -6,7 +6,7 @@ use yii\helpers\Url;
 <section>
     <div class="row row_2">
         <div class="col-xs-12">
-            <div class="title_places">
+            <div class="title_places" id="places">
                 <h2><?= $blockTitle ?></h2>
             </div>
 
