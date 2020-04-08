@@ -210,7 +210,7 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                     <? if (count($places) > 0) : ?>
                         <div class="inner">
                             <div class="free_office">
-                                <a href="#places" class="scroll_to grey_pill"><?= Yii::t('app', 'Free Offices').': '.count($places).' - '.$minPrice ?>:</a>
+                                <a href="#places" class="scroll_to grey_pill"><?= Yii::t('app', 'Free Offices').': '.count($places).' - '.$minPrice ?></a>
                             </div>
                         </div>
                     <? else: ?>
