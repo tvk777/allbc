@@ -206,12 +206,19 @@ class PageController extends FrontendController
         }
         $viewCounter->processCountViewItem();
 
+        $order = new OrderForm(); //User::findOne($id)
+        $broker = $model->brokers ? $model->brokers[0]->userInfo : User::findOne(8);
+        $order->toEmail = $broker->email;
+        $order->subject = 'subject';
+
         return $this->render('item', [
             'model' => $model,
             'target' => $targetId,
             'seoClass' => $seoClass,
             'mainRent' => $mainRent,
             'mainSell' => $mainSell,
+            'order' => $order,
+            'broker' => $broker
         ]);
     }
 
@@ -255,7 +262,7 @@ class PageController extends FrontendController
 
             return $this->refresh();
         } else {
-            return $this->renderAjax('order', [
+            return $this->renderAjax('order-modal', [
                 'model' => $model,
                 'user' => $broker
             ]);

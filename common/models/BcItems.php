@@ -204,22 +204,22 @@ class BcItems extends ActiveRecord
 
     public function getPlaces()
     {
-        return $this->hasMany(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['bc_places.hide' => 0]);
+        return $this->hasMany(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['bc_places.hide' => 0])->with('status');
     }
 
     public function getPlacesSell()
     {
-        return $this->hasMany(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0]);
+        return $this->hasMany(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 0])->andWhere(['hide' => 0])->with('status');
     }
 
     public function getArchivePlaces()
     {
-        return $this->hasMany(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 1])->andWhere(['hide' => 0]);
+        return $this->hasMany(BcPlaces::className(), ['item_id' => 'id'])->andWhere(['archive' => 1])->andWhere(['hide' => 0])->with('status');
     }
 
     public function getArchivePlacesSell()
     {
-        return $this->hasMany(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 1])->andWhere(['hide' => 0]);
+        return $this->hasMany(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 1])->andWhere(['hide' => 0])->with('status');
     }
 
 

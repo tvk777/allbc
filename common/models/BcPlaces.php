@@ -302,6 +302,12 @@ class BcPlaces extends ActiveRecord
         return $this->hasOne(Slugs::className(), ['model_id' => 'id'])->andWhere(['model' => self::tableName()]);
     }
 
+    public function getStatus()
+    {
+        return $this->hasOne(BcStatuses::className(), ['id' => 'status_id']);
+    }
+
+
     public function beforeValidate()
     {
         if (!$this->isNewRecord) {

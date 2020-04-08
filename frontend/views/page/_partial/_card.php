@@ -98,7 +98,7 @@ if (!empty($itemSubway)) {
                     <? if (!empty($slides)) : ?>
                         <? foreach ($slides as $slide): ?>
                             <div class="slide">
-                                <a href="<?= $slide['big'] ?>" class="img_box" data-fancybox="card_1"
+                                <a href="<?= $slide['big'] ?>" class="img_box" data-fancybox="card_1<?= $item->id ?>"
                                    data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></a>
                             </div>
                         <? endforeach; ?>

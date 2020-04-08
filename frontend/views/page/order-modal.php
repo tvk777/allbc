@@ -6,15 +6,36 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\captcha\Captcha;
+
+$this->title = 'Заявка на просмотр';
+$this->params['breadcrumbs'][] = $this->title;
 $phone = !empty($user->broker_phone) ? $user->broker_phone : $user->phone;
 $src = !empty($user->avatar) ? $user->avatar->thumb260x260Src : '';
 ?>
-    <div class="contact_form_order">
-        <h2>Записаться на просмотр</h2>
+<div class="contact_popup">
+    <div class="contact_popup_header">
+        <button type="button" class="close close_btn" data-dismiss="modal" aria-label="Close"><i class="close_white"></i></button>
+
+        <div class="contact_person_desc">
+            <div class="col">
+                <div class="author_photo author_photo_2">
+                    <img src="<?= $src ?>" alt=""/>
+                </div>
+            </div>
+            <div class="col">
+                <h3>ЛМ - <?= $user->name ?></h3>
+                <div class="tel_link_2_wrapp"><a class="tel_link_2" href="tel:<?= $phone ?>"><?= $phone ?></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contact_form_wrapp">
+        <h3>Записаться на просмотр</h3>
         <div class="contact_form">
             <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
             <div class="input_wrapp_2">
-                <?= $form->field($model, 'name')->textInput(['placeholder' => $model->getAttributeLabel('name')])->label(false); ?>
+                <?= $form->field($model, 'name')->textInput(['autofocus' => true, 'placeholder' => $model->getAttributeLabel('name')])->label(false); ?>
             </div>
             <div class="input_wrapp_2">
                 <?= $form->field($model, 'email')->textInput(['placeholder' => $model->getAttributeLabel('email')])->label(false); ?>
@@ -31,3 +52,4 @@ $src = !empty($user->avatar) ? $user->avatar->thumb260x260Src : '';
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+</div>

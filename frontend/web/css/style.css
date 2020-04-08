@@ -657,7 +657,7 @@ textarea:focus {
 .breadcrumbs li a:link,
 .breadcrumbs li a:visited,
 .breadcrumbs li a:active,
-.breadcrumbs li a:hover{
+.breadcrumbs li a:hover {
     text-decoration: none;
 }
 
@@ -772,7 +772,7 @@ textarea:focus {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .metro {
@@ -807,7 +807,6 @@ textarea:focus {
     background-repeat: no-repeat;
     background-size: contain;
 }
-
 
 .tel_icon_white {
     display: inline-block;
@@ -2444,7 +2443,7 @@ img.logo_black {
 }
 
 .green_link,
-.green_link:hover{
+.green_link:hover {
     color: #3eb060;
     font-size: 16px;
     font-weight: bold;
@@ -2547,9 +2546,8 @@ img.logo_black {
     display: inline-block;
     vertical-align: top;
     min-width: 143px;
-    min-height:41px;
+    min-height: 41px;
     cursor: pointer;
-    margin: 2px 0;
     padding: 8px 20px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -2581,8 +2579,8 @@ img.logo_black {
     transition-timing-function: ease;
 }
 
-.office_info .green_pill, .office_info .green_pill:hover{
-    margin:0;
+.office_info .green_pill, .office_info .green_pill:hover {
+    margin: 0;
 }
 
 .green_pill:link,
@@ -3338,9 +3336,11 @@ img.logo_black {
     position: relative;
     font-family: "Proxima Nova";
 }
-a.green_pill{
+
+a.green_pill {
     line-height: normal;
 }
+
 .pass_link {
     text-decoration: underline;
     margin-top: 10px;
@@ -4040,7 +4040,6 @@ a.green_pill{
     background-size: 100%;
 }
 
-
 .metro_two_cols {
     display: flex;
 }
@@ -4592,6 +4591,11 @@ a.green_pill{
     position: relative;
 }
 
+.slide-empty {
+    background-image: linear-gradient(to left, #00AEE7 0%, #88C543 100%);
+    height: 180px;
+}
+
 .object_slider .img_box img {
     display: block;
     width: auto;
@@ -4604,6 +4608,11 @@ a.green_pill{
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+}
+
+.object_slider .img_box.place img {
+    position: relative;
+    width: 100%;
 }
 
 .white_left_arrow {
@@ -4720,14 +4729,14 @@ a.green_pill{
 
 a.object_card_title,
 a.object_card_title:hover,
-a.object_card_title:focus{
+a.object_card_title:focus {
     height: 44px;
     overflow: hidden;
     font-size: 18px;
     font-weight: 700;
     display: block;
     text-decoration: none;
-    color:#000000;
+    color: #000000;
 }
 
 .adres h5,
@@ -5448,10 +5457,12 @@ a.object_card_title:focus{
     border: 1px solid #3eb060;
     background-color: #3eb060;
 }
-.olive_pill:hover,.olive_pill:focus{
+
+.olive_pill:hover, .olive_pill:focus {
     text-decoration: none;
     color: #ffffff;
 }
+
 .white_pill {
     display: block;
     width: 50%;
@@ -5460,6 +5471,7 @@ a.object_card_title:focus{
     line-height: 20px;
     color: #000000;
 }
+
 .white_pill:hover, .white_pill:focus {
     text-decoration: none;
     color: #000000;
@@ -6343,6 +6355,14 @@ p.desc_p_2 .red {
     border: 1px solid #3eb060;
     background-color: #3eb060;
     color: #ffffff;
+}
+
+.modal.grey_pill,
+.modal.grey_pill:hover,
+.modal.grey_pill:hover,
+.modal.grey_pill:hover,
+.modal.grey_pill:hover{
+    background: none;
 }
 
 .pills_wrapp {
@@ -7613,7 +7633,7 @@ th.table_cell.thm2 .arrow .green {
 }
 
 .star_checkbox label,
-i.fav{
+i.fav {
     display: block;
     width: 15px;
     height: 15px;
@@ -7627,7 +7647,7 @@ i.fav{
 .star_checkbox input:checked + label,
 i.fav.rem,
 i.star_icon_2.rem,
-i.star_2.rem{
+i.star_2.rem {
     background-image: url(../img/star_yellow.svg);
 }
 
@@ -8061,12 +8081,14 @@ i.star_2.rem{
     border: 1px solid #44ba95;
     background-color: #44ba95;
 }
+
 .modal.transparent_pill_2,
-.modal.green_pill.green_pill_2{
+.modal.green_pill.green_pill_2 {
     border: none;
 }
+
 .modal.transparent_pill_2:hover,
-.modal.green_pill.green_pill_2{
+.modal.green_pill.green_pill_2 {
     border: none;
     background-color: transparent;
 }
@@ -8211,6 +8233,7 @@ i.star_2.rem{
 .contact_popup_header h3 {
     color: #ffffff;
 }
+
 .contact_popup_header h1 {
     color: #ffffff;
     font-family: "Proxima Nova";
@@ -8218,7 +8241,6 @@ i.star_2.rem{
     line-height: 27px;
     font-weight: bold;
 }
-
 
 .tel_link_2_wrapp {
     padding-left: 20px;
@@ -8274,8 +8296,8 @@ i.star_2.rem{
 
 .input_wrapp_2 .help-block-error {
     position: absolute;
-    top:20px;
-    left:15px;
+    top: 20px;
+    left: 15px;
     font-size: 11px;
     color: red;
     padding: 0;
@@ -8677,47 +8699,52 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     z-index: 9;
 }
 
-.alert{
+.alert {
     text-align: center;
     width: 100%;
     clear: both;
 }
-.alert button{
+
+.alert button {
     background: none;
     border: none;
     font-size: 16px;
     cursor: pointer;
 }
 
-.alert-success, .alert-success button{
-    color:#76c258;
+.alert-success, .alert-success button {
+    color: #76c258;
 }
 
 .col3 {
-    width:33%;
-    float:left;
+    width: 33%;
+    float: left;
     padding: 10px;
 }
 
-.bc-name{
+.bc-name {
     font-size: 16px;
     font-weight: 700;
     display: block;
     text-decoration: none;
-    color:#000000;
+    color: #000000;
 }
+
 .col60, .col50, .col40 {
-    float:left;
+    float: left;
     padding: 10px;
 }
+
 .col60 {
-    width:60%;
+    width: 60%;
 }
+
 .col40 {
-    width:40%;
+    width: 40%;
 }
+
 .col50 {
-    width:50%;
+    width: 50%;
 }
 
 /*
@@ -8725,22 +8752,61 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     text-align: center;
 }
 */
-.favorite a.img_box{
+.favorite a.img_box {
     display: block;
-    width:300px;
+    width: 300px;
     height: 200px;
     background-image: linear-gradient(to left, #00AEE7 0%, #88C543 100%);
 }
 
-.remove-fav .remove-link{
-    color:red;
+.remove-fav .remove-link {
+    color: red;
 }
+
 .transparent_pill_2:hover,
 .transparent_pill_2:focus,
-.transparent_pill_2:active{
-    color:white;
+.transparent_pill_2:active {
+    color: white;
 }
-.sub-result{
+
+.sub-result {
     padding-top: 10px;
     border-bottom: 1px solid #ededed;
+}
+
+.place-card {
+    margin-bottom: 20px;
+}
+
+.place-card .favor-star {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    z-index: 9;
+}
+
+.title_places {
+    padding-bottom: 20px;
+}
+
+.header-item__name, .header-item__value, .object_content .row {
+    padding: 0;
+}
+
+.header-item__name p{
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: bold;
+}
+
+.header-item__name .custom_select_wrapp {
+z-index: auto;
+}
+
+.header-item__name .dropdown_select {
+    z-index: 2;
+    top:70%;
+}
+.contact_form_order {
+    padding: 0 30px 15px 30px;
 }

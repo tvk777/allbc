@@ -1808,6 +1808,52 @@ $(document).ready(function () {
         }
     }, '.change-period .select_item span');
 
+    $(document).on({
+        click: function () {
+            var itemText = $(this).text(),
+                currencyId = $(this).data('currid'),
+                periodId, parentBlock, inputP, dataAtr, parentDiv, currencyValue, currElm2, currElperiod, periodValue;
+            parentBlock = $(this).closest(".custom_select");
+            parentDiv = $(this).closest(".place-card");
+            periodId = parentDiv.find("input.period").val();
+            inputP = parentBlock.find(".select_input .sel_val");
+            parentBlock.find(".select_res.currency").val(currencyId);
+            inputP.html(itemText);
+            parentBlock.find(".dropdown_select").slideUp(200);
+
+            currElm2 = parentDiv.find(".table_cell.m2");
+            currencyValue = currElm2.data(currencyId);
+            currElm2.html('<p>' + currencyValue + ' </p>');
+
+            currElperiod = parentDiv.find(".table_cell.period");
+            dataAtr = periodId + '_' + currencyId;
+            periodValue = currElperiod.data(dataAtr);
+            currElperiod.html('<p>' + periodValue + ' </p>');
+        }
+    }, '.change-currency-single .select_item span');
+
+    $(document).on({
+        click: function () {
+            var itemText = $(this).text(),
+                periodId = $(this).data('period'),
+                currencyId, parentBlock, inputP, dataAtr, parentDiv, currElperiod, periodValue;
+            parentBlock = $(this).closest(".custom_select");
+            parentDiv = $(this).closest(".place-card");
+            currencyId = parentDiv.find("input.currency").val(),
+                inputP = parentBlock.find(".select_input .sel_val");
+            parentBlock.find(".select_res.period").val(periodId);
+            inputP.html(itemText);
+            parentBlock.find(".dropdown_select").slideUp(200);
+
+            currElperiod = parentDiv.find(".table_cell.period");
+            dataAtr = periodId + '_' + currencyId;
+            periodValue = currElperiod.data(dataAtr);
+            currElperiod.html('<p>' + periodValue + ' </p>');
+        }
+    }, '.change-period-single .select_item span');
+
+
+
     $('.scroll_to').click(function (e) {
         e.preventDefault();
         var jump = $(this).attr('href');

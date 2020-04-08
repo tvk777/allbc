@@ -55,7 +55,7 @@ if ($city_id !== 0) {
 if ($seoClass) {
     $this->params['breadcrumbs'][] = [
         'label' => $seoClass->name,
-        'url' => $seoClass->slug->slug
+        'url' => $seoClass->slug->slug.'?filter[result]=bc'
     ];
 }
 $district = '';
@@ -287,16 +287,23 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                             ]); ?>
                         <? endforeach; ?>
                     <? endif; ?>
-                    <? if (count($model->brokers) > 0) : ?>
-                        <? foreach ($model->brokers as $user) : ?>
-                            <?= $this->render('_partial/_user-info', [
-                                'user' => $user,
+                    <?= $this->render('_partial/_user-info', [
+                                'user' => $broker,
                                 'city_url' => $city_url,
                                 'comission' => $comission,
                                 'role' => 'Брокер'
                             ]); ?>
-                        <? endforeach; ?>
-                    <? endif; ?>
+                    <?/* if (count($model->brokers) > 0) : */?><!--
+                        <?/* foreach ($model->brokers as $user) : */?>
+                            <?/* debug($user) */?>
+                            <?/*= $this->render('_partial/_user-info', [
+                                'user' => $user,
+                                'city_url' => $city_url,
+                                'comission' => $comission,
+                                'role' => 'Брокер'
+                            ]); */?>
+                        <?/* endforeach; */?>
+                    --><?/* endif; */?>
                     <div class="inner">
                         <div class="pills_wrapp">
                             <div class="col">
@@ -309,7 +316,6 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                             </div>
                         </div>
                         <ul class="socials_list">
-                            <? //echo yii\helpers\Url::current([], true); ?>
                             <?= \ymaker\social\share\widgets\SocialShare::widget([
                                 'configurator' => 'socialShare',
                                 'url' => yii\helpers\Url::current([], true),
@@ -317,18 +323,6 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                 'description' => 'Description of the page...',
                                 'imageUrl' => \yii\helpers\Url::to($share_img_url, true),
                             ]); ?>
-                            <!--<li><a href="#"><img src="img/pinterest_2.svg" alt=""/></a></li>
-                            <li><a href="#"><img src="img/twitter_2.svg" alt=""/></a></li>
-                            <li><a href="#"><img src="img/envelop_2.svg" alt=""/></a></li>
-                            <li><a href="#"><img src="img/facebook_2.svg" alt=""/></a></li>
-                            <li class="hide_soc"><a href="#"><img src="img/pinterest_2.svg" alt=""/></a></li>
-                            <li class="hide_soc"><a href="#"><img src="img/twitter_2.svg" alt=""/></a></li>
-                            <li class="hide_soc"><a href="#"><img src="img/envelop_2.svg" alt=""/></a></li>
-                            <li class="hide_soc"><a href="#"><img src="img/facebook_2.svg" alt=""/></a></li>
-                            <li class="slide_socials more_socials"><a href="#"><img src="/img/plus_2.svg" alt=""/></a>
-                            </li>
-                            <li class="slide_socials less_socials"><a href="#"><img src="/img/minus_btn.svg" alt=""/></a>
-                            </li>-->
                         </ul>
                     </div>
                 </div>
@@ -397,13 +391,12 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
     echo $this->render('_item-partial/_places', [
         'target' => $target,
         'places' => $placesRent,
-        'tablId' => 'placesTable',
-        'galleryId' => 'galleries_1',
-        'blockTitle' => Yii::t('app', 'Office rental - offers')
+        'blockTitle' => Yii::t('app', 'Office rental - offers'),
+        'userId' => $broker->id
     ]);
 } ?>
 
-<? if (count($placesRent) > 0) {
+<? /*if (count($placesRent) > 0) {
     echo $this->render('_item-partial/_places-owner', [
         'target' => $target,
         'places' => $placesRent,
@@ -412,9 +405,9 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
         'dataTable' => 'rent_table',
         'blockTitle' => Yii::t('app', 'Office rental - offers')
     ]);
-} ?>
+}*/ ?>
 
-<? if (count($placesRentArhive) > 0) {
+<? /*if (count($placesRentArhive) > 0) {
     echo $this->render('_item-partial/_places-owner', [
         'target' => $target,
         'places' => $placesRentArhive,
@@ -423,7 +416,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
         'dataTable' => 'rent_ar_table',
         'blockTitle' => Yii::t('app', 'Office rental - archive')
     ]);
-} ?>
+}*/ ?>
 
 
 
@@ -437,7 +430,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
     ]);
 } ?>
 
-<? if (count($placesSell) > 0) {
+<? /*if (count($placesSell) > 0) {
     echo $this->render('_item-partial/_places-owner-sell', [
         'target' => $target,
         'places' => $placesSell,
@@ -446,9 +439,9 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
         'dataTable' => 'sell_table',
         'blockTitle' => Yii::t('app', 'Office sale - offers')
     ]);
-} ?>
+}*/ ?>
 
-<? if (count($placesSellArhive) > 0) {
+<? /*if (count($placesSellArhive) > 0) {
     echo $this->render('_item-partial/_places-owner-sell', [
         'target' => $target,
         'places' => $placesSellArhive,
@@ -457,7 +450,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
         'dataTable' => 'sell_ar_table',
         'blockTitle' => Yii::t('app', 'Office sale - archive')
     ]);
-} ?>
+}*/ ?>
 
 <section class="sect_4_buisnes_center">
     <div class="row">
@@ -478,28 +471,39 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                         <img src="/img/green_marker.svg" alt=""/>
                     </div>
                     <div class="col">
-                        <p><?= $objectTitle . ', ' . $model->address . '<br />' . $cityName ?></p>
+                        <p><?= $objectTitle . ',<br />' . $model->address . '<br />' . $cityName ?></p>
                     </div>
                 </div>
 
-                <? if (count($model->brokers) > 0) : ?>
-                    <? foreach ($model->brokers as $user) : ?>
-                        <?= $this->render('_partial/_user-contact', [
+                        <?
+                        //debug($broker);
+                        echo $this->render('_partial/_user-info', [
+                            'user' => $broker,
+                            'city_url' => $city_url,
+                            'comission' => $comission,
+                            'role' => 'Брокер'
+                        ]);
+                        ?>
+
+
+                <? //if (count($model->brokers) > 0) : ?>
+                    <? //foreach ($model->brokers as $user) : ?>
+                        <? /*echo $this->render('_partial/_user-contact', [
                             'user' => $user,
                             'role' => 'Брокер'
-                        ]); ?>
-                    <? endforeach; ?>
-                <? endif; ?>
+                        ]);*/ ?>
+                    <? //endforeach; ?>
+                <? //endif; ?>
 
 
-                <? if (count($model->owners) > 0) : ?>
-                    <? foreach ($model->owners as $user) : ?>
-                        <?= $this->render('_partial/_user-contact', [
+                <? //if (count($model->owners) > 0) : ?>
+                    <? //foreach ($model->owners as $user) : ?>
+                        <? /*echo $this->render('_partial/_user-contact', [
                             'user' => $user,
                             'role' => 'Собственник'
-                        ]); ?>
-                    <? endforeach; ?>
-                <? endif; ?>
+                        ]); */ ?>
+                    <? //endforeach; ?>
+                <? //endif; ?>
 
                 <div class="contact_item">
                     <div class="col">
@@ -519,64 +523,10 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                 </div>
             </div>
             <div class="right">
-                <div class="h2_wrapp_2">
-                    <h2>Комментарии:</h2>
-                </div>
-                <div class="comments_form_wrapp clearfix">
-                    <div class="left">
-                        <div class="comment_form">
-                            <form>
-                                <div class="input_wrapp">
-                                    <textarea placeholder="Сообщение"></textarea>
-                                </div>
-                                <input type="submit" class="green_pill" value="Отправить сообщение"/>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="right">
-                        <div class="comments_scroll_box scroll">
-                            <div class="comment_thumb">
-                                <div class="descript">
-                                    <p>Все офисы сданы до 2020 года, звонят не раньше чем через пол года.</p>
-                                </div>
-                                <div class="comment_thumb_footer">
-                                    <div class="col">
-                                        <div class="date">03/09/2019</div>
-                                    </div>
-                                    <div class="col">
-                                        <a href="#" class="red_link">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment_thumb">
-                                <div class="descript">
-                                    <p>Все офисы сданы до 2020 года, звонят не раньше чем через пол года.</p>
-                                </div>
-                                <div class="comment_thumb_footer">
-                                    <div class="col">
-                                        <div class="date">03/09/2019</div>
-                                    </div>
-                                    <div class="col">
-                                        <a href="#" class="red_link">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment_thumb">
-                                <div class="descript">
-                                    <p>Все офисы сданы до 2020 года, звонят не раньше чем через пол года.</p>
-                                </div>
-                                <div class="comment_thumb_footer">
-                                    <div class="col">
-                                        <div class="date">03/09/2019</div>
-                                    </div>
-                                    <div class="col">
-                                        <a href="#" class="red_link">Удалить</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?= $this->render('order', [
+                    'model' => $order,
+                    'user' => $broker
+                ]); ?>
             </div>
         </div>
     </div>
