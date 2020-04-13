@@ -96,10 +96,16 @@ function getfilterNavParams() {
             $(".filter_nav").addClass("fixed");
             $(".filter_resp").addClass("scroll");
             $("#filters").outerHeight($(".filter_nav").outerHeight());
+            if($(".item-invis").length>0) {
+                $(".item-invis").show();
+            }
         } else {
             $(".filter_nav").removeClass("fixed");
             $(".filter_resp").removeClass("scroll");
             $("#filters").height(false);
+            if($(".item-invis").length>0) {
+                $(".item-invis").hide();
+            }
         }
     }
 }
@@ -1873,7 +1879,7 @@ $(document).ready(function () {
     //favorit-box
     var places = $('.out-wish');
     $('.multi').click(function (e) {
-        if ($(this).hasClass('in-wish')) {
+        if ($(this).hasClass('in-wish-bc')) {
             places.each(function (index) {
                 var self = this,
                     model = $(self).data('model'),

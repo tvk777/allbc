@@ -103,6 +103,12 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
 $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' . $model->getMinPrice($places)['price'] . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
 ?>
 <section class="grey_bg">
+
+    <?= $this->render('_item-partial/_head', [
+        'user' => $broker,
+        'name' => $objectTitle,
+    ]); ?>
+
     <form action="" id="main_form">
         <input name="city_link" type="hidden" id="city_link" value="<?= $rentHref ?>"
                data-valuesell="<?= $sellHref ?>">
@@ -183,8 +189,8 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                                         'model' => $model,
                                         'anchorActive' => '<i class="fav rem"></i>',
                                         'anchorUnactive' => '<i class="fav"></i>',
-                                        'cssClass' => 'multi out-wish',
-                                        'cssClassInList' => 'in-wish',
+                                        'cssClass' => 'multi out-wish-bc',
+                                        'cssClassInList' => 'in-wish-bc',
                                         'building' => 'bc'
                                     ]); ?>
                                 </div>

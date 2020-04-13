@@ -8779,10 +8779,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 }
 
 .place-card .favor-star {
-    position: absolute;
-    right: 30px;
-    top: 10px;
-    z-index: 9;
+
 }
 
 .title_places {
@@ -8809,4 +8806,12 @@ z-index: auto;
 }
 .contact_form_order {
     padding: 0 30px 15px 30px;
+}
+
+.item-invis{
+    display: none;
+}
+
+.multi .fav-span {
+    display: none;
 }
