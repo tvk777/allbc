@@ -1879,7 +1879,7 @@ $(document).ready(function () {
     //favorit-box
     var places = $('.out-wish');
     $('.multi').click(function (e) {
-        if ($(this).hasClass('in-wish-bc')) {
+        if ($(this).hasClass('in-wish')) {
             places.each(function (index) {
                 var self = this,
                     model = $(self).data('model'),
@@ -1943,6 +1943,5 @@ $(document).ready(function () {
             });
         }
     });
-
 
 });

@@ -184,13 +184,13 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                         <div class="object_title">
                             <div class="h3_wrapp">
                                 <h3><?= $objectTitle; ?></h3>
-                                <div class="star_checkbox like_star">
+                                <div class="star_checkbox like_star item_info">
                                     <?= WishlistButton::widget([
                                         'model' => $model,
                                         'anchorActive' => '<i class="fav rem"></i>',
                                         'anchorUnactive' => '<i class="fav"></i>',
-                                        'cssClass' => 'multi out-wish-bc',
-                                        'cssClassInList' => 'in-wish-bc',
+                                        'cssClass' => 'multi out-wish',
+                                        'cssClassInList' => 'in-wish',
                                         'building' => 'bc'
                                     ]); ?>
                                 </div>

@@ -50,6 +50,18 @@ use yii\helpers\Url;
 
                 <div class="col-xs-12 place-card">
                     <div class="col-md-4 col-sm-12">
+                        <div class="favor-star">
+                            <div class="black_circle_2">
+                                <?= WishlistButton::widget([
+                                    'model' => $place,
+                                    'anchorActive' => '<i class="star_icon_2 rem"></i>',
+                                    'anchorUnactive' => '<i class="star_icon_2"></i>',
+                                    'cssClass' => 'card out-wish',
+                                    'cssClassInList' => 'in-wish',
+                                    //'building' => $building
+                                ]); ?>
+                            </div>
+                        </div>
                         <? if (!empty($place->slides)) : ?>
                             <div class="object_slider">
                                 <? foreach ($place->slides as $slide): ?>
@@ -81,20 +93,6 @@ use yii\helpers\Url;
                         <div class="row">
                             <div class="col-xs-6 header-item__name"><p>Стан приміщення:</p></div>
                             <div class="col-xs-6 header-item__value"><p><?= $place->status->name ?></p></div>
-                        </div>
-                        <div class="row">
-                            <div class="favor-star">
-                                <div class="__black_circle_2">
-                                    <?= WishlistButton::widget([
-                                        'model' => $place,
-                                        'anchorActive' => '<i class="fav rem"></i><span class="fav-span">В обраному</span>',
-                                        'anchorUnactive' => '<i class="fav"></i><span class="fav-span">Додати в обране</span>',
-                                        'cssClass' => 'card out-wish',
-                                        'cssClassInList' => 'in-wish',
-                                        //'building' => $building
-                                    ]); ?>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="object_content col-md-4 col-sm-12">

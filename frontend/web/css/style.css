@@ -4025,6 +4025,7 @@ a.green_pill {
     border-radius: 3px;
     border: 1px solid #cdcece;
     background-color: #ffffff;
+    z-index:9;
 }
 
 .custom_select_wrapp_2 {
@@ -7758,7 +7759,8 @@ th.table_cell.thm2 .arrow .green {
 }
 
 .star_checkbox label,
-i.fav {
+i.fav,
+.item_info i.star_icon_2 {
     display: block;
     width: 15px;
     height: 15px;
@@ -8904,7 +8906,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 }
 
 .place-card .favor-star {
-
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    z-index: 9;
 }
 
 .title_places {
