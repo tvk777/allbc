@@ -50,9 +50,10 @@ class Menu extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['url', 'coll'], 'required'],
+            [['url', 'coll', 'menu'], 'required'],
             [['coll', 'sort_order'], 'integer'],
             [['url'], 'string', 'max' => 127],
+            [['menu'], 'string', 'max' => 16],
             [['text', 'text_ru', 'text_ua', 'text_en',], 'safe'],
         ];
     }
@@ -67,6 +68,7 @@ class Menu extends \yii\db\ActiveRecord
             'url' => Yii::t('app', 'Url'),
             'coll' => Yii::t('app', 'Coll'),
             'sort_order' => Yii::t('app', 'Sort Order'),
+            'menu' => Yii::t('app', 'Menu'),
         ];
     }
 
@@ -75,9 +77,14 @@ class Menu extends \yii\db\ActiveRecord
         return new MultilingualQuery(get_called_class());
     }
 
+    public static function findTopMenu()
+    {
+        return self::find()->where(['menu' => 'main'])->multilingual()->orderBy('sort_order')->all();
+    }
+
     public static function findByColl()
     {
-        $items = self::find()->multilingual()->orderBy('sort_order')->all();
+        $items = self::find()->where(['menu' => 'foot'])->multilingual()->orderBy('sort_order')->all();
         $menu = [];
         foreach($items as $item){
             switch ($item->coll){

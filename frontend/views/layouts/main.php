@@ -147,6 +147,7 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                     <div class="append-elem" data-append-elem="5"></div>
                 </div>
                 <div class="main_nav">
+                    <?php echo common\widgets\TopMenuWidget::widget() ?>
                     <div class="add-advert">
                         <div class="dropdowm_wrapp <?= $dropdowmClass2 ?>">
                             <div class="dropdown_title">

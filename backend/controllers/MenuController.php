@@ -27,10 +27,11 @@ class MenuController extends AdminController
     }*/
     public function actionIndex()
     {
-        $menu = Menu::findByColl();
-
+        $footmenu = Menu::findByColl();
+        $topmenu = Menu::findTopMenu();
         return $this->render('index', [
-            'menu' => $menu,
+            'footmenu' => $footmenu,
+            'topmenu' => $topmenu,
         ]);
     }
 

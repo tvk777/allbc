@@ -1684,7 +1684,15 @@ textarea:focus {
     background: rgba(255, 255, 255, .95);
 }
 
-/* end main nav menu */
+.top-menu a{
+    color:#ffffff;
+}
+
+.header_site_inner .top-menu a{
+    color:#000000;
+}
+
+    /* end main nav menu */
 
 
 .logo_wrapp_2:after {

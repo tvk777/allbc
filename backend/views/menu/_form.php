@@ -6,11 +6,16 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\Menu */
 /* @var $form yii\widgets\ActiveForm */
+$options=[
+    'main'=>'Меню в шапке',
+    'foot'=>'Меню в футере',
+];
 ?>
 
 <div class="menu-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <?= $form->field($model, 'menu')->dropDownList($options); ?>
 
     <div class="col-sm-4">
         <h3>Перевод на русский</h3>
