@@ -994,12 +994,69 @@ textarea:focus {
     text-align: right;
 }
 
+.header_site .row {
+    position:relative;
+    display:-webkit-flex;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-justify-content:space-between;
+    -ms-flex-pack:justify;
+    justify-content:space-between;
+    -webkit-align-items:center;
+    -ms-flex-align:center;
+    align-items:center;
+}
+
+/*-- Header - Inner --*/
+
+.header_1 {
+    position: relative;
+    z-index: 12;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
+}
+
+.header_1 .row {
+    max-width: 100%;
+    padding: 0 25px;
+}
+
+.header_1 .inline {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.header_1 .logo_wrapp {
+    margin: 2px 0;
+}
+
+.header_1 .dropdown_title {
+    min-height: 40px;
+    padding-top: 8px;
+    padding-bottom: 9px;
+}
+
+.header_1 .dropdown_title:before {
+    top: 20px;
+}
+
+.header_site_inner {
+    background-color: #ffffff;
+    position: relative;
+}
+
+
 .logo_wrapp {
     display: inline-block;
     vertical-align: top;
     margin: 10px 0;
     padding: 5px 17px 9px 0;
     position: relative;
+    text-align: center;
 }
 
 .logo_wrapp:after {
@@ -1166,6 +1223,10 @@ textarea:focus {
     top: 100%;
     left: 0;
     text-align: center;
+}
+
+.currency_switch .dropdown_menu {
+   right:0;
 }
 
 .dropdown_menu ul li a {
@@ -1446,15 +1507,17 @@ textarea:focus {
 /* ----- Responsive Menu Button ------ */
 
 .respmenubtn {
-    display: none;
+    display: inline-block;
+    position: relative;
     width: 45px;
     height: 37px;
     background: transparent;
     cursor: pointer;
-    position: relative;
-    z-index: 11;
+    z-index: 12;
     border: 1px solid transparent;
 }
+
+
 
 .respmenubtn span {
     display: block;
@@ -1481,6 +1544,9 @@ textarea:focus {
     transition-property: transform, border, background;
     transition-duration: .3s;
     transition-timing-function: ease;
+}
+.header_site_inner .respmenubtn span {
+    background: #000000;
 }
 
 .respmenubtn span:last-child {
@@ -1528,47 +1594,98 @@ textarea:focus {
 
 /* ----- / Responsive Menu Button ------ */
 
-/*-- Header - Inner --*/
-
-.header_1 {
-    position: relative;
-    z-index: 12;
-    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
-    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
+/*Main Nav Menu */
+.main_nav_wrapp {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 11;
+    background: rgba(0, 0, 0, .9);
 }
 
-.header_1 .row {
-    max-width: 100%;
-    padding: 0 25px;
+.main_nav {
+    margin: 0;
+    padding: 0;
 }
 
-.header_1 .inline {
+.main_nav > li {
+    display: block;
+    padding: 10px 0;
+}
+
+.main_nav > li a {
     display: inline-block;
     vertical-align: top;
+    padding: 0 2%;
+    font-size: 21px;
+    line-height: 21px;
+    font-weight: normal;
+}
+
+.main_nav > li ul {
+    display: none;
+    width: 100%;
+    min-height: auto;
+    margin-top: 8px;
     position: relative;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .8);
+    opacity: 1;
 }
 
-.header_1 .logo_wrapp {
-    margin: 2px 0;
+.main_nav li:hover ul {
+    display: none;
 }
 
-.header_1 .dropdown_title {
-    min-height: 40px;
-    padding-top: 8px;
-    padding-bottom: 9px;
+.main_nav li > ul li {
+    padding: 6px 0;
+    text-align: center;
 }
 
-.header_1 .dropdown_title:before {
-    top: 20px;
+.main_nav li > ul li a {
+    display: block;
+    font-size: 18px;
+    line-height: 23px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
-.header_site_inner {
-    background-color: #ffffff;
-    position: relative;
+.main_nav li > ul li a:link,
+.main_nav li > ul li a:visited {
+    color: #ffffff;
 }
+
+.main_nav li > ul li a:active,
+.main_nav li > ul li a.active {
+    color: #ffe261;
+}
+
+.main_nav li > ul li a:hover {
+    color: #ffe261;
+}
+
+.menu_btn {
+    cursor: pointer;
+    width: 19px;
+    height: 19px;
+    top: 8px;
+    right: 0;
+}
+
+.header_site_inner .main_nav_wrapp {
+    background: rgba(255, 255, 255, .95);
+}
+
+/* end main nav menu */
+
 
 .logo_wrapp_2:after {
     background-color: #e0e0e0;
@@ -8815,3 +8932,5 @@ z-index: auto;
 .multi .fav-span {
     display: none;
 }
+
+

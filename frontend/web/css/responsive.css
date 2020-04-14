@@ -672,14 +672,15 @@
 	    top: 22px;
 	}
 
-	.respmenubtn {
+	/*.respmenubtn {
 	    display: block;
 	    position: absolute;
 	    top: 6px;
 	    right: 11px;
 	    z-index: 12;
-	}
+	}*/
 
+    /*
 	.main_nav_wrapp {
 		display: none;
 		width: 100%;
@@ -769,6 +770,7 @@
 	    background: rgba(255, 255, 255, .95);
 	}
 
+    */
 	/*-- /Header --*/
 
 	/*-- Section 1 - Info Side Page --*/
@@ -1826,9 +1828,10 @@
 
 }
 
+/*
 @media only screen and (min-width: 801px) {
 
-	/*-- Header --*/
+	!*-- Header --*!
 
 	.sub-menu {
 		display: block !important;
@@ -1838,6 +1841,6 @@
 		display: none !important;
 	}
 
-	/*-- /Header --*/
+	!*-- /Header --*!
 
-}
+}*/

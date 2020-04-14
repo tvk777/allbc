@@ -92,5 +92,6 @@ return [
     'Message' => 'Сообщение',
     'Name' => 'Имя',
     'Send' => 'Отправить',
-    'Office' => 'Офис'
+    'Office' => 'Офис',
+    'All business centers here' => 'Все бизнес-центры здесь'
 ];

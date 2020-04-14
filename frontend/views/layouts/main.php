@@ -13,6 +13,7 @@ use common\widgets\Alert;
 use kartik\typeahead\Typeahead;
 use yii\jui\AutoComplete;
 use yii\web\JsExpression;
+
 //echo 'result='.Yii::$app->controller->result;
 AppAsset::register($this);
 $controller = Yii::$app->controller->id;
@@ -25,6 +26,7 @@ if ($controller == 'site' && $action != 'index') {
 }
 $headerClass = '';
 $logoClass = '';
+//$logoText = '<span class="logo-text">'.Yii::t('app', 'All business centers here').'</span>';
 $logoImg = Html::img('@web/img/logo.svg', ['alt' => 'Логотип']);
 $searchIconClass = 'search_icon';
 $dropdowmClass = '';
@@ -52,7 +54,7 @@ if ($action != 'index') {
     ]
 ]);
 $wishAmount = \Yii::$app->wishlist->getUserWishlistAmount();
-$countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'</span>' : '';
+$countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount . '</span>' : '';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -72,33 +74,23 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'
         <div class="header_site <?= $headerClass ?>">
             <div class="row clearfix">
                 <div class="left">
+                    <button class="respmenubtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <?= common\widgets\CountOfficeWidget::widget() ?>
+                </div>
+                <div class="center">
                     <div class="logo_wrapp <?= $logoClass ?>">
                         <?= $logoImg ?>
                     </div>
-                    <?= common\widgets\CountOfficeWidget::widget() ?>
                 </div>
                 <div class="right">
                     <div class="search_sect inline append-elem" data-append-desktop-elem="2" data-min-screen="600">
-
                         <a href="#" class="search_open">
                             <i class="<?= $searchIconClass ?>"></i>
                         </a>
-                    </div>
-                    <div class="top_menu append-elem" data-append-desktop-elem="1" data-min-screen="800">
-                        <div class="dropdowm_wrapp <?= $dropdowmClass2 ?>">
-                            <div class="dropdown_title">
-                                <p class="p_width">Добавить объявление</p>
-                                <input type="text" name="" placeholder="Добавить объявление" readonly/>
-                            </div>
-                            <div class="dropdown_menu">
-                                <ul>
-                                    <li><a href="#" title="" class="active"/>Объявление 1</a></li>
-                                    <li><a href="#" title=""/>Объявление 2</a></li>
-                                    <li><a href="#" title=""/>Объявление 3</a></li>
-                                    <li><a href="#" title=""/>Объявление 4</a></li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                     <div class="inline append-elem" data-append-desktop-elem="3" data-min-screen="600">
                         <div class="favorite_box">
@@ -118,21 +110,21 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'
                             <div class="dropdown_menu">
                                 <ul>
                                     <? if (Yii::$app->user->isGuest) : ?>
-                                    <li>
-                                        <?= Html::a(
-                                            Yii::t('app', 'Login'),
-                                            ['/login'],
-                                            ['class' => 'link_2 modal-form size-middle']
-                                        ) ?>
-                                    </li>
+                                        <li>
+                                            <?= Html::a(
+                                                Yii::t('app', 'Login'),
+                                                ['/login'],
+                                                ['class' => 'link_2 modal-form size-middle']
+                                            ) ?>
+                                        </li>
                                     <? else : ?>
-                                    <li>
-                                        <?= Html::a(
-                                            Yii::t('app', 'Logout'),
-                                            ['/logout'],
-                                            ['data-method' => 'post']
-                                        ) ?>
-                                    </li>
+                                        <li>
+                                            <?= Html::a(
+                                                Yii::t('app', 'Logout'),
+                                                ['/logout'],
+                                                ['data-method' => 'post']
+                                            ) ?>
+                                        </li>
                                     <? endif; ?>
                                 </ul>
                             </div>
@@ -140,16 +132,12 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'
                     </div>
                     <div class="top_menu append-elem" data-append-desktop-elem="5" data-min-screen="450">
                         <?php echo common\widgets\LangWidget::widget() ?>
+                        <?php echo common\widgets\CurrencyWidget::widget() ?>
                     </div>
-                    <button class="respmenubtn">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
                 </div>
             </div>
-            <?= $this->render('_partial/_search',[
-                'result' => Yii::$app->controller->result 
+            <?= $this->render('_partial/_search', [
+                'result' => Yii::$app->controller->result
             ]); ?>
             <div class="main_nav_wrapp" id="resp_nav">
                 <div class="inline_blocks">
@@ -159,7 +147,22 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">'.$wishAmount.'
                     <div class="append-elem" data-append-elem="5"></div>
                 </div>
                 <div class="main_nav">
-                    <div class="append-elem" data-append-elem="1"></div>
+                    <div class="add-advert">
+                        <div class="dropdowm_wrapp <?= $dropdowmClass2 ?>">
+                            <div class="dropdown_title">
+                                <p class="p_width">Добавить объявление</p>
+                                <input type="text" name="" placeholder="Добавить объявление" readonly/>
+                            </div>
+                            <div class="dropdown_menu">
+                                <ul>
+                                    <li><a href="#" title="" class="active"/>Объявление 1</a></li>
+                                    <li><a href="#" title=""/>Объявление 2</a></li>
+                                    <li><a href="#" title=""/>Объявление 3</a></li>
+                                    <li><a href="#" title=""/>Объявление 4</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <?= Alert::widget() ?>
