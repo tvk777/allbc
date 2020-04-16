@@ -22,7 +22,6 @@ class LastModifyWidget extends Widget{
             ->andWhere(['approved' => 1])
             ->andWhere(['in', 'id', $placesIds])
             ->orderBy('updated_at DESC')
-            ->multilingual()
             ->limit(10)
             ->all();
         return $this->render('last-modify',[

@@ -10,12 +10,45 @@ use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use Imagine\Image\Point;
 
+use common\models\BcPlaces;
+use common\models\BcPlacesPrice;
+use common\models\BcValutes;
+use common\models\BcItems;
+use yii\helpers\ArrayHelper;
+
 
 /**
  * PostController implements the CRUD actions for Post model.
  */
 class PostController extends AdminController
 {
+
+    public function actionTest()
+    {
+        $valutes = BcValutes::find()->asArray()->all();
+        $valutes = ArrayHelper::map($valutes, 'id', 'rate');
+
+        //$prices = BcPlacesPrice::find()->with('place')->where(['>', 'place_id', 11815])->limit(2)->all();
+        //$newPrice = [];
+        $places = BcPlaces::find()->where(['id' => 18748])->one(); //all();
+        //foreach($places as $k => $place){
+            $places->calcPrice();
+        //}
+        return '123'; //debug($places->price);
+    }
+
+    public function actionTest2()
+    {
+        $items = BcItems::findAll();
+        foreach($items as $item) {
+            
+        }
+
+        return '5';
+    }
+
+
+
     /**
      * Lists all Post models.
      * @return mixed
@@ -34,6 +67,10 @@ class PostController extends AdminController
             ]);
         }
 
+        $valutes = BcValutes::find()->asArray()->all();
+        $places = BcPlaces::find()->where(['id' => 18748])->one(); //all();
+        $places->calcPrice();
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

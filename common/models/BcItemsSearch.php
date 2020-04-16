@@ -50,7 +50,7 @@ class BcItemsSearch extends BcItems
     public function search($params)
     {
 
-        $query = BcItems::find()->localized('ru');
+        $query = BcItems::find();
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -99,7 +99,7 @@ class BcItemsSearch extends BcItems
         $target = !empty($params['target']) && $params['target'] === 2 ? 2 : 1;
         $result = !empty($params['result']) && $params['result'] === 'bc' ? 'bc' : 'offices';
 
-        $query_bcitems = BcItems::find()->where(['active' => 1])->andWhere(['hide' => 0])->multilingual();
+        $query_bcitems = BcItems::find()->where(['active' => 1])->andWhere(['hide' => 0]);
         $query_offices = Offices::find()->where(['target' => $target]); //запрос для отбора отдельных офисов
 
         //фильтрация БЦ
@@ -245,7 +245,7 @@ class BcItemsSearch extends BcItems
                 $coord = [$item->lng, $item->lat]; 
                 $img = isset($item->images[0]) ? $item->images[0]->imgSrc : '';
                 $class = $item->class->short_name;
-                $name = getDefaultTranslate('name', $currentLanguage, $item);
+                $name = getDefaultTranslate('name', $currentLanguage, $item, true);
             } else {
                 $name = getDefaultTranslate('name', $currentLanguage, $item, true);
                 if (isset($item->images[0])) {
@@ -374,13 +374,11 @@ class BcItemsSearch extends BcItems
                 $itemsModel = BcItems::find()
                     ->where(['in', 'id', $bcItemsIds])
                     ->with('slug', 'images', 'class', 'subways.subwayDetails.branch.image', 'city', 'district', 'places.images', 'places.stageImg', 'places.prices')
-                    ->multilingual()
                     ->all();
             } else {
                 $itemsModel = BcItems::find()
                     ->where(['in', 'id', $bcItemsIds])
                     ->with('slug', 'images', 'class', 'subways.subwayDetails.branch.image', 'city', 'district', 'placesSell.images', 'placesSell.stageImg', 'placesSell.prices')
-                    ->multilingual()
                     ->all();
             }
 

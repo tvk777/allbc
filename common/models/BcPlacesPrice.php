@@ -47,4 +47,10 @@ class BcPlacesPrice extends \yii\db\ActiveRecord
             'city_id' => Yii::t('app', 'City ID'),
         ];
     }
+
+    public function getPlace()
+    {
+        return $this->hasOne(BcPlaces::className(), ['id' => 'place_id']);
+    }
+
 }

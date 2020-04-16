@@ -288,7 +288,7 @@ class BcPlaces extends ActiveRecord
 
     public function getBcitem()
     {
-        return $this->hasOne(BcItems::className(), ['id' => 'item_id'])->with('translations');
+        return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
     }
 
     public function getOffice()
@@ -466,12 +466,15 @@ class BcPlaces extends ActiveRecord
         elseif ($this->price_period == 3)
             $price_m2 = $this->price / $this->m2;
 
-        $price_m2 = $price_m2 * $valutes[$this->valute_id];
-        $opex = floatval($this->opex) * $valutes[$this->valute_id];
-        $tax = floatval($this->tax);
-        $kop = floatval($this->kop);
+        $price_m2_uah = $price_m2 * $valutes[$this->valute_id]; //цена в грн.
+       // echo $price_m2; die();
+        $opex = floatval($this->opex) * $valutes[$this->valute_id]; //0
+        $tax = floatval($this->tax); //0
+        $kop = floatval($this->kop); //0
         foreach ($valutes as $k => $v) {
-            $price_m2 = round($price_m2 / $v, 0);
+            //if($k==3) {echo $v.' - '.$price_m2; die();}
+            $price_m2 = round($price_m2_uah / $v, 0);
+            //if($k==3) {echo $v.' - '.$price_m2; die();}
             /*****************m2*********************/
             $data = new BcPlacesPrice();
             $data->place_id = $this->id;
@@ -501,7 +504,7 @@ class BcPlaces extends ActiveRecord
             //debug($data->getErrors());
             /*****************All In Month*********************/
             $data = new BcPlacesPrice();
-            $price_and_opex = round($price_m2 / $v + $opex / $v);
+            $price_and_opex = round($price_m2 + $opex / $v);
             $data->place_id = $this->id;
             $data->valute_id = $k;
             $data->period_id = 100;
@@ -538,6 +541,18 @@ class BcPlaces extends ActiveRecord
     public function getCountView()
     {
         return $this->hasOne(ViewsCounter::className(), ['item_id' => 'id'])->andWhere(['model' => self::tableName()]);
+    }
+    
+    public function getAllPrices() {
+        $valutes = BcValutes::find()->asArray()->all();
+        $valutes = ArrayHelper::map($valutes, 'id', 'rate');
+        $prices = [];
+        foreach ($valutes as $k => $v) {
+            $prices[$k] = [
+                'stavka' => ['forM2month' => 100, 'forM2year' => 1200, 'forAllMonth' => 100*$this->m2]
+            ];
+        }
+        return $prices;
     }
 
 

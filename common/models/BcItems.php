@@ -74,7 +74,7 @@ class BcItems extends ActiveRecord
                 ],
                 'value' => new Expression('NOW()'),
             ],
-            'ml' => [
+            /*'ml' => [
                 'class' => MultilingualBehavior::className(),
                 'languages' => [
                     'ru' => 'Russian',
@@ -87,7 +87,7 @@ class BcItems extends ActiveRecord
                 'attributes' => [
                     'name', 'content', 'title', 'keywords', 'description', 'annons', 'mgr_content', 'shuttle', 'contacts'
                 ]
-            ],
+            ],*/
         ];
     }
 
@@ -111,7 +111,7 @@ class BcItems extends ActiveRecord
                 },
             ],
             [['name', 'content', 'title', 'keywords', 'description', 'annons', 'mgr_content', 'shuttle', 'contacts'], 'string'],
-            [['name_ru', 'content_ru', 'title_ru', 'keywords_ru', 'description_ru', 'annons_ru', 'mgr_content_ru', 'shuttle_ru', 'contacts_ru', 'name_ua', 'content_ua', 'title_ua', 'keywords_ua', 'description_ua', 'annons_ua', 'mgr_content_ua', 'shuttle_ua', 'contacts_ua', 'name_en', 'content_en', 'title_en', 'keywords_en', 'description_en', 'annons_en', 'mgr_content_en', 'shuttle_en', 'contacts_en', 'city_id', 'country_id', 'district_id'], 'safe'],
+            [['name_ua', 'content_ua', 'title_ua', 'keywords_ua', 'description_ua', 'annons_ua', 'mgr_content_ua', 'shuttle_ua', 'contacts_ua', 'name_en', 'content_en', 'title_en', 'keywords_en', 'description_en', 'annons_en', 'mgr_content_en', 'shuttle_en', 'contacts_en', 'city_id', 'country_id', 'district_id'], 'safe'],
             [['created_at', 'updated_at', 'deleted_at', 'uploaded', 'deleted'], 'safe'],
             [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
             [['city_id', 'country_id', 'address', 'lat', 'lng', 'sort_order', 'class_id', 'active', 'hide'], 'required'],
@@ -161,10 +161,10 @@ class BcItems extends ActiveRecord
         ];
     }
 
-    public static function find()
+    /*public static function find()
     {
         return new MultilingualQuery(get_called_class());
-    }
+    }*/
 
     public function getSlug()
     {

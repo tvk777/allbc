@@ -46,7 +46,6 @@ $this->registerJsVar('maxTotal', $countValM2['max'], $this::POS_HEAD);
 
 $currency = !empty($params['currency']) ? $params['currency'] : 1;
 $type = !empty($params['type']) ? $params['type'] : 1;
-
 $activePrice = '';
 if($currency==2){
     $currencySymbol = '$';
@@ -95,7 +94,7 @@ switch ($currency){
 
 
 ?>
-<?= Html::beginForm(['beginFormpage/bars'], 'post', ['data-pjax' => true, 'id' => 'barsForm']) ?>
+<?= Html::beginForm(['page/bars'], 'post', ['data-pjax' => true, 'id' => 'barsForm']) ?>
 <?= Html::input('hidden', 'bars[]', serialize($pricesChart)) ?>
 <?= Html::input('hidden', 'type', $type, ['id' => 'type']) ?>
 <?= Html::input('hidden', 'currency', $currency, ['id' => 'currency']) ?>

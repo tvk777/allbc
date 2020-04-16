@@ -141,7 +141,8 @@ $result = !empty($params['result']) && $params['result'] == 'bc' ? 'bc' : 'offic
                                         'item' => $items[$i],
                                         'target' => $seo->target,
                                         'places' => $places,
-                                        'result' => $result
+                                        'result' => $result,
+                                        'currentLanguage' => $currentLanguage
                                     ]);
                                 }
                             }
@@ -166,7 +167,8 @@ $result = !empty($params['result']) && $params['result'] == 'bc' ? 'bc' : 'offic
                                         'item' => $items[$i],
                                         'target' => $seo->target,
                                         'places' => $places,
-                                        'result' => $result
+                                        'result' => $result,
+                                        'currentLanguage' => $currentLanguage
                                     ]);
                                 }
                             }

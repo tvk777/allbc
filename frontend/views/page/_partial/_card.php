@@ -5,6 +5,7 @@ use kriptograf\wishlist\widgets\WishlistButton;
 $paramTarget = $target==1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
 $href = '/' . $item->slug->slug . '?target=' . $paramTarget;
+$itemName = getDefaultTranslate('name', $currentLanguage, $item);
 if($result=='bc') {
     $city = $item->city->name;
     $district = $item->district ? $item->district->name . ' р-н' : '';
@@ -108,7 +109,7 @@ if (!empty($itemSubway)) {
                 <div class="p_info red_p">
                     <p><?= Yii::t('app', 'Commission') . ': ' . $itemComission ?> %</p>
                 </div>
-                <?= Html::a($item->name, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
+                <?= Html::a($itemName, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
                 <div class="two_cols_2">
                     <div class="two_cols_2_col">
                         <div class="adres">

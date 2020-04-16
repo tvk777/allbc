@@ -181,7 +181,7 @@ class PageController extends FrontendController
             $query->with('subways.subwayDetails', 'characteristics.characteristic', 'brokers', 'owners', 'places.prices');
         }
 
-        $model = $query->where(['slug' => $slug])->multilingual()->one();
+        $model = $query->where(['slug' => $slug])->one();
 
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
         $mainRent = trim($seo->main_rent_link_href, '/');
@@ -271,9 +271,9 @@ class PageController extends FrontendController
 
     public function actionPdf($id, $target)
     {
-        $model = BcItems::find()->where(['id' => $id])->multilingual()->one();
+        $model = BcItems::find()->where(['id' => $id])->one();
         $currentLanguage = Yii::$app->language;
-        $title = getDefaultTranslate('title', $currentLanguage, $model);
+        $title = getDefaultTranslate('title', $currentLanguage, $model, true);
         /*return $this->renderPartial('_item-pdf', [
             'model' => $model,
             'target' => $target,
