@@ -103,17 +103,26 @@ class Offices extends ActiveRecord
 
     public function getUsers()
     {
-        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])
+            ->with('userInfo')
+            ->where(['user_role' => 'administrator'])
+            ->andWhere(['model' => $this->tableName()]);
     }
 
     public function getBrokers()
     {
-        return $this->hasMany(BcItemsBrokers::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])
+            ->with('userInfo')
+            ->where(['user_role' => 'broker'])
+            ->andWhere(['model' => $this->tableName()]);
     }
 
     public function getOwners()
     {
-        return $this->hasMany(BcItemsOwners::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])
+            ->with('userInfo')
+            ->where(['user_role' => 'owner'])
+            ->andWhere(['model' => $this->tableName()]);
     }
 
 
