@@ -74,20 +74,6 @@ class BcItems extends ActiveRecord
                 ],
                 'value' => new Expression('NOW()'),
             ],
-            /*'ml' => [
-                'class' => MultilingualBehavior::className(),
-                'languages' => [
-                    'ru' => 'Russian',
-                    'ua' => 'Ukrainian',
-                    'en' => 'English',
-                ],
-                'defaultLanguage' => 'ru',
-                'langForeignKey' => 'item_id',
-                'tableName' => "{{%bc_itemsLang}}",
-                'attributes' => [
-                    'name', 'content', 'title', 'keywords', 'description', 'annons', 'mgr_content', 'shuttle', 'contacts'
-                ]
-            ],*/
         ];
     }
 
@@ -178,17 +164,26 @@ class BcItems extends ActiveRecord
 
     public function getUsers()
     {
-        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])->with('userInfo')->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])
+            ->with('userInfo')
+            ->where(['user_role' => 'administrator'])
+            ->andWhere(['model' => $this->tableName()]);
     }
 
     public function getBrokers()
     {
-        return $this->hasMany(BcItemsBrokers::className(), ['item_id' => 'id'])->with('userInfo')->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])
+            ->with('userInfo')
+            ->where(['user_role' => 'broker'])
+            ->andWhere(['model' => $this->tableName()]);
     }
 
     public function getOwners()
     {
-        return $this->hasMany(BcItemsOwners::className(), ['item_id' => 'id'])->with('userInfo')->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsUsers::className(), ['item_id' => 'id'])
+            ->with('userInfo')
+            ->where(['user_role' => 'owner'])
+            ->andWhere(['model' => $this->tableName()]);
     }
 
     public function getCharacteristics()
