@@ -44,7 +44,7 @@ class AltOffersWidget extends Widget{
         $query->andWhere(['active' => 1]);
         $query->andWhere(['approved' => 1]);
         $query->andWhere(['in', 'id', $placesIds]);
-        $query->multilingual()->orderBy('distance ASC')->limit(12);
+        $query->orderBy('distance ASC')->limit(12);
         $items = $query->all();
 
         //фильтрация площадей по выбранным items.
