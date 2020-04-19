@@ -1,6 +1,7 @@
 <?php
 use kriptograf\wishlist\widgets\WishlistButton;
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 ?>
 <section>
@@ -11,7 +12,7 @@ use yii\helpers\Url;
             </div>
 
             <? foreach ($places as $index => $place) : ?>
-                <? //debug($place->slides) ?>
+                <? //debug($place->slug) ?>
 
                 <?
                 $plus = '';
@@ -93,6 +94,15 @@ use yii\helpers\Url;
                         <div class="row">
                             <div class="col-xs-6 header-item__name"><p>Стан приміщення:</p></div>
                             <div class="col-xs-6 header-item__value"><p><?= $place->status->name ?></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 link-more">
+                                <?= Html::a(
+                                    Yii::t('app', 'See More'),
+                                    [$place->slug->slug],
+                                    ['class' => 'green_pill']
+                                ) ?>
+                            </div>
                         </div>
                     </div>
                     <div class="object_content col-md-4 col-sm-12">
