@@ -91,7 +91,7 @@ class BcPlacesSell extends ActiveRecord
             [['created_at', 'updated_at'], 'safe'],
             [['item_id', 'm2', 'valute_id', 'price_period', 'ai', 'plan_comment', 'hide', 'archive', 'con_price'], 'required'],
             [['item_id', 'm2', 'm2min', 'valute_id', 'price_period', 'ai', 'commission', 'plan_comment', 'hide', 'archive', 'price', 'con_price', 'status_id', 'sell', 'hits', 'hide_contacts', 'hide_bc'], 'integer'],
-            [['tax', 'kop'], 'number'],
+            [['tax', 'kop', 'kop_type'], 'number'],
             [['name', 'name_ua', 'name_en', 'fio', 'fio_ua', 'fio_en', 'stage_name', 'phone', 'email'], 'string', 'max' => 255],
             [['title', 'title_ua', 'title_en', 'keywords', 'keywords_ua', 'keywords_en', 'description', 'description_ua', 'description_en'], 'string', 'max' => 255],
             [['comment', 'comment_ua', 'comment_en', 'stage_name'], 'string'],
