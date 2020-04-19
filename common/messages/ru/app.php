@@ -93,5 +93,6 @@ return [
     'Name' => 'Имя',
     'Send' => 'Отправить',
     'Office' => 'Офис',
-    'All business centers here' => 'Все бизнес-центры здесь'
+    'All business centers here' => 'Все бизнес-центры здесь',
+    'See More' => 'Смотреть подробнее'
 ];
