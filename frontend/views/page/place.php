@@ -11,6 +11,7 @@ use kriptograf\wishlist\widgets\WishlistButton;
 $city_url = $target == 2 ? $mainSell . '?filter[result]=offices' : $mainRent . '?filter[result]=offices';
 $city_id = 0;
 $zoom = 13;
+$broker = $item->brokers ? $item->brokers[0]->userInfo : User::findOne(8);
 
 //debug($item);
 
@@ -119,6 +120,11 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
 ?>
 
 <section class="grey_bg">
+    <?= $this->render('_item-partial/_head', [
+        'user' => $broker,
+        'name' => $objectTitle,
+    ]); ?>
+
     <form action="" id="main_form">
         <input name="city_link" type="hidden" id="city_link" value="<?= $rentHref ?>"
                data-valuesell="<?= $sellHref ?>">
@@ -284,9 +290,10 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                         <? endforeach; ?>
                     <? endif; ?>
                     <? if (count($item->brokers) > 0) : ?>
+                        <? //debug($item->brokers) ?>
                         <? foreach ($item->brokers as $user) : ?>
                             <?= $this->render('_partial/_user-info', [
-                                'user' => $user,
+                                'user' => $user->userInfo,
                                 'city_url' => $city_url,
                                 'comission' => $comission,
                                 'role' => 'Брокер'
