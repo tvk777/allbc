@@ -82,20 +82,23 @@ class PageController extends FrontendController
         }
         $viewCounter->processCountViewItem();
 
+        $broker = $item->brokers ? $item->brokers[0]->userInfo : User::findOne(8);
+
+
         $data['model'] = $model;
         $data['targetId'] = $targetId;
         $data['seoClass'] = $seoClass;
         $data['mainRent'] = $mainRent;
         $data['mainSell'] = $mainSell;
         $data['item'] = $item;
-
+        $data['broker'] = $broker;
         return $data;
     }
 
     public function actionBc_places($slug)
     {
         $data = $this->officeData($slug, 'rent');
-        $this->result ='offices';
+        $this->result = 'offices';
         return $this->render('place', [
             'model' => $data['model'],
             'target' => $data['targetId'],
@@ -103,13 +106,14 @@ class PageController extends FrontendController
             'mainRent' => $data['mainRent'],
             'mainSell' => $data['mainSell'],
             'item' => $data['item'],
+            'broker' => $data['broker'],
         ]);
     }
 
     public function actionBc_places_sell($slug)
     {
         $data = $this->officeData($slug, 'sell');
-        $this->result ='offices';
+        $this->result = 'offices';
         return $this->render('place', [
             'model' => $data['model'],
             'target' => $data['targetId'],
@@ -210,7 +214,7 @@ class PageController extends FrontendController
         $broker = $model->brokers ? $model->brokers[0]->userInfo : User::findOne(8);
         $order->toEmail = $broker->email;
         $order->subject = 'subject';
-
+//debug($broker); die();
         return $this->render('item', [
             'model' => $model,
             'target' => $targetId,
@@ -238,7 +242,7 @@ class PageController extends FrontendController
     public function actionRemoveFavorites()
     {
         if (Yii::$app->request->post() && \Yii::$app->wishlist->removeAll()) {
-            $link = '/'.Yii::$app->request->post('link');
+            $link = '/' . Yii::$app->request->post('link');
             return $this->redirect($link);
         } else {
             Yii::$app->session->setFlash('error', "Ошибка при удалении");
@@ -385,22 +389,24 @@ class PageController extends FrontendController
     //тестирование выдачи по условиям фильтров
     public function actionTestitems()
     {
-        $whereCondition['result'] = 'offices'; //'bc'; //
-        $whereCondition['target'] = 1;
-        $whereCondition['city'] = 5;
-        $whereCondition['sort'] = 'm2_desc';
-        $whereCondition['lang'] = 'ua';
-        $whereCondition['m2'] = [35, 150];
-        $whereCondition['price'] = [70, 90];
+        //$whereCondition['result'] = 'offices'; //'bc'; //
+        //$whereCondition['target'] = 1;
+        //$whereCondition['country'] = 1;
+        //$whereCondition['city'] = 1;
+        //$whereCondition['sort'] = 'price_asc';
+        //$whereCondition['lang'] = 'ua';
+        $whereCondition['m2min'] = 100;
+        $whereCondition['m2max'] = 150;
+        //$whereCondition['price'] = [70, 90];
         //$whereCondition['user'] = 259;
-        //$whereCondition['subway'] = 1;
+        $whereCondition['subway'] = 305;
         //$whereCondition['walk_dist'] = 1500;
-        //$whereCondition['classes'] = [1];
-        //$whereCondition['districts'] = [7];
+        //$whereCondition['classes'] = [1, 2];
+        //$whereCondition['districts'] = [45, 46];
         //$whereCondition['visibles'] = [31792, 31627, 32171];
 
         $searchModel = new BcItemsSearch();
-        $result = $searchModel->seoSearch($whereCondition);
+        $result = $searchModel->seoSearchFromView($whereCondition);
 
         return $this->render('test-items', [
             'test' => $result
@@ -455,7 +461,7 @@ class PageController extends FrontendController
             'countPlaces' => count($result['places']),
         ]);
 
-        $this->result = !empty($params)&&!empty($params['result']) ? $params['result'] : 'bc';
+        $this->result = !empty($params) && !empty($params['result']) ? $params['result'] : 'bc';
 
         $targetLinks = SeoCatalogUrls::find()->where(['id' => 88])->one();
         $mainRent = trim($targetLinks->main_rent_link_href, '/');
