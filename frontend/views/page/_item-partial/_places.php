@@ -50,7 +50,7 @@ use yii\helpers\Html;
                 ?>
 
                 <div class="col-xs-12 place-card">
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col-md-4 col-sm-12 img">
                         <div class="favor-star">
                             <div class="black_circle_2">
                                 <?= WishlistButton::widget([
@@ -77,7 +77,7 @@ use yii\helpers\Html;
                             <div class="slide-empty">&nbsp;</div>
                         <? endif; ?>
                     </div>
-                    <div class="object_content col-md-4 col-sm-12">
+                    <div class="object_content left col-md-4 col-sm-12">
                         <div class="row bold">
                             <div class="col-xs-6 header-item__name"><p>Площа:</p></div>
                             <div class="col-xs-6 header-item__value"><p><?= $place->m2range ?> м2</p></div>
@@ -100,8 +100,8 @@ use yii\helpers\Html;
                     <div class="object_content col-md-4 col-sm-12">
                         <div class="row bold">
                             <div class="col-xs-6 header-item__name"><p>Оренда:</p></div>
-                            <div class="col-xs-6 header-item__value">
-                                <div class="col-xs-6 header-item__value">
+                            <div class="col-xs-6 header-item__value text__select">
+                                <div class="header-item__value">
                                     <div class="table_cell m2"
                                          data-usd="<?= $usd ?>"
                                          data-uah="<?= $uah ?>"
@@ -111,23 +111,23 @@ use yii\helpers\Html;
                                         <p><?= $uah . $plus ?></p>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 custom_select">
+                                <div class="custom_select">
                                     <div>
                                         <input type="hidden" class="select_res currency" value="uah">
                                         <p class="select_input"><span class="sel_val">₴/m²</span></p>
                                     </div>
                                     <div class="dropdown_select change-currency-single">
                                         <div class="select_item">
-                                            <span data-currid="uah">₴/m²</span>
+                                            <span data-currid="uah">₴/m²/мес</span>
                                         </div>
                                         <div class="select_item">
-                                            <span data-currid="usd">$/m²</span>
+                                            <span data-currid="usd">$/m²/мес</span>
                                         </div>
                                         <div class="select_item">
-                                            <span data-currid="eur">€/m²</span>
+                                            <span data-currid="eur">€/m²/мес</span>
                                         </div>
                                         <div class="select_item">
-                                            <span data-currid="rub">₽/m²</span>
+                                            <span data-currid="rub">₽/m²/мес</span>
                                         </div>
                                     </div>
                                 </div>
@@ -148,8 +148,8 @@ use yii\helpers\Html;
                         </div>
                         <div class="row bold">
                             <div class="col-xs-6 header-item__name"><p>Все включено:</p></div>
-                            <div class="col-xs-6 header-item__value">
-                                <div class="col-xs-6 header-item__value">
+                            <div class="col-xs-6 header-item__value text__select">
+                                <div class="header-item__value">
                                     <div class="table_cell period"
                                          data-month_usd="<?= $month_usd ?>"
                                          data-month_uah="<?= $month_uah ?>"
@@ -168,7 +168,7 @@ use yii\helpers\Html;
                                         <p><?= $month_uah ?></p>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 header-item__name">
+                                <div class="header-item__name">
                                     <div class="custom_select_wrapp custom_select_wrapp_3">
                                         <div class="custom_select">
                                             <div>
@@ -177,13 +177,13 @@ use yii\helpers\Html;
                                             </div>
                                             <div class="dropdown_select change-period-single">
                                                 <div class="select_item">
-                                                    <span data-period="month">all in/мес</span>
+                                                    <span data-period="month">₴/мес</span>
                                                 </div>
                                                 <div class="select_item">
-                                                    <span data-period="m2">all in/m2</span>
+                                                    <span data-period="m2">₴/m2</span>
                                                 </div>
                                                 <div class="select_item">
-                                                    <span data-period="year">all in/год</span>
+                                                    <span data-period="year">₴/год</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,7 +193,7 @@ use yii\helpers\Html;
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row button">
               
                         <div class="col-md-4 col-sm-12 link-more">
                             <a href="/<?= $place->slug->slug ?>" class="green_pill">

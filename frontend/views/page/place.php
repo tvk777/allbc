@@ -227,8 +227,8 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                     </div>
                     <div class="inner">
                         <div class="office_info">
-                            <p><b><?= Yii::t('app', 'Office area') . ': ' . $model->m2range ?> м²</b></p>
-                            <p><b><?= $price ?></b></p>
+                            <span><b><?= Yii::t('app', 'Office area') . ': ' . $model->m2range ?> м²</b></span>
+                            <span><b><?= $price ?></b></span>
                             <?= $itemHtml ?>
                         </div>
                     </div>
@@ -237,10 +237,6 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                         <div class="two_cols_2 two_cols_2_2">
                             <div class="two_cols_2_col">
                                 <div class="adres">
-                                    <h5>
-                                        <a target="_blank"
-                                           href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
-                                    </h5>
                                     <? if ($item->street && Yii::$app->user->isGuest) : ?>
                                         <p><?= $item->street ?></p>
                                     <? endif; ?>
@@ -248,8 +244,16 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                         <p><?= $item->address ?></p>
                                     <? endif; ?>
 
+                                    <h5 class="region-map-link">
+                                        <a target="_blank"
+                                           href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
+                                        <span class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
+                                        карте</a></span>
+                                    </h5>
+
                                 </div>
                                 <? if (count($item->subways) > 0) : ?>
+                                <div class="metros_wrapp">
                                     <? foreach ($item->subways as $sub) : ?>
                                         <? switch ($sub->subwayDetails->branch_id) {
                                             case 1:
@@ -270,12 +274,10 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                             <p><?= $subway; ?></p>
                                         </div>
                                     <? endforeach ?>
+                                </div>
                                 <? endif; ?>
                             </div>
-                            <div class="two_cols_2_col">
-                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
-                                        карте</a></p>
-                            </div>
+
                         </div>
                     </div>
                     <? if (count($item->owners) > 0) : ?>

@@ -216,7 +216,7 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                     <? if (count($places) > 0) : ?>
                         <div class="inner">
                             <div class="free_office">
-                                <a href="#places" class="scroll_to grey_pill"><?= Yii::t('app', 'Free Offices').': '.count($places).' - '.$minPrice ?></a>
+                                <a href="#places" class="scroll_to green_pill tel_pill tel_hide_pill"><?= Yii::t('app', 'Free Offices').': '.count($places).' - '.$minPrice ?></a>
                             </div>
                         </div>
                     <? else: ?>
@@ -237,15 +237,21 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                         <div class="two_cols_2 two_cols_2_2">
                             <div class="two_cols_2_col">
                                 <div class="adres">
-                                    <h5>
-                                        <a target="_blank"
-                                           href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
-                                    </h5>
                                     <? if ($model->address) : ?>
                                         <p><?= $model->address ?></p>
                                     <? endif; ?>
+
+                                    <h5 class="region-map-link">
+                                        <a target="_blank"
+                                           href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
+
+                                        <span class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
+                                        карте</a></span>
+
+                                    </h5>
                                 </div>
                                 <? if (count($model->subways) > 0) : ?>
+                                <div class="metros_wrapp">
                                     <? foreach ($model->subways as $sub) : ?>
                                         <? switch ($sub->subwayDetails->branch_id) {
                                             case 1:
@@ -266,12 +272,10 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                                             <p><?= $subway; ?></p>
                                         </div>
                                     <? endforeach ?>
+                                </div>
                                 <? endif; ?>
                             </div>
-                            <div class="two_cols_2_col">
-                                <p class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
-                                        карте</a></p>
-                            </div>
+
                         </div>
                     </div>
                     <? if (count($model->owners) > 0) : ?>

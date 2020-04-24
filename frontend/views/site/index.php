@@ -16,15 +16,8 @@ $this->registerCssFile('/css/sliderResponsive.css');
 
 ?>
 <section class="promo_sect">
-    <div class="promo-slider" id="bgslider">
-        <? foreach($images as $img) : ?>
-        <div style="background-image:url(<?= $img['url']?>)">
-          <a href="<?= $img['href']?>"><?= $img['title']?></a>
-        </div>
-        <? endforeach; ?>
-    </div>
+    <?= common\widgets\MainSliderWidget::widget(); ?>
     <div class="row">
-
         <?php echo common\widgets\MainTitleWidget::widget() ?>
 
         <div class="search_city">

@@ -18,7 +18,9 @@ use yii\web\JsExpression;
 AppAsset::register($this);
 $controller = Yii::$app->controller->id;
 $action = Yii::$app->controller->action->id;
-
+$changeCurrency = ($action=='bc_items' || $action=='bc_places') ? true : false;
+//echo $controller.' - '.$action;
+//page - bc_items, page - bc_places
 if ($controller == 'site' && $action != 'index') {
     $bodyClass = 'class="' . $controller . ' ' . $action . ' pages"';
 } else {
@@ -79,12 +81,13 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                         <span></span>
                         <span></span>
                     </button>
-                    <?= common\widgets\CountOfficeWidget::widget() ?>
                 </div>
                 <div class="center">
                     <div class="logo_wrapp <?= $logoClass ?>">
                         <?= $logoImg ?>
                     </div>
+                    <?= common\widgets\CountOfficeWidget::widget() ?>
+
                 </div>
                 <div class="right">
                     <div class="search_sect inline append-elem" data-append-desktop-elem="2" data-min-screen="600">
@@ -132,7 +135,9 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                     </div>
                     <div class="top_menu append-elem" data-append-desktop-elem="5" data-min-screen="450">
                         <?php echo common\widgets\LangWidget::widget() ?>
-                        <?php echo common\widgets\CurrencyWidget::widget() ?>
+                        <?php
+                        if($changeCurrency) echo common\widgets\CurrencyWidget::widget();
+                        ?>
                     </div>
                 </div>
             </div>
