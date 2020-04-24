@@ -88,6 +88,7 @@ function getMapParams() {
             });
         }
     }
+    return $(".object_map").length;
 }
 
 function getfilterNavParams() {
@@ -245,13 +246,6 @@ var filtersCoord,
     bottomCoord;
 
 var innerWrapp;
-
-$(window).on("load", function () {
-    console.log($(".scroll").length + ' ' + $(".scroll").attr('class'));
-    if ($(".scroll").length > 0) {
-        $(".scroll").mCustomScrollbar();
-    }
-});
 
 $(window).resize(function () {
     bodyWidth = w.innerWidth || e.clientWidth || g.clientWidth;
@@ -1361,6 +1355,27 @@ $(document).ready(function () {
     var filtersIndex;
     var filtersArray;
 
+    $("[data-count]").on("click", function () {
+        var id = $(this).attr('for'),
+            input = $("#"+id),
+            count,
+            targetSpan = $(".district .count");
+        count = $(this).closest(".countable").find( "input:checked" ).length;
+        if(!input.is(':checked')) {
+            count++;
+        } else {
+            count--;
+        }
+        if(count>0){
+            targetSpan.text(': '+count);
+        } else {
+            targetSpan.text('');
+        }
+       //console.log($(this).closest(".countable").find( "input:checked" ).length);
+        //console.log($(this).attr('for'));
+        //console.log(count, targetSpan);
+    });
+
     $("[data-filter]").on("click", function () {
         if (!$(this).hasClass("checked_filter")) {
             $(this).addClass("checked_filter");
@@ -1403,11 +1418,11 @@ $(document).ready(function () {
 
     //Submit form and clear filters buttons
 
-    $(".filter-form .submit").on("click", function () {
+    $(".filter-form .apply-filters .submit").on("click", function () {
         $(".filter-form").submit();
     });
 
-    $(".filter-form .more-filters .remove").on("click", function () {
+    $(".filter-form .apply-filters .remove").on("click", function () {
         $(".checkbox .more-filters").attr('checked', false);
         $("#metro_val").text(defaultDist);
         $("#metro_name").html(defaultName);
