@@ -16,6 +16,7 @@ return [
     'Company' => 'Компания',
     'Information' => 'Информация',
     'Offices' => 'Офисы',
+    'Business centers' => 'Бизнес-центры',
     'About Us' => 'О нас',
     'Show more' => 'Показать больше',
     'Collapse' => 'Свернуть',

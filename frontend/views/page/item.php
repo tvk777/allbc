@@ -100,7 +100,7 @@ if(city!=0) {
 JS;
 $this->registerJs($script, $this::POS_READY, 'city-handler');
 
-$minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' . $model->getMinPrice($places)['price'] . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
+$minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' . $model->getMinPrice($places)['price'] . ' ₴/m<sup>2</sup>/мес' : Yii::t('app', 'price con.');
 ?>
 <section class="grey_bg">
 
@@ -459,6 +459,9 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
         <?= common\widgets\PartnersWidget::widget(); ?>
     </div>
 </section>
+<section class="sect_7_2_bc">
+    <div id="item_map"></div>
+</section>
 
 <section class="grey_bg">
     <div class="row row_2">
@@ -543,10 +546,6 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
     <div class="row">
         <? echo common\widgets\DistrictsStatWidget::widget(['target' => $target, 'city' => $city_id]); ?>
     </div>
-</section>
-
-<section class="sect_7_2_bc">
-    <div id="item_map"></div>
 </section>
 
 

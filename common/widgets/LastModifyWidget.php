@@ -20,6 +20,7 @@ class LastModifyWidget extends Widget{
             ->with('places','images','class', 'city', 'slug')
             ->where(['active' => 1])
             ->andWhere(['approved' => 1])
+            ->andWhere(['single_office' => 0])
             ->andWhere(['in', 'id', $placesIds])
             ->orderBy('updated_at DESC')
             ->limit(10)

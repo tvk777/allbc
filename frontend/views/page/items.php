@@ -34,34 +34,11 @@ if(city!=0) {
  }
 JS;
 $this->registerJs($script, $this::POS_READY, 'city-handler');
-//debug($conditions);
-$sortText = Yii::t('app', 'Sort');
-if (!empty($conditions) && !empty($conditions['sort'])) {
-    switch ($conditions['sort']) {
-        case 'price_asc':
-            $sortText = Yii::t('app', 'Ascending prices');
-            break;
-        case 'price_desc':
-            $sortText = Yii::t('app', 'Descending prices');
-            break;
-        case 'm2_asc':
-            $sortText = Yii::t('app', 'Ascending area');
-            break;
-        case 'm2_desc':
-            $sortText = Yii::t('app', 'Descending area');
-            break;
-        case 'updated_at':
-            $sortText = Yii::t('app', 'By date added');
-            break;
-        default:
-            $sortText = Yii::t('app', 'Sort');
-            break;
-    }
-}
 $result = !empty($params['result']) && $params['result'] == 'bc' ? 'bc' : 'offices';
 $h1 = getDefaultTranslate('name', $currentLanguage, $seo);
 $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
 ?>
+
 <section class="items-top-banner">
     <?= common\widgets\SliderWidget::widget(['text' => [$h1, $h2]]); ?>
 </section>
@@ -80,7 +57,8 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'params' => $params,
         'pricesChart' => $pricesChart,
         'rate' => $rate,
-        'result' => $result
+        'result' => $result,
+        'countPlaces' => $countPlaces
     ]); ?>
 
     <?php Pjax::begin([
@@ -92,49 +70,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
     //$pages->params = $params;
     //debug($pages);
     ?>
-    <div id="map_box">
-        <div class="mask"></div>
-        <div class="map_object_header">
-            <div class="row clearfix">
-                <div class="left">
-                    <div class="inlines_wrapp">
-                        <div class="inline">
-                            <h4><?= getDefaultTranslate('name', $currentLanguage, $seo) ?></h4>
-                        </div>
-                        <div class="inline">
-                            <p><?= $countPlaces ?> </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="right align_right">
-                    <div class="custom_select_wrapp custom_select_wrapp_2">
-                        <div class="custom_select">
-                            <div>
-                                <input type="text" class="select_res" value="$/м²/mec" readonly="readonly">
-                                <p class="select_input"><span class="sel_val"><?= $sortText ?></span></p>
-                            </div>
-                            <div class="dropdown_select">
-                                <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'price_asc']) ?>"><?= Yii::t('app', 'Ascending prices') ?></a></p>
-                                </div>
-                                <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'price_desc']) ?>"><?= Yii::t('app', 'Descending prices') ?></a></p>
-                                </div>
-                                <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'm2_asc']) ?>"><?= Yii::t('app', 'Ascending area') ?></a></p>
-                                </div>
-                                <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'm2_desc']) ?>"><?= Yii::t('app', 'Descending area') ?></a></p>
-                                </div>
-                                <div class="select_item">
-                                    <p><a href="<?= Url::current(['sort' => 'updated_at']) ?>"><?= Yii::t('app', 'By date added') ?></a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="append-elem" data-append-elem="map_index"></div>
 
         <div class="map_object_templ">

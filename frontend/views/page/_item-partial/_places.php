@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 ?>
-<section>
+<section  class="grey_bg">
     <div class="row row_2">
         <div class="col-xs-12">
             <div class="title_places" id="places">

@@ -1,8 +1,9 @@
 <?php
 use yii\helpers\Url;
 use yii\helpers\Html;
-$paramTarget = $target==1 ? 'rent' : 'sell';
-$href = '/'.$item->slug->slug.'?target='.$paramTarget;
+
+$paramTarget = $target == 1 ? 'rent' : 'sell';
+$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
 $city = $item->city->name;
 $district = $item->district ? $item->district->name . ' р-н' : '';
 $address = $item->address;
@@ -40,16 +41,9 @@ if (isset($item->subways[0])) {
         <div class="inner_wrapp">
             <div class="object_slider_wrapp">
                 <div class="object_slider_header">
-                    <div class="inline">
-                        <div class="cl_pill">
-                            <p><?= $item->class->name ?></p>
-                        </div>
+                    <div class="inline p_info red_p">
+                        <p><?= Yii::t('app', 'Commission') . ': ' . $item->percent_commission ?> %</p>
                     </div>
-                    <!--<div class="inline">
-                        <div class="black_circle_2">
-                            <i class="star_icon_2"></i>
-                        </div>
-                    </div>-->
                 </div>
                 <div class="object_slider">
                     <? if ($item->slides) : ?>
@@ -63,40 +57,30 @@ if (isset($item->subways[0])) {
                 </div>
             </div>
             <div class="object_thumb_descript">
-                <div class="p_info red_p">
-                    <p><?= Yii::t('app', 'Commission') . ': ' . $item->percent_commission ?> %</p>
-                </div>
+
                 <?= Html::a($item->name, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
-                <div class="two_cols_2">
-                    <div class="two_cols_2_col">
-                        <div class="adres">
-                            <h5>г. <?= $city ?>, <?= $district ?></h5>
-                            <p><?= $address ?></p>
-                        </div>
-                        <div class="metro_wrapp">
-                            <p><?= $subway ?></p>
-                        </div>
+                <div class="inline">
+                    <div class="cl_pill_class">
+                        <span class="item-type">Тип: </span>
+                        <span class="item-type-name">Бизнес центр </span>
+                        <span class="item-class"><?= $item->class->name ?></span>
+                        <span class="item-id">ID: <?= $item->id ?></span>
                     </div>
-                    <div class="two_cols_2_col">
-                        <div class="office_cont_wrapp">
-                            <div class="office_cont">
-                                <div class="col">
-                                    <i class="room_2"></i>
-                                </div>
-                                <div class="col">
-                                    <h5><?= count($itemPlaces) ?></h5>
-                                </div>
-                            </div>
-                            <p><?= Yii::t('app', 'offices') ?></p>
-                        </div>
+                </div>
+                <div class="card-address">
+                    <div class="adres">
+                        <h5><?= $district ?>, г. <?= $city ?></h5>
+                        <p>(<?= $address ?>)</p>
+                    </div>
+                    <div class="metro_wrapp">
+                        <p><?= $subway ?></p>
                     </div>
                 </div>
                 <div class="thumb_5_footer">
-                    <div class="thumb_5_footer_col">
-                        <p><?= $minmax ?></p>
-                    </div>
-                    <div class="thumb_5_footer_col">
-                        <p><?= $minPrice ?>
+                    <div class="free_office">
+                        <a href="<?= $href ?>"
+                           class="scroll_to green_pill tel_pill tel_hide_pill"><?= Yii::t('app', 'Free Offices') . ': ' . count($itemPlaces) . ' - ' . $minPrice ?>
+                        </a>
                     </div>
                 </div>
             </div>
