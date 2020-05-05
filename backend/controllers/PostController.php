@@ -14,6 +14,7 @@ use common\models\BcPlaces;
 use common\models\BcPlacesPrice;
 use common\models\BcValutes;
 use common\models\BcItems;
+use common\models\BcPlacesView;
 use yii\helpers\ArrayHelper;
 
 
@@ -22,31 +23,177 @@ use yii\helpers\ArrayHelper;
  */
 class PostController extends AdminController
 {
+//запросы для выдачи Офисов
+    public function actionTest2()
+    {
+        $start = microtime(true);
+        //запрос всех строк по условиям фильтра для подсчета кол-ва найденных офисов и для графиков цены и площадей
+        //совпадает с запросом для выдачи БЦ
+        $fullQuery = BcPlacesView::find()
+            //->where(['city_id' => 1])
+            //->asArray()
+            ->all();
+        $fullQuery = getUniqueArray('pid', $fullQuery);
+        $time1 = microtime(true) - $start;
+
+        $time3 = microtime(true) - $start;
+
+
+        return $this->render('test2', [
+            'fullQuery' => $fullQuery,
+            'time1' => $time1,
+            'time3' => $time3,
+        ]);
+    }
+
+//запросы для выдачи БЦ
+    public function actionTest3()
+    {
+        $start = microtime(true);
+        $attr = ['id',
+            'MIN(con_price) as con_price',
+            'MIN(uah_price) as minPrice',
+            'MAX(uah_price) as maxPrice',
+            'MIN(m2) as minM2',
+            'MIN(m2min) as minM2min',
+            'MAX(m2) as maxM2',
+            'updated_at'];
+
+        $items = BcPlacesView::find()
+            ->select($attr)
+            //->asArray()
+            ->limit(200)
+            ->offset(0)
+            //->orderBy('con_price, minPrice ASC')
+            //->orderBy('maxPrice DESC')
+            //->orderBy('minM2min, minM2 ASC')
+            //->orderBy('maxM2 DESC')
+            //->orderBy('updated_at ASC')
+            //->with('bcitem')
+            ->orderBy('id')
+            ->groupBy(['id'])
+            ->all();
+        $time1 = microtime(true) - $start;
+
+        $ids = ArrayHelper::getColumn($items, 'id');
+        $bcPlaces = BcPlacesView::find()
+            //->select(['id', 'pid'])
+            ->where(['in', 'id', $ids])
+            ->orderBy('id')
+            //->asArray()
+            //->with('place')
+            ->all();
+        $time2 = microtime(true) - $start;
+        $bcPlaces = getUniqueArray('pid', $bcPlaces);
+//debug(ArrayHelper::getColumn($placesForPage, 'pid'));
+        $allForPage = [];
+
+        foreach ($items as $key => $item) {
+            $allForPage[$key]['bc'] = $item;
+            $places = [];
+            foreach ($bcPlaces as $place) {
+                if ($place['id'] == $item['id']) {
+                    $places = ArrayHelper::merge($places, [$place]);
+                    $allForPage[$key]['places'] = $places;
+                    /*if($place->uah_price == $item->minPrice){
+                        if($place->kop>0 || $place->tax==1 || $place->tax==5 || $place->opex>0){
+                            $allForPage[$key]['plus']=1;
+                        }
+                    }*/
+                }
+            }
+        }
+
+        //запрос всех строк по условиям фильтра для подсчета кол-ва найденных офисов и для графиков цены и площадей
+        $fullQuery = BcPlacesView::find()
+            //->where(['city_id' => 1])
+            ->asArray()
+            ->all();
+        $fullQuery = getUniqueArray('pid', $fullQuery);
+
+        /*$pids = count(array_unique(ArrayHelper::getColumn($fullQuery, 'pid'))); //count ofices
+        $m2 = array_unique(ArrayHelper::getColumn($fullQuery, 'm2')); //m2 array
+        $m2min = array_unique(ArrayHelper::getColumn($fullQuery, 'm2min')); //m2min array
+        $m2ForChart = array_unique(ArrayHelper::merge($m2, $m2min)); //all m2 array
+        $pricesForChart = array_unique(ArrayHelper::getColumn($fullQuery, 'uah_price')); //prices array*/
+
+
+        $time3 = microtime(true) - $start;
+
+        return $this->render('test', [
+            'items' => $allForPage,
+            //'places' => $allArr,
+            //'fullQuery' => $fullQuery,
+            //'time1' => $time1,
+            //'time2' => $time2,
+            //'time3' => $time3,
+            //'count_offices' => $pids
+        ]);
+    }
 
     public function actionTest()
     {
-        $valutes = BcValutes::find()->asArray()->all();
-        $valutes = ArrayHelper::map($valutes, 'id', 'rate');
+        //выбираю все БЦ
+        //$attr = BcItems::attributes(); SELECT DISTINCT `id`, `con_price`, `uah_price` FROM `bc_places_view` ORDER BY `con_price`, `uah_price` LIMIT 8
+        $start = microtime(true);
+        $itemsForPage = BcPlacesView::find()
+            ->select(['id', 'con_price', 'uah_price'])
+            ->distinct()
+            ->asArray()
+            ->limit(8)
+            ->offset(0)
+            ->orderBy('con_price ASC, uah_price ASC')
+            ->all();
+        $time1 = microtime(true) - $start;
+        $ids = ArrayHelper::getColumn($itemsForPage, 'id');
+        $bcPlacesView = BcPlacesView::find()
+            ->select(['id', 'pid'])
+            ->where(['in', 'id', $ids])
+            //->with('bcitem', 'place')
+            ->asArray()
+            ->all();
+        $time2 = microtime(true) - $start;
 
-        //$prices = BcPlacesPrice::find()->with('place')->where(['>', 'place_id', 11815])->limit(2)->all();
-        //$newPrice = [];
-        $places = BcPlaces::find()->where(['id' => 18748])->one(); //all();
-        //foreach($places as $k => $place){
-            $places->calcPrice();
-        //}
-        return '123'; //debug($places->price);
-    }
+        //$bcItemsWithPlaces[0] = [$bcPlacesView[0]['id'], $itemsArray];
+        /*foreach($bcPlacesView as $key => $item){
+            if($bcItemsWithPlaces[$key][0] == $item['id']){
+                $itemsArray = ArrayHelper::merge($itemsArray, $item);
+                $bcItemsWithPlaces[$key][1] = $itemsArray;
+            } else {
+                $bcItemsWithPlaces[$key] = [$item['id'], $item];
+            }
+        }*/
+        //$firstKey = $bcPlacesView[0]['id'];
+        //$bcItemsWithPlaces[$firstKey] = [];
 
-    public function actionTest2()
-    {
-        $items = BcItems::findAll();
-        foreach($items as $item) {
-            
+        $id = 0;
+        $pid = 0;
+        $arr = [];
+        $itemsArray = [];
+        foreach ($bcPlacesView as $item) {
+            if ($id == $item['id']) {
+                if ($pid != $item['pid']) {
+                    //$itemsArray = ArrayHelper::merge($itemsArray, [$item['pid']]);
+                    $itemsArray = ArrayHelper::merge($itemsArray, [$item]);
+                    $arr[$item['id']] = $itemsArray;
+                }
+            } else {
+                //$itemsArray = [$item['pid']];
+                $itemsArray = [$item];
+                $arr[$item['id']] = $itemsArray;
+            }
+            $id = $item['id'];
+            $pid = $item['pid'];
         }
 
-        return '5';
-    }
 
+        return $this->render('test', [
+            'items' => $ids,
+            'bcItemsWithPlaces' => $arr,
+            'time1' => $time1,
+            'time2' => $time2,
+        ]);
+    }
 
 
     /**
@@ -70,7 +217,7 @@ class PostController extends AdminController
         $valutes = BcValutes::find()->asArray()->all();
         $places = BcPlaces::find()->where(['id' => 18748])->one(); //all();
         $places->calcPrice();
-        
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -102,7 +249,7 @@ class PostController extends AdminController
         $model->enabled = 1;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['index']);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -122,7 +269,7 @@ class PostController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())  && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
         return $this->render('update', ['model' => $model,]);
@@ -130,12 +277,12 @@ class PostController extends AdminController
 
     public function actionUploadImage($allwoedFiles = NULL)
     {
-        
+
         if (Yii::$app->request->isAjax) {
             $file = UploadedFile::getInstancesByName('Images[attachment]');
             if (empty($file)) exit;
             $file = $file[0];
-            return SystemFiles::uploadImage($file,$allwoedFiles);
+            return SystemFiles::uploadImage($file, $allwoedFiles);
         }
         return false;
     }
@@ -151,7 +298,7 @@ class PostController extends AdminController
 
     public function actionSortImage($id)
     {
-        if(Yii::$app->request->isAjax){
+        if (Yii::$app->request->isAjax) {
             SystemFiles::sortImage($id);
             return true;
         }

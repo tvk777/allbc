@@ -28,7 +28,10 @@ class BcItemsController extends AdminController
     public function actionIndex()
     {
         $searchModel = new BcItemsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['BcItemsSearch']['single_office'] = 0; //фильтр только БЦ (без отдельных офисов)
+        //debug($params); die();
+        $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -84,6 +87,7 @@ class BcItemsController extends AdminController
             $data = array_map('array_filter', Yii::$app->request->post('characteristics'));
             $data = array_filter($data);
             $model->formCharacteristics = $data;
+            $model->single_office = 0; //not single office
 
             if ($model->save()) {
                 if ((Yii::$app->request->post('save')) == 1) {
@@ -116,6 +120,7 @@ class BcItemsController extends AdminController
         }
 
         $model = BcItems::find()->where(['id' => $id])->with('subways.subwayDetails')->one();
+        //debug($model->slug); die();
         $model->alias = $model->slug->slug;
         $model->cityName = $model->city ? $model->city->name : '';
         $model->countryName = $model->country ? $model->country->name : '';

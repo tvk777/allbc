@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'sort_order',
-            [
+            /*[
                 'class'=>'kartik\grid\EditableColumn',
                 'attribute'=>'sort_order',
                 'editableOptions'=>[
@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'100px',
                 'format'=>['decimal', 2],
                 'pageSummary'=>true
-            ],
+            ],*/
             'percent_commission',
             'title',
             'keywords',
