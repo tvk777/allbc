@@ -24,7 +24,7 @@ class BcItemsSearch extends BcItems
     public function rules()
     {
         return [
-            [['id', 'sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
+            [['id', 'sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved', 'single_office'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at', 'address', 'slug', 'contacts_admin', 'redirect', 'email', 'email_name'], 'safe'],
             [['lat', 'lng'], 'number'],
             [['city_id', 'country_id', 'district_id', 'm2', 'city'], 'safe'],
@@ -82,6 +82,7 @@ class BcItemsSearch extends BcItems
             'hide' => $this->hide,
             'hide_contacts' => $this->hide_contacts,
             'approved' => $this->approved,
+            'single_office' => $this->single_office
         ]);
 
         $query->andFilterWhere(['like', 'address', $this->address])
@@ -93,6 +94,306 @@ class BcItemsSearch extends BcItems
         return $dataProvider;
     }
 
+    protected function initParams($params)
+    {
+        $params['city'] = !empty($params['city']) ? $params['city'] : null;
+        $params['country'] = !empty($params['country']) ? $params['country'] : null;
+        $params['percent_commission'] = !empty($params['percent_commission']) ? $params['percent_commission'] : null;
+        $params['classes'] = !empty($params['classes']) ? $params['classes'] : null;
+        $params['districts'] = !empty($params['districts']) ? $params['districts'] : null;
+        $params['subway'] = !empty($params['subway']) ? $params['subway'] : null;
+        $params['walk_dist'] = !empty($params['walk_dist']) ? $params['walk_dist'] : null;
+        $params['m2min'] = !empty($params['m2min']) ? $params['m2min'] : null;
+        $params['m2max'] = !empty($params['m2max']) ? $params['m2max'] : null;
+        $params['pricemin'] = !empty($params['pricemin']) ? $params['pricemin'] : null;
+        $params['pricemax'] = !empty($params['pricemax']) ? $params['pricemax'] : null;
+        $params['currency'] = !empty($params['currency']) ? $params['currency'] : 1;
+        $params['result'] = !empty($params['result']) ? $params['result'] : 'offices';
+        $params['target'] = !empty($params['target']) ? $params['target'] : 1;
+        $params['lang']  = !empty($params['lang']) ? $params['lang'] : 'ua';
+        return $params;
+    }
+
+    protected function filterConditions($query, $params)
+    {
+        $query->andFilterWhere([
+            'active' => 1,
+            'approved' => 1,
+            'hide' => 0,
+            'phide' => 0,
+            'city_id' => $params['city'],
+            'country_id' => $params['country'],
+            'percent_commission' => $params['percent_commission']
+        ]);
+        if($params['result']=='bc') {
+            $query->andWhere(['no_bc' => null]);
+        }
+        $query->andFilterWhere(['in', 'class_id', $params['classes']]);
+        $query->andFilterWhere(['in', 'district_id', $params['districts']]);
+        $query->andFilterWhere(['in', 'subway_id', $params['subway']]);
+        $query->andFilterWhere(['<', 'walk_dist', $params['walk_dist']]);
+
+        if (!empty($params['m2min']) && !empty($params['m2max'])) {
+            $query->andWhere([
+                'and',
+                ['or', ['<=', 'm2min', $params['m2max']], ['is', 'm2min', NULL]],
+                ['and', ['>=', 'm2', $params['m2min']], ['<=', 'm2', $params['m2max']]]
+            ]);
+
+        } elseif (!empty($params['m2min'])) {
+            $query->andWhere([
+                'and',
+                ['>=', 'm2', $params['m2min']]
+            ]);
+        } elseif (!empty($params['m2max'])) {
+            $query->andWhere([
+                'or',
+                ['<=', 'm2min', $params['m2max']],
+                ['and', ['is', 'm2min', NULL], ['<=', 'm2', $params['m2max']]]
+            ]);
+        }
+
+        switch ($params['currency']) {
+            case 1:
+                $query->andFilterWhere(['>=', 'uah_price', $params['pricemin']]);
+                $query->andFilterWhere(['<=', 'uah_price', $params['pricemax']]);
+                break;
+            case 2:
+                $query->andFilterWhere(['>=', 'usd_price', $params['pricemin']]);
+                $query->andFilterWhere(['<=', 'usd_price', $params['pricemax']]);
+                break;
+            case 3:
+                $query->andFilterWhere(['>=', 'eur_price', $params['pricemin']]);
+                $query->andFilterWhere(['<=', 'eur_price', $params['pricemax']]);
+                break;
+            case 4:
+                $query->andFilterWhere(['>=', 'rub_price', $params['pricemin']]);
+                $query->andFilterWhere(['<=', 'rub_price', $params['pricemax']]);
+                break;
+        }
+        return $query;
+    }
+
+    protected function orderByConditions($query, $params)
+    {
+        if (!empty($params['sort'])) {
+            switch ($params['sort']) {
+                case 'price_desc':
+                    $query->orderBy('con_price, maxPrice DESC');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('con_price, minPrice ASC');
+                    break;
+                case 'm2_desc':
+                    $query->orderBy('maxM2 DESC');
+                    break;
+                case 'm2_asc':
+                    $query->orderBy('minM2 ASC');
+                    break;
+                default:
+                    $query->orderBy('updated_at DESC');
+                    break;
+            }
+        }
+        return $query;
+    }
+
+    protected function orderByConditionsPlaces($query, $params)
+    {
+        if (!empty($params['sort'])) {
+            switch ($params['sort']) {
+                case 'price_desc':
+                    $query->orderBy('con_price, uah_price DESC');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('con_price, uah_price ASC');
+                    break;
+                case 'm2_desc':
+                    $query->orderBy('m2 DESC');
+                    break;
+                case 'm2_asc':
+                    $query->orderBy('m2 ASC');
+                    break;
+                default:
+                    $query->orderBy('updated_at DESC');
+                    break;
+            }
+        }
+        return $query;
+    }
+
+    protected function getMapMarkers($array, $params){
+        //формирование маркеров для карты
+        $markers = [];
+        $markers['type'] = 'FeatureCollection';
+        $markers['result'] = $params['result'];
+        $markers['lang'] = $params['lang'];
+        $markers['features'] = [];
+        foreach ($array as $item) {
+            if ($params['result'] === 'bc') {
+                $id = $item->id;
+                $addres = $item->address;
+                $coord = [$item->lng, $item->lat];
+                $img = isset($item->bcitem->images[0]) ? $item->bcitem->images[0]->imgSrc : '';
+                $class = $item->bcitem->class->short_name;
+                $name = getDefaultTranslate('name', $params['lang'], $item, true);
+            } else {
+                $id = $item->pid;
+                $coord = [$item->lng_str, $item->lat_str];
+                $addres = '';
+                $img = '';
+                $class = '';
+                $name = '';
+
+            }
+            $feature = [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => $coord
+                ],
+                'properties' => [
+                    'id' => $id,
+                    'title' => $name,
+                    'address' => $addres,
+                    'img' => $img,
+                    'class' => $class
+                ]
+            ];
+            $markers['features'][] = $feature;
+        }
+     return $markers;
+    }
+
+
+    public function seoSearchFromView($params)
+    {
+        $params = $this->initParams($params);
+
+        //Полный запрос всех отфильтрованных places
+        $filteredPlacesQuery = BcPlacesView::find(); //->asArray();
+        $column = 'pid';
+        $with ='place';
+        if($params['result']=='bc'){
+            $filteredPlacesQuery->with('bcitem.images', 'bcitem.class'); //class & images for markers
+            $column = 'id';
+            $with ='bcitem';
+        }
+        $filteredPlacesQuery = $this->filterConditions($filteredPlacesQuery, $params)->all();
+        //Полный запрос всех отфильтрованных places
+
+        $itemsForMarkers = getUniqueArray($column, $filteredPlacesQuery);
+        $markers = $this->getMapMarkers($itemsForMarkers, $params);
+
+        $allUniquePlaces = $params['result']=='bc' ? getUniqueArray('pid', $filteredPlacesQuery) : $itemsForMarkers;
+        $count_ofices = count($allUniquePlaces); //count ofices
+
+        $allPlacesQuery = BcPlacesView::find()
+        ->select(['m2min', 'm2', 'uah_price'])
+        ->groupBy(['pid'])
+        ->where([
+            'active' => 1,
+            'approved' => 1,
+            'hide' => 0,
+            'phide' => 0,
+            'city_id' => $params['city'],
+            'country_id' => $params['country'],
+        ])->all();
+        //debug($allPlacesQuery); die();
+        //$allPlacesQuery = $PlacesQuery->all();
+        //$allPlacesQuery = getUniqueArray('pid', $allPlacesQuery);
+        //echo $count_ofices.' - '.count($allPlacesQuery); die();
+        $m2 = ArrayHelper::getColumn($allPlacesQuery, 'm2'); //m2 array
+        $m2min = ArrayHelper::getColumn($allPlacesQuery, 'm2min'); //m2min array
+        $m2ForChart = array_filter(ArrayHelper::merge($m2, $m2min)); //all m2 array for chart
+
+        $pricesForChart=[];
+        foreach($allPlacesQuery as $one) {
+            if($one->uah_price>0){
+                $pricesForChart['type1'][] = $one->uah_price;
+                $pricesForChart['type3'][] = round($one->uah_price*$one->m2);
+            }
+        }
+
+        //БЦ или Офисы для страницы отфильтрованные и отсортированные
+        $attr = [$column,
+            'MIN(con_price) as con_price',
+            'MIN(uah_price) as minPrice',
+            'MAX(uah_price) as maxPrice',
+            /*'(CASE
+              WHEN m2min>0 THEN MIN(m2min)
+              ELSE MIN(m2)
+              END) AS minM2',*/
+            'MIN(m2) as minM2',
+            'MAX(m2) as maxM2',
+            'updated_at'];
+
+        $query_items = BcPlacesView::find()
+            ->select($attr)
+            ->with($with)
+                //->with('bcitem', 'bcitem.slug', 'bcitem.city', 'bcitem.district', 'bcitem.subways', 'bcitem.class')
+            ->groupBy([$column]);
+
+        $query_items = $this->filterConditions($query_items, $params);
+        $query_items = $this->orderByConditions($query_items, $params);
+
+        $pages = new Pagination(['totalCount' => $query_items->count(), 'pageSize' => 8]);
+        $pages->pageSizeParam = false;
+        $pages->forcePageParam = false;
+        $items = $query_items->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+         //БЦ или офисы для страницы отфильтрованные и отсортированные
+        //$allForPage = $items;
+
+        if($params['result']=='bc') {
+            //Запрос всех данных по найденным БЦ для страницы
+            $ids = ArrayHelper::getColumn($items, 'id');
+            $bcPlaces = BcPlacesView::find()
+                ->where(['in', 'id', $ids])
+                ->with('place', 'place.images');
+            $bcPlaces = $this->filterConditions($bcPlaces, $params);
+            $bcPlaces = $this->orderByConditionsPlaces($bcPlaces, $params);
+            $bcPlaces = $bcPlaces->all();
+            $bcPlaces = getUniqueArray('pid', $bcPlaces); //only unique pid
+            //Массив БЦ и офисов, отфильтрованный, отсортированный, сгруппированный по БЦ - для стр. выдачи БЦ
+            $allForPage = [];
+            foreach ($items as $key => $item) {
+                $allForPage[$key]['bc'] = $item;
+                $places = [];
+                foreach ($bcPlaces as $place) {
+                    if ($place['id'] == $item['id']) {
+                        $places = ArrayHelper::merge($places, [$place]);
+                        $allForPage[$key]['places'] = $places;
+                    }
+                }
+            }
+        } else {
+            $pids = ArrayHelper::getColumn($items, 'pid');
+            $bcPlaces = BcPlacesView::find()
+                ->where(['in', 'pid', $pids])
+                ->with('place', 'place.images');
+            $bcPlaces = $this->orderByConditionsPlaces($bcPlaces, $params);
+            $bcPlaces = $bcPlaces->all();
+            $bcPlaces = getUniqueArray('pid', $bcPlaces); //only unique pid
+            $allForPage = $bcPlaces;
+        }
+
+        $result = [];
+        $result['params'] = $params;
+        $result['count_ofices'] = $count_ofices; //количество найденных офисов
+        $result['m2ForChart'] = $m2ForChart; //массив кв.м. для графика
+        $result['pricesForChart'] = $pricesForChart; //массив цен для графика [0] => 425(uah_price) [1] => 45(m2)
+        $result['markers'] = json_encode($markers);
+        $result['pages'] = $pages;
+        /*массив данных для страницы
+        выдача БЦ 'bc' => bcitem, 'places' =>[place1, place2 ... ]
+        выдача офисов BcPlacesView Object [place] => common\models\BcPlaces Object
+        */
+        $result['allForPage'] = $allForPage; //
+        
+        return $result;
+    }
 
     public function seoSearch($params)
     {
@@ -136,7 +437,6 @@ class BcItemsSearch extends BcItems
         if (!empty($params['subway'])) {
             $dist = !empty($params['walk_dist']) ? $params['walk_dist'] : NULL;
             $query_bcitems->andWhere(['in', 'id', $this->getItemsBySubway($params['subway'], $dist)]);
-            $query_offices->andWhere(['in', 'id', $this->getOfficesBySubway($params['subway'], $dist)]);
         }
 
         if ($result === 'bc') $query_bcitems->with('class', 'images');
@@ -242,7 +542,7 @@ class BcItemsSearch extends BcItems
             //$addres = $item->address;
             if ($result === 'bc') {
                 $addres = $item->address;
-                $coord = [$item->lng, $item->lat]; 
+                $coord = [$item->lng, $item->lat];
                 $img = isset($item->images[0]) ? $item->images[0]->imgSrc : '';
                 $class = $item->class->short_name;
                 $name = getDefaultTranslate('name', $currentLanguage, $item, true);
@@ -256,12 +556,12 @@ class BcItemsSearch extends BcItems
                     $img = '';
                 }
                 if ($item->no_bc === 1) {
-                    $addres = $item->office->street;
-                    $coord = [$item->office->lng_str, $item->office->lat_str]; 
-                    $class = $item->office->class->short_name;
+                    $addres = $item->bcitem->street;
+                    $coord = [$item->bcitem->lng_str, $item->bcitem->lat_str];
+                    $class = $item->bcitem->class->short_name;
                 } else {
                     $addres = $item->bcitem->street;
-                    $coord = [$item->bcitem->lng_str, $item->bcitem->lat_str]; 
+                    $coord = [$item->bcitem->lng_str, $item->bcitem->lat_str];
                     $class = $item->bcitem->class->short_name;
                 }
             }
@@ -431,7 +731,6 @@ class BcItemsSearch extends BcItems
         $result['markers'] = json_encode($markers);
         $result['pages'] = $pages;
         return $result;
-
     }
 
 

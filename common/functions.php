@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\ArrayHelper;
 
 function debug($arr){
     echo '<pre>'.print_r($arr, true).'</pre>';
@@ -61,4 +62,83 @@ function FilterAndTrim($arr){
     return array_filter($arr, function($item) {
         return !empty(trim($item));
     });
+}
+
+function getUniqueArray($key, $array){
+    $arrayKeys = array(); // массив для хранения ключей
+    $resultArray = array(); // выходной массив
+    foreach($array as $one){ // проходим циклом по всему исходному массиву
+        if(!in_array($one[$key], $arrayKeys)){ // если такого значения еще не встречаласть, то
+            $arrayKeys[] = $one[$key]; // пишем значение ключа в массив, для дальнейшей проверки
+            $resultArray[] = $one; // записываем уникальное значение в выходной массив
+        }
+    }
+    return $resultArray; // возвращаем массив
+}
+
+//возвращает true false в зависимости от того есть ли добавочная стоимость к минимальному значению
+//на входе принимает массив из BcPlacesView Object - офисов для БЦ
+function getPlusForBC ($places){
+    $arr = ArrayHelper::map($places, 'pid', 'uah_price');
+    $arrNotNull = array_filter($arr, function ($v) { return !empty($v); });
+    $min = count($arrNotNull)>0 ? min($arrNotNull) : null;
+    foreach($places as $place){
+        if(!is_null($min) && $place->uah_price === $min){
+            if($place->kop>0 || $place->tax==1 || $place->tax==5 || $place->opex>0){
+                return true;
+            } 
+        }
+    }
+    return false;
+}
+
+function getBcMinPrice ($item, $currency, $rate) {
+    //$currency=4;
+    if(empty($item['bc']->minPrice)) return Yii::t('app', 'price con.');
+    $plus = getPlusForBC($item['places']) ? '++' : '';
+    $text=getCurrencyText($currency);
+    return round($item['bc']->minPrice/$rate).$plus.' '.$text;
+}
+
+function getCurrencyText ($currency){
+    switch ($currency){
+        case 1:
+            $text = Yii::t('app', '&#8372;/m²/month');
+            break;
+        case 2:
+            $text = Yii::t('app', '$/m²/month');
+            break;
+        case 3:
+            $text = Yii::t('app', '€/m²/month');
+            break;
+        case 4:
+            $text = Yii::t('app', '₽/m²/month');
+            break;
+        default:
+            $text = Yii::t('app', '&#8372;/m²/month');
+            break;
+    }
+    return $text;
+}
+
+
+//возвращает true false в зависимости от того есть ли добавочная стоимость к минимальному значению
+//на входе принимает массив из BcPlacesView Object - офисов для БЦ
+function getPlusForPlace ($place){
+            if($place->kop>0 || $place->tax==1 || $place->tax==5 || $place->opex>0){
+                return true;
+            }
+    return false;
+}
+//toDo: сделать расчет цены с накладными для $prices['forAll']
+function getPlacePrices ($place, $rate){
+    $prices['forM2'] = Yii::t('app', 'con.');
+    $prices['forAll'] = Yii::t('app', 'con.');
+    $placePlus = getPlusForPlace($place) ? '++' : '';
+    if($place->con_price != 1 && !empty($place->uah_price)){
+        $price = round($place->uah_price/$rate);
+        $prices['forM2'] = $price.$placePlus;
+        $prices['forAll'] = $price*$place->m2.$placePlus;
+    }
+return $prices;
 }
