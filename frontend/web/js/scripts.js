@@ -1359,7 +1359,8 @@ $(document).ready(function () {
         var id = $(this).attr('for'),
             input = $("#"+id),
             count,
-            targetSpan = $(".district .count");
+            targetSpan = $(".district .count"),
+            districtTitle = $(".district-filter");
         count = $(this).closest(".countable").find( "input:checked" ).length;
         if(!input.is(':checked')) {
             count++;
@@ -1368,12 +1369,12 @@ $(document).ready(function () {
         }
         if(count>0){
             targetSpan.text(': '+count);
+            districtTitle.addClass('green_active');
         } else {
             targetSpan.text('');
+            districtTitle.removeClass('green_active');
         }
-       //console.log($(this).closest(".countable").find( "input:checked" ).length);
-        //console.log($(this).attr('for'));
-        //console.log(count, targetSpan);
+        //console.log(count, districtTitle);
     });
 
     $("[data-filter]").on("click", function () {
@@ -1418,11 +1419,12 @@ $(document).ready(function () {
 
     //Submit form and clear filters buttons
 
-    $(".filter-form .apply-filters .submit").on("click", function () {
+    $(".filter-form .submit").on("click", function (e) {
+        e.preventDefault();
         $(".filter-form").submit();
     });
 
-    $(".filter-form .apply-filters .remove").on("click", function () {
+    $(".filter-form .remove").on("click", function () {
         $(".checkbox .more-filters").attr('checked', false);
         $("#metro_val").text(defaultDist);
         $("#metro_name").html(defaultName);

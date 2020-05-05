@@ -5,14 +5,14 @@ use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 
-//debug($conditions);
-//debug($items[0]['bc']->bcitem);
-//debug($items[0]['places']);
-//debug($items[0]->place);
-//$currency = $conditions['currency'];
+//debug($countValM2);
+
+//debug($seo->name);
+
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
+
 if (!empty($city)) {
     $sellHref = $city->slug_sell;
     $rentHref = $city->slug;
@@ -52,7 +52,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         <input id="submit_main_form" type="hidden">
     </form>
 
-    <? echo $this->render('_partial/_items-head', [
+    <?= $this->render('_partial/_items-head', [
         'seo' => $seo,
         'countValM2' => $countValM2,
         'filters' => $filters,
@@ -73,73 +73,71 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
     //debug($pages);
     ?>
 
-    <div class="append-elem" data-append-elem="map_index"></div>
+        <div class="append-elem" data-append-elem="map_index"></div>
 
-    <div class="map_object_templ">
-        <div class="row">
-            <div class="w_half">
-                <div class="objects_cards">
-                    <?
-                    for ($i = 0; $i <= 3; $i++) {
-                        if (isset($items[$i])) {
-                            echo $this->render('_partial/_card', [
-                                'item' => $items[$i],
-                                'target' => $seo->target,
-                                'result' => $result,
-                                'currentLanguage' => $currentLanguage,
-                                'currency' => $currency,
-                                'rate' => $rate,
-                            ]);
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
-        <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
+        <div class="map_object_templ">
             <div class="row">
                 <div class="w_half">
-                    <?= common\widgets\ExpertsWidget::widget(); ?>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="w_half">
-                <div class="objects_catalog objects_cards">
-                    <?
-                    for ($i = 4; $i <= 7; $i++) {
-                        if (isset($items[$i])) {
-                            echo $this->render('_partial/_card', [
-                                'item' => $items[$i],
-                                'target' => $seo->target,
-                                'result' => $result,
-                                'currentLanguage' => $currentLanguage,
-                                'currency' => $currency,
-                                'rate' => $rate,
-                            ]);
-                        }
-                    }
-                    ?>
-                </div>
-                <? echo LinkPager::widget([
-                    'pagination' => $pages,
-                ]); ?>
-            </div>
-        </div>
-        <div class="append-elem" data-append-desktop-elem="map_index" data-min-screen="1024">
-            <div class="object_map">
-                <div class="map_scroll">
-                    <div class="map_search_wrapp">
-                        <div class="map_search checkbox">
-                            <input type="checkbox" name="searchonmap" id="searchonmap"/>
-                            <label for="searchonmap">Поиск при перемещении на карте</label>
-                        </div>
+                    <div class="objects_cards">
+                        <? //if ($result != 'offices') {
+                            for ($i = 0; $i <= 3; $i++) {
+                                if (isset($items[$i])) {
+                                    echo $this->render('_partial/_card', [
+                                        'item' => $items[$i],
+                                        'target' => $seo->target,
+                                        'places' => $places,
+                                        'result' => $result,
+                                        'currentLanguage' => $currentLanguage
+                                    ]);
+                                }
+                            }
+                        //} ?>
                     </div>
-                    <div id="object_map"></div>
+                </div>
+            </div>
+            <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
+                <div class="row">
+                    <div class="w_half">
+                        <?= common\widgets\ExpertsWidget::widget(); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="w_half">
+                    <div class="objects_catalog objects_cards">
+                        <? //if ($result != 'offices') {
+                            for ($i = 4; $i <= 7; $i++) {
+                                if (isset($items[$i])) {
+                                    echo $this->render('_partial/_card', [
+                                        'item' => $items[$i],
+                                        'target' => $seo->target,
+                                        'places' => $places,
+                                        'result' => $result,
+                                        'currentLanguage' => $currentLanguage
+                                    ]);
+                                }
+                            }
+                        //} ?>
+                    </div>
+                    <? echo LinkPager::widget([
+                        'pagination' => $pages,
+                    ]); ?>
+                </div>
+            </div>
+            <div class="append-elem" data-append-desktop-elem="map_index" data-min-screen="1024">
+                <div class="object_map">
+                    <div class="map_scroll">
+                        <div class="map_search_wrapp">
+                            <div class="map_search checkbox">
+                                <input type="checkbox" name="searchonmap" id="searchonmap"/>
+                                <label for="searchonmap">Поиск при перемещении на карте</label>
+                            </div>
+                        </div>
+                        <div id="object_map"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <?
     $script = <<< JS

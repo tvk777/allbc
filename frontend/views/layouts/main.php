@@ -42,7 +42,7 @@ if ($action != 'index') {
     $logoImg = Html::a(Html::img('@web/img/logo_2.svg', ['alt' => 'Логотип', 'class' => 'logo_black']), [Url::home()]);
     $dropdowmClass = 'dropdowm_wrapp_2';
     $dropdowmClass2 = 'dropdowm_wrapp_2 dropdowm_wrapp_2_2';
-    $contentClass = 'content_2 content_resp';
+    $contentClass = 'content_resp';
     $searchIconClass = 'search_icon_black';
     $blackClass = '_black';
 }

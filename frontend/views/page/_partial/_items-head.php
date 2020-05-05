@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
-
 if ($seo->target == 1) {
     $targetText = Yii::t('app', 'Rent');
     $rentSelected = 'selected';
@@ -302,21 +301,17 @@ if($result==='bc'){
                         </div>
                     </div>
 
-                    <!--<div class="item_wrapp">
-                        <button type="button" class="more_filter <? /*= $activeMore */ ?>"><span
-                                class="novisible_767">Еще фильтры</span><span class="visible_767">Фильтры</span>
-                        </button>
-                    </div>-->
-
                     <? if (!empty($filters['district'])): ?>
                         <div class="item_wrapp novisible_1024">
                             <div class="dropdow_item_wrapp">
                                 <div class="dropdown_item_title district-filter <?= $activeDistricts ?>">
                                     <?  $districtText = (!empty($params['districts']) && count($params['districts']) > 0)
-                                        ? ':(<span class="count">'.count($params['districts']).'</span>'
+                                        ? ': '.count($params['districts'])
                                         : '';
                                     ?>
-                                    <div class="item_title_text district"><?= Yii::t('app', 'District').$districtText ?></div>
+                                    <div class="item_title_text district">
+                                        <?= Yii::t('app', 'District').'<span class="count">'.$districtText.'</span>' ?>
+                                    </div>
                                     <!--<div class="chose_filter" data-filters-index="filters_2"></div>-->
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4 countable">
@@ -349,12 +344,8 @@ if($result==='bc'){
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4">
                                     <div class="metro_box">
-                                        <div class="chose_filter" data-filters-index="filters_5">
-                                            <span id="metro_val"><?= $metroVal ?></span> m,
-                                            <span id="metro_name"><?= $metroName ?></span>
                                             <input type="hidden" name="filter[walk_dist]" id="walk_dist"
                                                    value="<?= $metroValclear ?>"/>
-                                        </div>
 
                                         <? if (!empty($filters['branches'])): ?>
                                             <div class="metro_two_cols">
@@ -400,7 +391,7 @@ if($result==='bc'){
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="select_4_wrapp select_4_2">
+                                    <div class="select_4_wrapp select_4_2">pr
                                         <div class="custom_select_2">
                                             <div class="custom_select_title" id="metro_name_val"><a
                                                     href="#"><?= $metroName ?></a>
@@ -436,8 +427,6 @@ if($result==='bc'){
                                     <div class="item_title_text">Тип/Класс</div>
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4">
-                                    <div class="chose_filter" data-filters-index="filters_1"></div>
-
                                     <? foreach ($filters['classes'] as $class) : ?>
                                         <? if (!empty($params['classes']) && in_array($class->id, $params['classes'])) {
                                             $checked_classes = 'checked';
@@ -467,7 +456,6 @@ if($result==='bc'){
                                     <div class="item_title_text">Состояние</div>
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4">
-                                    <div class="chose_filter" data-filters-index="filters_6"></div>
                                     <? foreach ($filters['statuses'] as $status) : ?>
                                         <? if (!empty($params['statuses']) && in_array($status->id, $params['statuses'])) {
                                             $checked_statuses = 'checked';
@@ -491,7 +479,7 @@ if($result==='bc'){
                     <? endif; ?>
 
                     <div class="item_wrapp novisible_1024">
-                        <a href="#" class="submit olive_pill "><?= Yii::t('app', 'Search') ?></a>
+                        <a href="#" class="submit button-filter-search"><?= Yii::t('app', 'Search') ?></a>
                     </div>
                 </div>
 

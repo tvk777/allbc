@@ -146,44 +146,57 @@ use yii\helpers\Html;
                             <div class="col-xs-6 header-item__name"><p>Комунальнi:</p></div>
                             <div class="col-xs-6 header-item__value"><p>+ опалення, вода, эл/эн</p></div>
                         </div>
-                        <div class="row bold">
-                            <div class="col-xs-6 header-item__name"><p>Все включено:</p></div>
-                            <div class="col-xs-6 header-item__value text__select">
-                                <div class="header-item__value">
-                                    <div class="table_cell period"
-                                         data-month_usd="<?= $month_usd ?>"
-                                         data-month_uah="<?= $month_uah ?>"
-                                         data-month_eur="<?= $month_eur ?>"
-                                         data-month_rub="<?= $month_rub ?>"
-                                         data-year_usd="<?= $year_usd ?>"
-                                         data-year_uah="<?= $year_uah ?>"
-                                         data-year_eur="<?= $year_eur ?>"
-                                         data-year_rub="<?= $year_rub ?>"
-                                         data-m2_usd="<?= $m2_usd ?>"
-                                         data-m2_uah="<?= $m2_uah ?>"
-                                         data-m2_eur="<?= $m2_eur ?>"
-                                         data-m2_rub="<?= $m2_rub ?>"
-                                    >
-                                        <input id="period" type="hidden" value="1"/>
-                                        <p><?= $month_uah ?></p>
+
+                    </div>
+
+                    <div class="col-sm-12 button">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4 col-sm-12 link-more">
+                            <a href="/<?= $place->slug->slug ?>" class="green_pill">
+                                <?= Yii::t('app', 'See More') ?>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 col-sm-12">
+                            <div class="all-in bold">
+                                <div class="col-xs-6 header-item__name"><p>Все включено:</p></div>
+                                <div class="col-xs-6 header-item__value text__select">
+                                    <div class="header-item__value">
+                                        <div class="table_cell period"
+                                             data-month_usd="<?= $month_usd ?>"
+                                             data-month_uah="<?= $month_uah ?>"
+                                             data-month_eur="<?= $month_eur ?>"
+                                             data-month_rub="<?= $month_rub ?>"
+                                             data-year_usd="<?= $year_usd ?>"
+                                             data-year_uah="<?= $year_uah ?>"
+                                             data-year_eur="<?= $year_eur ?>"
+                                             data-year_rub="<?= $year_rub ?>"
+                                             data-m2_usd="<?= $m2_usd ?>"
+                                             data-m2_uah="<?= $m2_uah ?>"
+                                             data-m2_eur="<?= $m2_eur ?>"
+                                             data-m2_rub="<?= $m2_rub ?>"
+                                        >
+                                            <input id="period" type="hidden" value="1"/>
+                                            <p><?= $month_uah ?></p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="header-item__name">
-                                    <div class="custom_select_wrapp custom_select_wrapp_3">
-                                        <div class="custom_select">
-                                            <div>
-                                                <input type="hidden" class="select_res period" value="month">
-                                                <p class="select_input"><span class="sel_val">All in/мес</span></p>
-                                            </div>
-                                            <div class="dropdown_select change-period-single">
-                                                <div class="select_item">
-                                                    <span data-period="month">₴/мес</span>
+                                    <div class="header-item__name">
+                                        <div class="custom_select_wrapp custom_select_wrapp_3">
+                                            <div class="custom_select">
+                                                <div>
+                                                    <input type="hidden" class="select_res period" value="month">
+                                                    <p class="select_input"><span class="sel_val">All in/мес</span></p>
                                                 </div>
-                                                <div class="select_item">
-                                                    <span data-period="m2">₴/m2</span>
-                                                </div>
-                                                <div class="select_item">
-                                                    <span data-period="year">₴/год</span>
+                                                <div class="dropdown_select change-period-single">
+                                                    <div class="select_item">
+                                                        <span data-period="month">₴/мес</span>
+                                                    </div>
+                                                    <div class="select_item">
+                                                        <span data-period="m2">₴/m2</span>
+                                                    </div>
+                                                    <div class="select_item">
+                                                        <span data-period="year">₴/год</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,15 +204,8 @@ use yii\helpers\Html;
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row button">
-              
-                        <div class="col-md-4 col-sm-12 link-more">
-                            <a href="/<?= $place->slug->slug ?>" class="green_pill">
-                                <?= Yii::t('app', 'See More') ?>
-                            </a>
-                        </div>
+
                     </div>
                 </div>
             <? endforeach; ?>

@@ -1,7 +1,8 @@
 <?php
 use yii\helpers\ArrayHelper;
 
-//debug($test['allForPage']);
+debug($test['params']);
+debug($test['allForPage']);
 //debug(ArrayHelper::getColumn($test['places_for_charts'], 'id'));
 //debug($test['bcItems']);
 
@@ -22,5 +23,4 @@ $result['count_ofices'] = $count_ofices; //количество найденны
 //echo count($test['m2ForChart']).'</br>';
 //echo count($test['pricesForChart']).'</br>';
 //echo count($test['pages']);
-echo common\widgets\MainSliderWidget::widget();
 ?>

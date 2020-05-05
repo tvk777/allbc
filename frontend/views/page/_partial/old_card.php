@@ -1,57 +1,51 @@
 <?php
 use yii\helpers\Html;
 use kriptograf\wishlist\widgets\WishlistButton;
+
 $paramTarget = $target == 1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
-//$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
-//$itemName = getDefaultTranslate('name', $currentLanguage, $item);
+$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
+$itemName = getDefaultTranslate('name', $currentLanguage, $item);
 if ($result == 'bc') {
-    $cardItem = $item['bc'];
-    $id = $cardItem->id;
-    $modelWishlist = $cardItem->bcitem;
-    $href = '/' . $cardItem->bcitem->slug->slug . '?target=' . $paramTarget;
-    $itemName = getDefaultTranslate('name', $currentLanguage, $cardItem->bcitem, true);
-    $city = $cardItem->bcitem->city->name;
-    $district = $cardItem->bcitem->district ? $cardItem->bcitem->district->name . ' р-н' : '';
-    $address = $cardItem->bcitem->address;
-    $plus = getPlusForBC($item['places']) ? '++' : '';
-    $minPrice = getBcMinPrice ($item, $currency, $rate);
-    $itemPlaces = $item['places'];
-    $itemSubway = !empty($cardItem->bcitem->subways[0]) ? $cardItem->bcitem->subways[0] : null;
-    $itemClass = $cardItem->bcitem->class->name;
-    $slides = !empty($cardItem->bcitem->slides) ? $cardItem->bcitem->slides : null;
-    $itemComission = $cardItem->bcitem->percent_commission;
+    $city = $item->city->name;
+    $district = $item->district ? $item->district->name . ' р-н' : '';
+    $address = $item->address;
+    $minmax = $item->minm2 != $item->maxm2 ? Yii::t('app', 'from') . ' ' . $item->minm2 . ' m² ...' . $item->maxm2 . ' m²' : $item->minm2 . ' m²';
+    $minPrice = $item->minprice != 'z' ? Yii::t('app', 'from') . ' ' . $item->minprice . '++ ₴/m<sup>2</sup>/мес' : Yii::t('app', 'price con.');
+    $itemPlaces = $item->getFilteredPlaces($places, $target);
+    $placesInfo = $item->getPlacesInfo($itemPlaces);
+    $itemSubway = !empty($item->subways[0]) ? $item->subways[0] : null;
+    $itemClass = $item->class->name;
+    $slides = !empty($item->slides) ? $item->slides : null;
+    $itemComission = $item->percent_commission;
     $building = 'bc';
-
 } else {
-    $cardItem = $item->place->bcitem; //bc
-    $placeItem = $item->place; //place
-    $id = $placeItem->id;
-    //debug($item); die();
-    $itemPlaces = null;
-    $modelWishlist = $placeItem;
-    $itemName = getDefaultTranslate('name', $currentLanguage, $placeItem, true);
-    $href = '/' . $placeItem->slug->slug . '?target=' . $paramTarget;
-    $city = $cardItem->city->name;
-    $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
-    $address = $cardItem->street;
-    $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
-    $placePrices = getPlacePrices($item, $rate);
-    $minPrice = $placePrices['forM2'];
-
+    //debug($item->slug->slug);
+    //$href = '';
+    if ($item->no_bc === 1) {
+        $office = $item->bcitem;
+    } else {
+        $office = $item->bcitem;
+    }
+    $city = $office->city->name;
+    $district = $office->district ? $office->district->name . ' р-н' : '';
+    $address = $office->street;
+    $minmax = !empty($item->m2minm2) ? Yii::t('app', 'from') . ' ' . $item->m2min . ' m² ...' . $item->m2 . ' m²' : $item->m2 . ' m²';
+    //if(!empty($item->priceSqm->price)) debug($item->priceSqm->price);
+    $minPrice = ($item->con_price != 1 && !empty($item->priceSqm->price)) ? Yii::t('app', 'from') . ' ' . $item->priceSqm->price . '++ ₴/m<sup>2</sup>/мес' : Yii::t('app', 'price con.');
     $itemPlaces = null;
     $placesInfo = null;
-    $itemSubway = !empty($cardItem->subways[0]) ? $cardItem->subways[0] : null;
-    $itemClass = $cardItem->class->name;
-    $slides = !empty($cardItem->slides) ? $cardItem->slides : null;
+    $itemSubway = !empty($office->subways[0]) ? $office->subways[0] : null;
+    $itemClass = $office->class->name;
+    $slides = !empty($office->slides) ? $office->slides : null;
     if (!empty($item->slides)) {
         $slides = $item->slides;
-    } elseif ($item->item_id !== 0 && !empty($cardItem->slides)) {
-        $slides = $cardItem->slides;
+    } elseif ($item->item_id !== 0 && !empty($office->slides)) {
+        $slides = $office->slides;
     } else {
         $slides = null;
     }
-    $itemComission = $cardItem->percent_commission;
+    $itemComission = $office->percent_commission;
     $building = 'office';
 }
 
@@ -77,7 +71,7 @@ if (!empty($itemSubway)) {
 }
 ?>
 
-<div class="object_card" data-id="<?= $cardItem->id ?>">
+<div class="object_card" data-id="<?= $item->id ?>">
     <div class="border_wrapp">
         <div class="inner_wrapp">
             <div class="object_slider_wrapp">
@@ -89,7 +83,7 @@ if (!empty($itemSubway)) {
                     <div class="inline">
                         <div class="black_circle_2">
                             <?= WishlistButton::widget([
-                                'model' => $modelWishlist,
+                                'model' => $item,
                                 'anchorActive' => '<i class="star_icon_2 rem"></i>',
                                 'anchorUnactive' => '<i class="star_icon_2"></i>',
                                 'cssClass' => 'card out-wish',
@@ -103,7 +97,7 @@ if (!empty($itemSubway)) {
                     <? if (!empty($slides)) : ?>
                         <? foreach ($slides as $slide): ?>
                             <div class="slide">
-                                <a href="<?= $slide['big'] ?>" class="img_box" data-fancybox="card_1<?= $cardItem->id ?>"
+                                <a href="<?= $slide['big'] ?>" class="img_box" data-fancybox="card_1<?= $item->id ?>"
                                    data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></a>
                             </div>
                         <? endforeach; ?>
@@ -117,7 +111,7 @@ if (!empty($itemSubway)) {
                         <span class="item-type">Тип: </span>
                         <span class="item-type-name">Бизнес центр </span>
                         <span class="item-class"><?= $itemClass ?></span>
-                        <span class="item-id">ID: <?= $id ?></span>
+                        <span class="item-id">ID: <?= $item->id ?></span>
                     </div>
                 </div>
                 <div class="card-address">
@@ -158,7 +152,7 @@ if (!empty($itemSubway)) {
                             <p>м²</p>
                         </div>
                         <div class="table_cell">
-                            <p><?= getCurrencyText($currency) ?></p>
+                            <p>₴/м²</p>
                         </div>
                         <div class="table_cell">
                             <p>all in/мес</p>
@@ -166,37 +160,36 @@ if (!empty($itemSubway)) {
                         <div class="table_cell">
                         </div>
                     </div>
-                    <? if ($itemPlaces): ?>
-                        <? foreach ($itemPlaces as $k => $place): ?>
-                            <?
-                            $prices = getPlacePrices($place, $rate);
+                    <? if ($placesInfo): ?>
+                        <? foreach ($placesInfo as $k => $place): ?>
+                            <? //debug($place);
+                            $pluses = '';
+                            if (isset($place['for_m2']) && isset($place['all_for_m2']) && $place['for_m2'] < $place['all_for_m2']) $pluses = '<span class="pluses">++</span>';
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">
-                                    <p><?= $place->m2 ?></p>
+                                    <p><?= $place['m2'] ?></p>
                                 </div>
                                 <div class="table_cell">
-                                    <p><?= $prices['forM2'] ?></p>
+                                    <p><?= $place['for_m2'] . $pluses ?></p>
                                 </div>
                                 <div class="table_cell">
-                                    <p><?= $prices['forAll'] ?></p>
+                                    <p><?= $place['for_all'] ?></p>
                                 </div>
                                 <div class="table_cell">
-                                    <? //debug($place->place->images) ?>
-                                    <? if (isset($place->place->images) && count($place->place->images) > 0) : ?>
+                                    <? if (isset($place['img']) && count($place['img']) > 0) : ?>
 
-                                        <a href="#" class="icon_link_2" data-photogallerylink="<?= $place->pid ?>">
-                                            <i class="photo"></i>
-                                        </a>
-                                        <div class="images_paths_array" data-photogalleryindex="<?= $place->pid ?>">
-                                            <? foreach ($place->place->images as $img) : ?>
-                                                <span data-imagepath="<?= $img->imgSrc ?>"></span>
+                                        <a href="#" class="icon_link_2" data-photogallerylink="<?= $k ?>"><i
+                                                class="photo"></i></a>
+                                        <div class="images_paths_array" data-photogalleryindex="<?= $k ?>">
+                                            <? foreach ($place['img'] as $img) : ?>
+                                                <span data-imagepath="<?= $img ?>"></span>
                                             <? endforeach; ?>
                                         </div>
                                     <? endif; ?>
                                     <div class="star_place">
                                         <?= WishlistButton::widget([
-                                            'model' => $place->place,
+                                            'model' => $place['model'],
                                             'anchorActive' => '<i class="star_icon_2 rem"></i>',
                                             'anchorUnactive' => '<i class="star_icon_2"></i>',
                                             'cssClass' => 'out-wish',

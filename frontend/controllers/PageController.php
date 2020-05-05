@@ -383,28 +383,31 @@ class PageController extends FrontendController
             $searchParams['currency'] = !empty($params['currency']) ? $params['currency'] : 1;
             $searchParams['type'] = !empty($params['type']) ? $params['type'] : 1;
         }
+        //debug($searchParams);
         return $searchParams;
     }
 
     //тестирование выдачи по условиям фильтров
     public function actionTestitems()
     {
-        //$whereCondition['result'] = 'offices'; //'bc'; //
+        $whereCondition = [];
+        $whereCondition['result'] = 'bc'; //'offices'; //
         //$whereCondition['target'] = 1;
         //$whereCondition['country'] = 1;
-        //$whereCondition['city'] = 1;
-        //$whereCondition['sort'] = 'price_asc';
+        // $whereCondition['city'] = 1;
+        //$whereCondition['sort'] = 'price_desc';
         //$whereCondition['lang'] = 'ua';
-        $whereCondition['m2min'] = 100;
-        $whereCondition['m2max'] = 150;
-        //$whereCondition['price'] = [70, 90];
+        //$whereCondition['m2min'] = 100;
+        //$whereCondition['m2max'] = 150;
+        //$whereCondition['currency'] = 2;
+        //$whereCondition['pricemin'] = 10;
+        //$whereCondition['pricemax'] = 20;
         //$whereCondition['user'] = 259;
-        $whereCondition['subway'] = 305;
+        //$whereCondition['subway'] = 305;
         //$whereCondition['walk_dist'] = 1500;
         //$whereCondition['classes'] = [1, 2];
         //$whereCondition['districts'] = [45, 46];
         //$whereCondition['visibles'] = [31792, 31627, 32171];
-
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearchFromView($whereCondition);
 
@@ -415,6 +418,80 @@ class PageController extends FrontendController
 
     //страница выдачи каталога
     public function actionSeo_catalog_urls($slug)
+    {
+        $seo = SeoCatalogUrls::find()
+            ->joinWith(['slug'])
+            ->where(['slug' => $slug])
+            ->multilingual()
+            ->one();
+
+        if ($seo->city->city_id !== 0) {
+            $city = $seo->city->city;
+            $city_id = $city->id;
+        } else {
+            $city = 0;
+            $city_id = 0;
+        }
+
+        if ($city !== 0) {
+            $center = [$city->lng, $city->lat];
+            $zoom = $city->zoom;
+        } else {
+            $center = [30.52340000, 50.45010000]; //Ukraine
+            $zoom = 6;
+        }
+        $params = [];
+
+        if (Yii::$app->request->get('filter')) $params = Yii::$app->request->get('filter');
+        if (Yii::$app->request->get('sort')) $params['sort'] = Yii::$app->request->get('sort');
+
+        if (Yii::$app->request->isPjax) {
+            if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
+            if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) $center = Yii::$app->request->post('center');
+            if (Yii::$app->request->post('zoom') && Yii::$app->request->post('zoom') != 0) $zoom = Yii::$app->request->post('zoom');
+        }
+
+
+        $whereCondition = $this->getFilter($seo, $params);
+
+        $searchModel = new BcItemsSearch();
+        $result = $searchModel->seoSearchFromView($whereCondition);
+        //$result = $searchModel->seoSearch($whereCondition);
+        $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [
+            'countPlaces' => $result['count_ofices'],
+        ]);
+
+        $this->result = !empty($params) && !empty($params['result']) ? $params['result'] : 'bc';
+
+        $targetLinks = SeoCatalogUrls::find()->where(['id' => 88])->one();
+        $mainRent = trim($targetLinks->main_rent_link_href, '/');
+        $mainSell = trim($targetLinks->main_sell_link_href, '/');
+        //$currency = !empty($params['currency']) ? $params['currency'] : 4;
+        $currency = $whereCondition['currency'];
+        $rate = BcValutes::getRate($currency);
+        return $this->render('items', [
+            'seo' => $seo,
+            'city' => $city,
+            'items' => $result['allForPage'],
+            'countPlaces' => $countPlaces,
+            'pages' => $result['pages'],
+            'markers' => $result['markers'],
+            'center' => json_encode($center),
+            'zoom' => $zoom,
+            'filters' => $this->getDataForFilter($city_id),
+            'mainRent' => $mainRent,
+            'mainSell' => $mainSell,
+            'params' => $params,
+            'conditions' => $whereCondition,
+            'pricesChart' => $this->getPlacesForPriceChart($result['pricesForChart']),
+            'countValM2' => $this->getPlacesForM2Chart($result['m2ForChart']),
+            'rate' => $rate['rate'],
+            'currency' => $currency
+        ]);
+    }
+
+    //страница выдачи каталога - до переделки фильтров
+    public function _actionSeo_catalog_urls($slug)
     {
         $seo = SeoCatalogUrls::find()
             ->with('city')
@@ -466,7 +543,8 @@ class PageController extends FrontendController
         $targetLinks = SeoCatalogUrls::find()->where(['id' => 88])->one();
         $mainRent = trim($targetLinks->main_rent_link_href, '/');
         $mainSell = trim($targetLinks->main_sell_link_href, '/');
-        $currency = !empty($params['currency']) ? $params['currency'] : 1;
+        //$currency = !empty($params['currency']) ? $params['currency'] : 1;
+        $currency = 2;
         $rate = BcValutes::getRate($currency);
         return $this->render('items', [
             'seo' => $seo,
@@ -533,7 +611,27 @@ class PageController extends FrontendController
         return $filters;
     }
 
-    protected function getPlacesForM2Chart($places)
+    protected function getPlacesForM2Chart($m2Arr)
+    {
+        $countVal = [];
+        $countVal['count'] = [];
+        $countVal['max'] = 0;
+        $countVal['min'] = 0;
+        if (count($m2Arr) > 0) {
+            //$m2s = ArrayHelper::getColumn($places, 'm2');
+            $max = max($m2Arr);
+            $min = min($m2Arr);
+            $delta = round($max / 30);
+
+            $countVal['count'] = $this->getRanges($m2Arr, $delta);
+            $countVal['max'] = $max;
+            $countVal['min'] = $min;
+        }
+
+        return $countVal;
+    }
+
+    protected function _getPlacesForM2Chart($places)
     {
         $countVal = [];
         $countVal['count'] = [];
@@ -554,7 +652,40 @@ class PageController extends FrontendController
         return $countVal;
     }
 
-    protected function getPlacesForPriceChart($places, $target)
+    protected function getPlacesForPriceChart($prices)
+    {
+        //debug($prices);
+        $countVal['type1']['count'] = [];
+        $countVal['type1']['max'] = 0;
+        $countVal['type1']['min'] = 0;
+        $countVal['type3']['count'] = [];
+        $countVal['type3']['max'] = 0;
+        $countVal['type3']['min'] = 0;
+
+            $pr1 = $prices['type1'];
+            if (count($pr1) > 0) {
+                $minType1 = min($pr1);
+                $maxType1 = max($pr1);
+                $delta = round($maxType1 / 30);
+                $countVal['type1']['count'] = $this->getRanges($pr1, $delta);
+                $countVal['type1']['max'] = $maxType1;
+                $countVal['type1']['min'] = $minType1;
+            }
+
+            $pr2 = $prices['type3'];
+            if (count($pr2) > 0) {
+                $minType3 = min($pr2);
+                $maxType3 = max($pr2);
+                $delta3 = round($maxType3 / 30);
+                $countVal['type3']['count'] = $this->getRanges($pr2, $delta3);
+                $countVal['type3']['max'] = $maxType3;
+                $countVal['type3']['min'] = $minType3;
+            }
+        return $countVal;
+    }
+
+
+    protected function _getPlacesForPriceChart($places, $target = 1)
     {
         $countVal['type1']['count'] = [];
         $countVal['type1']['max'] = 0;
@@ -589,6 +720,7 @@ class PageController extends FrontendController
 
 
                 $pr1 = ArrayHelper::getColumn($type1, 'price');
+                debug($pr1);
                 if (count($pr1) > 0) {
                     $minType1 = min($pr1);
                     $maxType1 = max($pr1);
