@@ -35,14 +35,25 @@ $this->registerJsVar('metroVal', $metroVal, $this::POS_HEAD);
 $this->registerJsVar('defaultDist', $defaultDist, $this::POS_HEAD);
 $this->registerJsVar('defaultName', $defaultName, $this::POS_HEAD);
 $activeM2 = '';
-if ((!empty($params['m2min']) && $params['m2min'] != $countValM2['min']) || (!empty($params['m2max']) && $params['m2max'] != $countValM2['max'])) {
-    $activeM2 = 'green_active';
-}
+$squText = Yii::t('app', 'Square');
+$emptySquText=Yii::t('app', 'Square');
 $minM2 = !empty($params['m2min']) ? $params['m2min'] : $countValM2['min'];
 $maxM2 = !empty($params['m2max']) ? $params['m2max'] : $countValM2['max'];
+
+
+//echo 'minpar='.$params['m2min'].' maxpar='.$params['m2max'].' min='.$countValM2['min'].' max='.$countValM2['max'];
+$filterM2empty = (empty($params['m2min']) && empty($params['m2max'])) || ($params['m2min']==$countValM2['min'] && $params['m2max'] == $countValM2['max']);
+if (!$filterM2empty) {
+    $activeM2 = 'green_active';
+    $squText = $minM2 . ' m² - ' . $maxM2.' m²';
+}
 $this->registerJsVar('maxM2', $maxM2, $this::POS_HEAD);
 $this->registerJsVar('minM2', $minM2, $this::POS_HEAD);
 $this->registerJsVar('maxTotal', $countValM2['max'], $this::POS_HEAD);
+$this->registerJsVar('maxSqRange', $countValM2['max'], $this::POS_HEAD);
+$this->registerJsVar('minSqRange', $countValM2['min'], $this::POS_HEAD);
+$this->registerJsVar('sqText', $emptySquText, $this::POS_HEAD);
+
 
 $currency = !empty($params['currency']) ? $params['currency'] : 1;
 $type = !empty($params['type']) ? $params['type'] : 1;
@@ -61,23 +72,42 @@ if ($type == 3) {
     $minpricesChart = $pricesChart['type1']['min'];
     $maxpricesChart = $pricesChart['type1']['max'];
 }
-$minPrice = !empty($params['pricemin']) ? $params['pricemin'] : round($minpricesChart / $rate);
-$maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : round($maxpricesChart / $rate);
+$minRange = round($minpricesChart / $rate);
+$maxRange = round($maxpricesChart / $rate);
+$minPrice = !empty($params['pricemin']) ? $params['pricemin'] : $minRange;
+$maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : $maxRange;
 $min_max = $currencySymbol . ' ' . $minPrice . ' - ' . $maxPrice;
 
+$priceText = (empty($params['pricemin']) && empty($params['pricemax'])) || ($params['pricemin']==$minRange && $params['pricemax']==$maxRange)
+    ? Yii::t('app', 'Price')
+    : $min_max;
+$emptyPriceText=Yii::t('app', 'Price');
+//var_dump($params['pricemin']==$minPrice && $params['pricemax']==$maxPrice);
 $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
+$this->registerJsVar('maxRange', $maxRange, $this::POS_HEAD);
+$this->registerJsVar('minRange', $minRange, $this::POS_HEAD);
 $this->registerJsVar('maxTotalPrice', $pricesChart['type1']['max'], $this::POS_HEAD);
+$this->registerJsVar('currencySymbol', $currencySymbol, $this::POS_HEAD);
+$this->registerJsVar('priceText', $emptyPriceText, $this::POS_HEAD);
+
 
 if ((!empty($params['pricemin']) && $params['pricemin'] != round($minpricesChart / $rate)) ||
     (!empty($params['pricemax']) && $params['pricemax'] != round($maxpricesChart / $rate))
 ) {
     $activePrice = 'green_active';
 }
-$activeDistricts = (!empty($params['districts']) && count($params['districts'])) ? 'green_active' : '';
-/*$activeMore = '';
-if (!empty($params['districts']) || !empty($params['walk_dist']) || !empty($params['subway']) || !empty($params['classes']) || !empty($params['statuses']) || !empty($params['comission'])) $activeMore = 'active';*/
+$activeSubway='';
+$removeCss='';
+//$activeSubway = (!empty($params['walk_dist']) || !empty($params['subway'])) ? 'green_active' : '';
+if(!empty($params['walk_dist']) || !empty($params['subway'])) {
+    $activeSubway='green_active';
+    $removeCss ='style="display:block;"';
+}
 
+$activeDistricts = (!empty($params['districts']) && count($params['districts'])) ? 'green_active' : '';
+$activeClasses = !empty($params['classes']) ? 'green_active' : '';
+$activeStatuses = !empty($params['statuses']) ? 'green_active' : '';
 
 
 switch ($currency) {
@@ -119,7 +149,6 @@ if (!empty($conditions) && !empty($conditions['sort'])) {
     }
 }
 
-$result==='bc';
 $urlRezult = Yii::$app->request->pathInfo;
 if($result==='bc'){
     $bcLink = '<span class="active">'.Yii::t('app', 'Business centers').'</span>';
@@ -140,6 +169,7 @@ if($result==='bc'){
 
 
 <?= Html::beginForm('/' . $seo->slug->slug, 'get', ['class' => 'filter-form']) ?>
+<?= Html::input('hidden', 'filter[result]', $result, ['id' => 'result']) ?>
 <div id="filters">
     <div class="filter_nav">
         <div class="row">
@@ -150,7 +180,7 @@ if($result==='bc'){
                         <div class="dropdow_item_wrapp">
                             <div class="select_2_wrapp">
                                 <div class="custom_select_2">
-                                    <div class="custom_select_title"><a href="#"><?= $targetText ?></a></div>
+                                    <div class="custom_select_title green_active"><a href="#"><?= $targetText ?></a></div>
                                     <div class="custom_select_list">
                                         <div data-value="1" class="sel-type custom_select_item <?= $rentSelected ?>"><a
                                                 href="#"><?= Yii::t('app', 'Rent') ?></a>
@@ -166,7 +196,7 @@ if($result==='bc'){
                     <div class="item_wrapp novisible_1024 square">
                         <div class="dropdow_item_wrapp">
                             <div class="dropdown_item_title m2-filter <?= $activeM2 ?>">
-                                <div class="item_title_text"><?= Yii::t('app', 'Square') ?></div>
+                                <div class="item_title_text"><?= $squText ?></div>
                             </div>
                             <div class="dropdown_item_menu price_w">
                                 <div class="append-elem" data-append-desktop-elem="6" data-min-screen="1024">
@@ -215,7 +245,7 @@ if($result==='bc'){
                         <div class="dropdow_item_wrapp">
                             <div class="dropdown_item_title dropdown_item_title_2  price-filter <?= $activePrice ?>">
                                 <div class="item_title_text">
-                                    <?= $min_max ?>
+                                    <?= $priceText ?>
                                 </div>
                             </div>
                             <div class="dropdown_item_menu price_w">
@@ -288,12 +318,12 @@ if($result==='bc'){
 
                                 </div>
                                 <div class="footer_two_cols clearfix">
-                                    <div class="left">
+                                    <div class="left price-filter">
                                         <?= Html::input('hidden', 'filter[currency]', $currency, ['id' => 'currF']) ?>
                                         <?= Html::input('hidden', 'filter[type]', $type, ['id' => 'typeF']) ?>
                                         <p><a href="#" class="submit green_link"><?= Yii::t('app', 'Apply') ?></a></p>
                                     </div>
-                                    <div class="right">
+                                    <div class="right price-filter">
                                         <p><a href="#" class="remove black_link"><?= Yii::t('app', 'Clear') ?></a></p>
                                     </div>
                                 </div>
@@ -339,8 +369,8 @@ if($result==='bc'){
                     <? if (!empty($filters['subways'])): ?>
                         <div class="item_wrapp novisible_1024">
                             <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title">
-                                    <div class="item_title_text"><?= Yii::t('app', 'Subway') ?></div>
+                                <div class="dropdown_item_title subway-filter <?= $activeSubway ?>">
+                                    <div class="item_title_text subways"><?= Yii::t('app', 'Subway') ?></div>
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4">
                                     <div class="metro_box">
@@ -350,26 +380,26 @@ if($result==='bc'){
                                         <? if (!empty($filters['branches'])): ?>
                                             <div class="metro_two_cols">
                                                 <div class="col">
-                                                    <h4>Ветка метро</h4>
+                                                    <h4><?= Yii::t('app', 'Metro line') ?></h4>
                                                 </div>
                                                 <div class="col">
                                                     <div class="radio_metro_wrapp">
                                                         <? foreach ($filters['branches'] as $branch) : ?>
                                                             <? if ($branch == 1) : ?>
                                                                 <div class="radio_wrapp metro_radio branch">
-                                                                    <input data-branch="1" type="radio" id="metro_1"/>
+                                                                    <input class="red-branch" data-branch="1" type="checkbox" id="metro_1"/>
                                                                     <label for="metro_1"><i
                                                                             class="red_metro"></i></label>
                                                                 </div>
                                                             <? elseif ($branch == 2) : ?>
                                                                 <div class="radio_wrapp metro_radio branch">
-                                                                    <input data-branch="2" type="radio" id="metro_2"/>
+                                                                    <input class="green-branch" data-branch="2" type="checkbox" id="metro_2"/>
                                                                     <label for="metro_2"><i
                                                                             class="green_metro"></i></label>
                                                                 </div>
                                                             <? elseif ($branch == 3) : ?>
                                                                 <div class="radio_wrapp metro_radio branch">
-                                                                    <input data-branch="3" type="radio" id="metro_3"/>
+                                                                    <input class="blue-branch" data-branch="3" type="checkbox" id="metro_3"/>
                                                                     <label for="metro_3"><i
                                                                             class="blue_metro"></i></label>
                                                                 </div>
@@ -381,7 +411,7 @@ if($result==='bc'){
                                         <? endif; ?>
                                         <div class="metro_two_cols">
                                             <div class="col">
-                                                <h4>До метро</h4>
+                                                <h4><?= Yii::t('app', 'To the subway') ?></h4>
                                             </div>
                                             <div class="col">
                                                 <div class="range_slider_wrapp range_slider_3_wrapp">
@@ -391,10 +421,10 @@ if($result==='bc'){
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="select_4_wrapp select_4_2">pr
+                                    <div class="select_4_wrapp select_4_2">
                                         <div class="custom_select_2">
-                                            <div class="custom_select_title" id="metro_name_val"><a
-                                                    href="#"><?= $metroName ?></a>
+                                            <div class="custom_select_title" id="metro_name">
+                                                <i class="remove" <?= $removeCss ?> ></i><span><?= $metroName ?></span>
                                             </div>
                                             <div class="custom_select_list">
                                                 <? foreach ($filters['subways'] as $subway) : ?>
@@ -406,10 +436,10 @@ if($result==='bc'){
                                                     }
                                                     ?>
 
-                                                    <div class="subway custom_select_item <?= $checked_subway ?>"
+                                                    <div class="subway_custom_select_item <?= $checked_subway ?>"
                                                          data-subway="<?= $subway->id ?>"
-                                                         data-branch="<?= $subway->branch_id ?>"><a
-                                                            href="#"><?= $subway->name ?></a></div>
+                                                         data-branch="<?= $subway->branch_id ?>">
+                                                          <span><?= $subway->name ?></span></div>
                                                 <? endforeach; ?>
                                                 <input type="hidden" name="filter[subway]" value="<?= $metroId ?>"
                                                        id="subway"/>
@@ -423,8 +453,8 @@ if($result==='bc'){
                     <? if (!empty($filters['classes'])): ?>
                         <div class="item_wrapp novisible_1024">
                             <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title">
-                                    <div class="item_title_text">Тип/Класс</div>
+                                <div class="dropdown_item_title  <?= $activeClasses ?>">
+                                    <div class="item_title_text"><?= Yii::t('app', 'Type/Class') ?></div>
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4">
                                     <? foreach ($filters['classes'] as $class) : ?>
@@ -452,8 +482,8 @@ if($result==='bc'){
                     <? if (!empty($filters['statuses'])): ?>
                         <div class="item_wrapp novisible_1024">
                             <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title">
-                                    <div class="item_title_text">Состояние</div>
+                                <div class="dropdown_item_title  <?= $activeStatuses ?>">
+                                    <div class="item_title_text"><?= Yii::t('app', 'Condition') ?></div>
                                 </div>
                                 <div class="dropdown_item_menu dropdown_item_menu_4">
                                     <? foreach ($filters['statuses'] as $status) : ?>
@@ -479,7 +509,7 @@ if($result==='bc'){
                     <? endif; ?>
 
                     <div class="item_wrapp novisible_1024">
-                        <a href="#" class="submit button-filter-search"><?= Yii::t('app', 'Search') ?></a>
+                        <a href="#" class="button-filter-search"><?= Yii::t('app', 'Search') ?></a>
                     </div>
                 </div>
 

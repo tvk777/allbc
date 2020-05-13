@@ -95,5 +95,9 @@ return [
     'Send' => 'Отправить',
     'Office' => 'Офис',
     'All business centers here' => 'Все бизнес-центры здесь',
-    'See More' => 'Смотреть подробнее'
+    'See More' => 'Смотреть подробнее',
+    'Type/Class' => 'Тип/Класс',
+    'Condition' => 'Состояние',
+    'Metro line' => 'Ветка метро',
+    'To the subway' => 'До метро'
 ];

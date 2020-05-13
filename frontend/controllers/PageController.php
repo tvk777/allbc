@@ -348,12 +348,13 @@ class PageController extends FrontendController
                     $searchParams['m2max'] = '';
                 }
             }
-            $searchParams['percent_commission'] = $seo->bc_commission == 1 ? 0 : '';
+            $searchParams['commission'] = $seo->bc_commission == 1 ? 0 : '';
             $searchParams['classes'] = ArrayHelper::getColumn($seo->classes, 'bc_class_id');
             $searchParams['districts'] = $seo->districts ? ArrayHelper::getColumn($seo->districts, 'district_id') : '';
             $searchParams['price'] = $seo->price;
             $searchParams['walk_dist'] = '';
             $searchParams['subway'] = '';
+            $searchParams['statuses'] = [];
         } else {
 
             $params['m2min'] = isset($params['m2min']) ? $params['m2min'] : '';
@@ -372,7 +373,7 @@ class PageController extends FrontendController
             $searchParams['districts'] = count($params['districts']) > 0 ? $params['districts'] : '';
             $searchParams['classes'] = count($params['classes']) > 0 ? $params['classes'] : '';
             $searchParams['statuses'] = count($params['statuses']) > 0 ? $params['statuses'] : '';
-            $searchParams['percent_commission'] = $params['comission'] == 'on' ? 0 : '';
+            $searchParams['commission'] = $params['comission'] == 'on' ? 0 : '';
             $searchParams['walk_dist'] = !empty($params['walk_dist']) ? $params['walk_dist'] : '';
             $searchParams['subway'] = !empty($params['subway']) ? $params['subway'] : '';
             $searchParams['user'] = !empty($params['user']) ? $params['user'] : '';
@@ -383,7 +384,7 @@ class PageController extends FrontendController
             $searchParams['currency'] = !empty($params['currency']) ? $params['currency'] : 1;
             $searchParams['type'] = !empty($params['type']) ? $params['type'] : 1;
         }
-        //debug($searchParams);
+        //debug($searchParams); die();
         return $searchParams;
     }
 
@@ -424,6 +425,7 @@ class PageController extends FrontendController
             ->where(['slug' => $slug])
             ->multilingual()
             ->one();
+        //debug($seo); die();
 
         if ($seo->city->city_id !== 0) {
             $city = $seo->city->city;
@@ -654,7 +656,7 @@ class PageController extends FrontendController
 
     protected function getPlacesForPriceChart($prices)
     {
-        //debug($prices);
+        //debug($prices); die();
         $countVal['type1']['count'] = [];
         $countVal['type1']['max'] = 0;
         $countVal['type1']['min'] = 0;
@@ -662,7 +664,7 @@ class PageController extends FrontendController
         $countVal['type3']['max'] = 0;
         $countVal['type3']['min'] = 0;
 
-            $pr1 = $prices['type1'];
+            $pr1 = !empty($prices['type1']) ? $prices['type1'] : [];
             if (count($pr1) > 0) {
                 $minType1 = min($pr1);
                 $maxType1 = max($pr1);
@@ -672,7 +674,7 @@ class PageController extends FrontendController
                 $countVal['type1']['min'] = $minType1;
             }
 
-            $pr2 = $prices['type3'];
+            $pr2 = !empty($prices['type3']) ? $prices['type3'] : [];
             if (count($pr2) > 0) {
                 $minType3 = min($pr2);
                 $maxType3 = max($pr2);

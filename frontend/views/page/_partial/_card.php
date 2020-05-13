@@ -5,6 +5,7 @@ $paramTarget = $target == 1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
 //$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
 //$itemName = getDefaultTranslate('name', $currentLanguage, $item);
+//echo 'text='.getCurrencyText ($currency);
 if ($result == 'bc') {
     $cardItem = $item['bc'];
     $id = $cardItem->id;
@@ -37,7 +38,7 @@ if ($result == 'bc') {
     $address = $cardItem->street;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
     $placePrices = getPlacePrices($item, $rate);
-    $minPrice = $placePrices['forM2'];
+    $minPrice = $placePrices['forM2'].' '.getCurrencyText ($currency);
 
     $itemPlaces = null;
     $placesInfo = null;

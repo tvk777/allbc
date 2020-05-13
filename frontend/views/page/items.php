@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 use yii\helpers\Url;
 
 //debug($conditions);
-//debug($items[0]['bc']->bcitem);
+//debug($items[1]['bc']->minPrice);
 //debug($items[0]['places']);
 //debug($items[0]->place);
 //$currency = $conditions['currency'];

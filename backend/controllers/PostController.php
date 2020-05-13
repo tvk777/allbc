@@ -23,6 +23,66 @@ use yii\helpers\ArrayHelper;
  */
 class PostController extends AdminController
 {
+    protected function inArray ($var, $arr){
+        return in_array($var->id, $arr);
+    }
+    public function actionTest4()
+    {
+        $length = 8;
+        $offset = 0;
+
+        $start = microtime(true);
+        //запрос всех строк по условиям фильтра
+        $fullQuery = BcPlacesView::find()
+            ->where(['city_id' => 1])
+            ->with('bcitem', 'place')
+            ->orderBy('con_price, uah_price ASC')
+            ->all();
+        $time1 = microtime(true) - $start;
+        
+        $fullPlaces = getUniqueArray('pid', $fullQuery);
+        $allForPage = [];
+        //только для выдачи БЦ
+        $fullBcItems = getUniqueArray('id', $fullQuery);
+        $bcItemsForPage = array_slice($fullBcItems, $offset, $length);
+        $idsBcitems = ArrayHelper::getColumn($bcItemsForPage, 'id');
+        $placesForBcItems = array_filter($fullPlaces, function($var) use ($idsBcitems) {
+            return in_array($var->id, $idsBcitems);
+        });
+
+        foreach ($bcItemsForPage as $key => $item) {
+            $allForPage[$key]['bc'] = $item;
+            $places = [];
+            foreach ($placesForBcItems as $place) {
+                if ($place['id'] == $item['id']) {
+                    $places = ArrayHelper::merge($places, [$place]);
+                    $allForPage[$key]['places'] = $places;
+                }
+            }
+            $arr = array_filter(ArrayHelper::getColumn($places, 'uah_price'));
+            if(!empty($arr)) {
+                $allForPage[$key]['bc']->minPrice = min($arr);
+            }
+        }
+        $time2 = microtime(true) - $start;
+        //конец только для выдачи БЦ
+        
+        //для выдачи офисов
+        //$allForPage = array_slice($fullPlaces, $offset, $length);
+        //конец для выдачи офисов
+        
+        $time3 = microtime(true) - $start;
+        return $this->render('test4', [
+            'fullBcItems' => $fullBcItems,
+            'fullPlaces' => $fullPlaces,
+            'bcItemsForPage' => $bcItemsForPage,
+            'placesForBcItems' => $placesForBcItems,
+            'allForPage' => $allForPage,
+            'time1' => $time1,
+            'time2' => $time2,
+            'time3' => $time3,
+        ]);
+    }
 //запросы для выдачи Офисов
     public function actionTest2()
     {

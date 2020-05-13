@@ -10,9 +10,9 @@ $short = substr($phone, 0, 3);
 <div id="filters" class="item-invis">
     <div class="filter_nav">
         <div class="row">
-            <div class="left"><?= $name ?></div>
+            <div class="left-head"><?= $name ?></div>
             <div class="center"><?= $logoImg ?></div>
-            <div class="right">
+            <div class="right-head">
                 <div class="tel_pill_wrapp">
                     <div>
                         <a href="#contacts" class="scroll_to green_pill tel_pill tel_pill_2 tel_hide_pill" data-tel-pill = "tel_pill_2_<?= $user->id ?>">

@@ -97,14 +97,14 @@ function getfilterNavParams() {
             $(".filter_nav").addClass("fixed");
             $(".filter_resp").addClass("scroll");
             $("#filters").outerHeight($(".filter_nav").outerHeight());
-            if($(".item-invis").length>0) {
+            if ($(".item-invis").length > 0) {
                 $(".item-invis").show();
             }
         } else {
             $(".filter_nav").removeClass("fixed");
             $(".filter_resp").removeClass("scroll");
             $("#filters").height(false);
-            if($(".item-invis").length>0) {
+            if ($(".item-invis").length > 0) {
                 $(".item-invis").hide();
             }
         }
@@ -1100,9 +1100,9 @@ $(document).ready(function () {
                 handleUpperr = $("#range_slider_2").find(".noUi-handle-upper");
                 leftCoord = handleLower.offset().left;
                 rightCoord = handleUpperr.offset().left;
-                console.log(leftCoord + ' - ' + rightCoord);
+                //console.log(leftCoord + ' - ' + rightCoord);
                 barsCharts = handleLower.closest(".bars_range_wrapp");
-                console.log(barsCharts.find(".bars .bar:last-child").offset().left);
+                //console.log(barsCharts.find(".bars .bar:last-child").offset().left);
                 barsCharts.find(".bars .bar").each(function () {
                     if ($(this).offset().left >= leftCoord && $(this).offset().left <= rightCoord) {
                         $(this).removeClass("disable");
@@ -1115,28 +1115,56 @@ $(document).ready(function () {
             $("[data-filters-index='filters_3'] .maxVal2").html(maxVal);
             $(".price_resp").html($("#price_sel").html());
         });
+        var priceFilter = $(".dropdown_item_title.price-filter"), priceTitle = $(".price-filter .item_title_text");
         priceSlider2.noUiSlider.on('change', function (values, handle) {
+            console.log(priceText);
             minVal = parseInt($("#input-number_1").val());
             $("#minpricem2").val(minVal);
             maxVal = parseInt($("#input-number_2").val());
             $("#maxpricem2").val(maxVal);
+            if (minRange != values[0] || maxRange != values[1]) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + minVal + '-' + maxVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+            }
         });
 
         $("#input-number_1").keyup(function () {
             activeInputVal = parseInt($(this).val());
+            maxInputVal = parseInt($("#maxpricem2").val());
+            console.log(activeInputVal, minPrice, maxPrice);
             if (activeInputVal < parseInt($("#input-number_2").val())) {
                 leftRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([leftRange, null]);
             }
             $("#minpricem2").val(activeInputVal);
+            if (minRange != activeInputVal || maxRange != maxInputVal) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + activeInputVal + '-' + maxInputVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+            }
+
         });
         $("#input-number_2").keyup(function () {
             activeInputVal = parseInt($(this).val());
+            minInputVal = parseInt($("#minpricem2").val());
+
             if (activeInputVal > parseInt($("#input-number_1").val())) {
                 rightRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([null, rightRange]);
             }
             $("#maxpricem2").val(activeInputVal);
+            if (minRange != minInputVal || maxRange != activeInputVal) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + minInputVal + '-' + activeInputVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+            }
         });
     }
 
@@ -1232,29 +1260,54 @@ $(document).ready(function () {
             }, 500);
         });
 
+        var sqFilter = $(".dropdown_item_title.m2-filter"), sqTitle = $(".m2-filter .item_title_text");
         priceSlider4.noUiSlider.on('change', function (values, handle) {
+            //console.log(values, minSqRange, maxSqRange, sqText);
             minVal = parseInt($("#input-number_5").val());
             $("#minm2").val(minVal);
             maxVal = parseInt($("#input-number_6").val());
             $("#maxm2").val(maxVal);
+            if (minSqRange != values[0] || maxSqRange != values[1]) {
+                sqFilter.addClass('green_active');
+                sqTitle.html(minVal + ' m² - ' + maxVal + ' m²');
+            } else {
+                sqFilter.removeClass('green_active');
+                sqTitle.html(sqText);
+            }
         });
 
 
         $("#input-number_5").keyup(function () {
             activeInputVal = parseInt($(this).val());
+            maxInputVal = $("#maxm2").val();
             if (activeInputVal < parseInt($("#input-number_6").val())) {
                 leftRange = parseInt($(this).val());
                 priceSlider4.noUiSlider.set([leftRange, null]);
             }
             $("#minm2").val(activeInputVal);
+            if (minSqRange != activeInputVal || maxSqRange != maxInputVal) {
+                sqFilter.addClass('green_active');
+                sqTitle.html(activeInputVal + ' m² - ' + maxInputVal + ' m²');
+            } else {
+                sqFilter.removeClass('green_active');
+                sqTitle.html(sqText);
+            }
         });
         $("#input-number_6").keyup(function () {
             activeInputVal = parseInt($(this).val());
+            minInputVal = $("#minm2").val();
             if (activeInputVal > parseInt($("#input-number_5").val())) {
                 rightRange = parseInt($(this).val());
                 priceSlider4.noUiSlider.set([null, rightRange]);
             }
             $("#maxm2").val(activeInputVal);
+            if (minSqRange != minInputVal || maxSqRange != activeInputVal) {
+                sqFilter.addClass('green_active');
+                sqTitle.html(minInputVal + ' m² - ' + activeInputVal + ' m²');
+            } else {
+                sqFilter.removeClass('green_active');
+                sqTitle.html(sqText);
+            }
         });
     }
 
@@ -1311,7 +1364,7 @@ $(document).ready(function () {
             $("#metro_name").html(selectVal);
         }
         href = $(this).find('a').attr('href'); //.replace(new RegExp('/','g'), '');
-        window.location.href = href;
+        if (href) window.location.href = href;
     });
 
     $(".custom_select_title").on("click", function (e) {
@@ -1357,18 +1410,18 @@ $(document).ready(function () {
 
     $("[data-count]").on("click", function () {
         var id = $(this).attr('for'),
-            input = $("#"+id),
+            input = $("#" + id),
             count,
             targetSpan = $(".district .count"),
             districtTitle = $(".district-filter");
-        count = $(this).closest(".countable").find( "input:checked" ).length;
-        if(!input.is(':checked')) {
+        count = $(this).closest(".countable").find("input:checked").length;
+        if (!input.is(':checked')) {
             count++;
         } else {
             count--;
         }
-        if(count>0){
-            targetSpan.text(': '+count);
+        if (count > 0) {
+            targetSpan.text(': ' + count);
             districtTitle.addClass('green_active');
         } else {
             targetSpan.text('');
@@ -1378,19 +1431,20 @@ $(document).ready(function () {
     });
 
     $("[data-filter]").on("click", function () {
-        if (!$(this).hasClass("checked_filter")) {
-            $(this).addClass("checked_filter");
-            filtersIndex = $(this).attr("data-filter");
+        var id = $(this).attr('for'),
+            input = $("#" + id),
+            titleDiv = $(this).closest(".dropdow_item_wrapp").find(".dropdown_item_title"),
+            count = $(this).closest(".dropdown_item_menu").find('input:checked').length;
+        if (input.is(':checked')) {
+            count--;
         } else {
-            $(this).removeClass("checked_filter");
+            count++;
         }
-        filtersArray = [];
-        $("[data-filter = '" + filtersIndex + "']").each(function () {
-            if ($(this).hasClass("checked_filter")) {
-                filtersArray.push($(this).text());
-            }
-        });
-        $("[data-filters-index = '" + filtersIndex + "']").text(filtersArray);
+        if (count > 0) {
+            titleDiv.addClass('green_active');
+        } else {
+            titleDiv.removeClass('green_active');
+        }
     });
 
     $("[data-radio-filter]").on("click", function () {
@@ -1399,22 +1453,66 @@ $(document).ready(function () {
         $("[data-filters-index = '" + filtersIndex + "']").text($(this).html());
     });
 
-    $(".subway").on("click", function () {
-        $("#subway").val($(this).data('subway'));
+    var metroText = $('.item_title_text.subways').text(),
+        removeButton = $('#metro_name').find('i.remove');
+
+    removeButton.on("click", function (e) {
+        $(".subway_custom_select_item").removeClass("selected");
+        $("#metro_name span").text(metroText);
+        $("#subway").val('');
+        $('.dropdown_item_title.subway-filter').removeClass('green_active');
+        $(this).hide();
     });
 
-    /*var dataBranch, allSubways = $(".subway.custom_select_item");
+    $(".subway_custom_select_item").on("click", function (e) {
+        selectVal = $(this).text();
+        console.log($(this), selectVal);
+        $(".subway_custom_select_item").removeClass("selected");
+        $(this).addClass("selected");
+        $("#metro_name span").text(selectVal);
+        $("#subway").val($(this).data('subway'));
+        if ($(this).data('subway') > 0) {
+            $('.dropdown_item_title.subway-filter').addClass('green_active');
+        } else {
+            $('.dropdown_item_title.subway-filter').removeClass('green_active');
+        }
+        removeButton.show();
+    });
 
-     $(".metro_radio input").on("click", function () {
-     dataBranch = $(this).data('branch');
-     allSubways.removeClass('hidden');
-     if(dataBranch!=0) {
-     $(".subway.custom_select_item").each(function () {
-     if ($(this).data('branch') != dataBranch) $(this).addClass('hidden');
-     });
-     }
 
-     });*/
+    var allSubways = $(".subway_custom_select_item"),
+        red = $('.red-branch'),
+        green = $('.green-branch'),
+        blue = $('.blue-branch');
+
+    $(".metro_radio input").on("click", function () {
+        allSubways.removeClass('hidden');
+        if (red.is(':checked') && !green.is(':checked') && !blue.is(':checked')) {
+            $(".subway_custom_select_item").each(function () {
+                if ($(this).data('branch') != 1) $(this).addClass('hidden');
+            });
+        } else if (!red.is(':checked') && green.is(':checked') && !blue.is(':checked')) {
+            $(".subway_custom_select_item").each(function () {
+                if ($(this).data('branch') != 2) $(this).addClass('hidden');
+            });
+        } else if (!red.is(':checked') && !green.is(':checked') && blue.is(':checked')) {
+            $(".subway_custom_select_item").each(function () {
+                if ($(this).data('branch') != 3) $(this).addClass('hidden');
+            });
+        } else if (red.is(':checked') && green.is(':checked') && !blue.is(':checked')) {
+            $(".subway_custom_select_item").each(function () {
+                if ($(this).data('branch') == 3) $(this).addClass('hidden');
+            });
+        } else if (red.is(':checked') && !green.is(':checked') && blue.is(':checked')) {
+            $(".subway_custom_select_item").each(function () {
+                if ($(this).data('branch') == 2) $(this).addClass('hidden');
+            });
+        } else if (!red.is(':checked') && green.is(':checked') && blue.is(':checked')) {
+            $(".subway_custom_select_item").each(function () {
+                if ($(this).data('branch') == 1) $(this).addClass('hidden');
+            });
+        }
+    });
 
 
     //Submit form and clear filters buttons
@@ -1424,18 +1522,31 @@ $(document).ready(function () {
         $(".filter-form").submit();
     });
 
-    $(".filter-form .remove").on("click", function () {
-        $(".checkbox .more-filters").attr('checked', false);
-        $("#metro_val").text(defaultDist);
-        $("#metro_name").html(defaultName);
-        $("#metro_name_val a").html(defaultName);
-        priceSlider3.noUiSlider.set(defaultDist);
-        $("#walk_dist").val('');
-        $("#subway").val('');
-        $("#pill_ch_1").attr('checked', true);
-        $("#pill_ch_2").attr('checked', false);
+    $(".button-filter-search").on("click", function (e) {
+        e.preventDefault();
+        $('#minm2').val('');
+        $('#maxm2').val('');
+        $('#minpricem2').val('');
+        $('#maxpricem2').val('');
         $(".filter-form").submit();
     });
+
+    $("#ch_1_2").on("change", function (e) {
+        $(".filter-form").submit();
+    });
+
+    /*$(".filter-form .remove").on("click", function () {
+     $(".checkbox .more-filters").attr('checked', false);
+     $("#metro_val").text(defaultDist);
+     $("#metro_name").html(defaultName);
+     $("#metro_name_val a").html(defaultName);
+     priceSlider3.noUiSlider.set(defaultDist);
+     $("#walk_dist").val('');
+     $("#subway").val('');
+     $("#pill_ch_1").attr('checked', true);
+     $("#pill_ch_2").attr('checked', false);
+     $(".filter-form").submit();
+     });*/
 
     $(".filter-form .m2-filter .remove").on("click", function () {
         $("#maxm2").val('');
@@ -1444,7 +1555,7 @@ $(document).ready(function () {
         $(".filter-form").submit();
     });
 
-    $(".filter-form .price_w .remove").on("click", function () {
+    $(".filter-form .price-filter .remove").on("click", function () {
         $("#minpricem2").val('');
         $("#maxpricem2").val('');
         $("#currF").val(1);
@@ -1876,7 +1987,6 @@ $(document).ready(function () {
     }, '.change-period-single .select_item span');
 
 
-
     $('.scroll_to').click(function (e) {
         e.preventDefault();
         var jump = $(this).attr('href');
@@ -1884,7 +1994,6 @@ $(document).ready(function () {
         $('html, body').stop().animate({scrollTop: new_position.top - 150}, 1200);
         $(jump).mouseover();
     });
-
 
 
     $(".places_table tbody .table_row").hover(function () {
