@@ -45,7 +45,7 @@ $maxM2 = !empty($params['m2max']) ? $params['m2max'] : $countValM2['max'];
 $filterM2empty = (empty($params['m2min']) && empty($params['m2max'])) || ($params['m2min']==$countValM2['min'] && $params['m2max'] == $countValM2['max']);
 if (!$filterM2empty) {
     $activeM2 = 'green_active';
-    $squText = $minM2 . ' m² - ' . $maxM2.' m²';
+    $squText = $minM2 . '-' . $maxM2.'м²';
 }
 $this->registerJsVar('maxM2', $maxM2, $this::POS_HEAD);
 $this->registerJsVar('minM2', $minM2, $this::POS_HEAD);
@@ -76,7 +76,7 @@ $minRange = round($minpricesChart / $rate);
 $maxRange = round($maxpricesChart / $rate);
 $minPrice = !empty($params['pricemin']) ? $params['pricemin'] : $minRange;
 $maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : $maxRange;
-$min_max = $currencySymbol . ' ' . $minPrice . ' - ' . $maxPrice;
+$min_max = $currencySymbol . ' ' . $minPrice . '-' . $maxPrice;
 
 $priceText = (empty($params['pricemin']) && empty($params['pricemax'])) || ($params['pricemin']==$minRange && $params['pricemax']==$maxRange)
     ? Yii::t('app', 'Price')
@@ -229,14 +229,6 @@ if($result==='bc'){
                                         </div>
                                     </div>
                                 </div>
-                                <div class="footer_two_cols clearfix">
-                                    <div class="left m2-filter">
-                                        <p><a href="#" class="submit green_link"><?= Yii::t('app', 'Apply') ?></a></p>
-                                    </div>
-                                    <div class="right m2-filter">
-                                        <p><a href="#" class="remove black_link"><?= Yii::t('app', 'Clear') ?></a></p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -317,16 +309,8 @@ if($result==='bc'){
 
 
                                 </div>
-                                <div class="footer_two_cols clearfix">
-                                    <div class="left price-filter">
-                                        <?= Html::input('hidden', 'filter[currency]', $currency, ['id' => 'currF']) ?>
-                                        <?= Html::input('hidden', 'filter[type]', $type, ['id' => 'typeF']) ?>
-                                        <p><a href="#" class="submit green_link"><?= Yii::t('app', 'Apply') ?></a></p>
-                                    </div>
-                                    <div class="right price-filter">
-                                        <p><a href="#" class="remove black_link"><?= Yii::t('app', 'Clear') ?></a></p>
-                                    </div>
-                                </div>
+                                <?= Html::input('hidden', 'filter[currency]', $currency, ['id' => 'currF']) ?>
+                                <?= Html::input('hidden', 'filter[type]', $type, ['id' => 'typeF']) ?>
                             </div>
                         </div>
                     </div>

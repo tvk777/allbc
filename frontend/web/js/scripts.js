@@ -1269,7 +1269,7 @@ $(document).ready(function () {
             $("#maxm2").val(maxVal);
             if (minSqRange != values[0] || maxSqRange != values[1]) {
                 sqFilter.addClass('green_active');
-                sqTitle.html(minVal + ' m² - ' + maxVal + ' m²');
+                sqTitle.html(minVal + '-' + maxVal + 'м²');
             } else {
                 sqFilter.removeClass('green_active');
                 sqTitle.html(sqText);
@@ -1287,7 +1287,7 @@ $(document).ready(function () {
             $("#minm2").val(activeInputVal);
             if (minSqRange != activeInputVal || maxSqRange != maxInputVal) {
                 sqFilter.addClass('green_active');
-                sqTitle.html(activeInputVal + ' m² - ' + maxInputVal + ' m²');
+                sqTitle.html(activeInputVal + '-' + maxInputVal + 'м²');
             } else {
                 sqFilter.removeClass('green_active');
                 sqTitle.html(sqText);
@@ -1303,7 +1303,7 @@ $(document).ready(function () {
             $("#maxm2").val(activeInputVal);
             if (minSqRange != minInputVal || maxSqRange != activeInputVal) {
                 sqFilter.addClass('green_active');
-                sqTitle.html(minInputVal + ' m² - ' + activeInputVal + ' m²');
+                sqTitle.html(minInputVal + '-' + activeInputVal + 'м²');
             } else {
                 sqFilter.removeClass('green_active');
                 sqTitle.html(sqText);
@@ -1524,10 +1524,6 @@ $(document).ready(function () {
 
     $(".button-filter-search").on("click", function (e) {
         e.preventDefault();
-        $('#minm2').val('');
-        $('#maxm2').val('');
-        $('#minpricem2').val('');
-        $('#maxpricem2').val('');
         $(".filter-form").submit();
     });
 

@@ -311,8 +311,10 @@ class BcItemsSearch extends BcItems
         $markers = $this->getMapMarkers($itemsForMarkers, $params);
         $count_ofices = count($fullPlaces); //count offices
 
-        $forChartsQuery = BcPlacesView::find();
-        $forChartsQuery = $this->filterConditions($forChartsQuery, $params, true)->all();
+        $forChartsQuery = BcPlacesView::find()
+            ->andFilterWhere(['city_id' => $params['city']])->all(); //если в условиях только город
+        //$forChartsQuery = $this->filterConditions($forChartsQuery, $params, true)->all(); //условия фильтра для графиков, если они нужны
+
         $m2 = ArrayHelper::getColumn($forChartsQuery, 'm2'); //m2 array
         $m2min = ArrayHelper::getColumn($forChartsQuery, 'm2min'); //m2min array
         $m2ForChart = array_filter(ArrayHelper::merge($m2, $m2min)); //all m2 array for chart
