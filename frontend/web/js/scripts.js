@@ -275,26 +275,28 @@ $(document).on('pjax:complete', function (event) {
     $('.price-filter .item_title_text p').text(priceText);
 
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
-        if (maxTotalPrice === null) {
+        if (maxRange === null) {
             maxPrice = 0;
-            maxTotalPrice = 0;
+            maxRange = 0;
             start = [0, 10000];
         } else {
             maxPrice = parseInt(maxPrice);
             minPrice = parseInt(minPrice);
-            maxTotalPrice = parseInt(maxTotalPrice);
+            maxRange = parseInt(maxRange);
             start = [minPrice, maxPrice];
+            //console.log(start);
         }
 
         priceSlider2 = document.getElementById("range_slider_2");
+
         if (priceSlider2.noUiSlider) {
             priceSlider2.noUiSlider.destroy();
         }
         noUiSlider.create(priceSlider2, {
             start: start,
             range: {
-                'min': [0],
-                'max': [maxTotalPrice]
+                'min': [minRange],
+                'max': [maxRange]
             },
             connect: true,
             format: wNumb({
@@ -331,9 +333,9 @@ $(document).on('pjax:complete', function (event) {
                 handleUpperr = $("#range_slider_2").find(".noUi-handle-upper");
                 leftCoord = handleLower.offset().left;
                 rightCoord = handleUpperr.offset().left;
-                console.log(leftCoord + ' - ' + rightCoord);
+                //console.log(leftCoord + ' - ' + rightCoord);
                 barsCharts = handleLower.closest(".bars_range_wrapp");
-                console.log(barsCharts.find(".bars .bar:last-child").offset().left);
+                //console.log(barsCharts.find(".bars .bar:last-child").offset().left);
                 barsCharts.find(".bars .bar").each(function () {
                     if ($(this).offset().left >= leftCoord && $(this).offset().left <= rightCoord) {
                         $(this).removeClass("disable");
@@ -346,32 +348,61 @@ $(document).on('pjax:complete', function (event) {
             $("[data-filters-index='filters_3'] .maxVal2").html(maxVal);
             $(".price_resp").html($("#price_sel").html());
         });
+        var priceFilter = $(".dropdown_item_title.price-filter"), priceTitle = $(".price-filter .item_title_text");
         priceSlider2.noUiSlider.on('change', function (values, handle) {
+            console.log(priceText);
             minVal = parseInt($("#input-number_1").val());
             $("#minpricem2").val(minVal);
-
             maxVal = parseInt($("#input-number_2").val());
             $("#maxpricem2").val(maxVal);
+            if (minRange != values[0] || maxRange != values[1]) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + minVal + '-' + maxVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+            }
         });
 
         $("#input-number_1").keyup(function () {
             activeInputVal = parseInt($(this).val());
+            maxInputVal = parseInt($("#maxpricem2").val());
+            //console.log(activeInputVal, minPrice, maxPrice);
             if (activeInputVal < parseInt($("#input-number_2").val())) {
                 leftRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([leftRange, null]);
             }
             $("#minpricem2").val(activeInputVal);
+            if (minRange != activeInputVal || maxRange != maxInputVal) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + activeInputVal + '-' + maxInputVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+            }
+
         });
         $("#input-number_2").keyup(function () {
             activeInputVal = parseInt($(this).val());
+            minInputVal = parseInt($("#minpricem2").val());
+
             if (activeInputVal > parseInt($("#input-number_1").val())) {
                 rightRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([null, rightRange]);
             }
             $("#maxpricem2").val(activeInputVal);
+            if (minRange != minInputVal || maxRange != activeInputVal) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + minInputVal + '-' + activeInputVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+            }
         });
         getBarsChart();
     }
+
+
 
 
 });
@@ -1044,26 +1075,30 @@ $(document).ready(function () {
 
 
     // Range Slider
-
+//console.log(minPrice, maxPrice, maxRange);
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
-        if (maxTotalPrice === null) {
+        if (maxRange === null) {
             maxPrice = 0;
-            maxTotalPrice = 0;
+            maxRange = 0;
             start = [0, 10000];
         } else {
             maxPrice = parseInt(maxPrice);
             minPrice = parseInt(minPrice);
-            maxTotalPrice = parseInt(maxTotalPrice);
+            maxRange = parseInt(maxRange);
             start = [minPrice, maxPrice];
             //console.log(start);
         }
 
         priceSlider2 = document.getElementById("range_slider_2");
+
+        if (priceSlider2.noUiSlider) {
+            priceSlider2.noUiSlider.destroy();
+        }
         noUiSlider.create(priceSlider2, {
             start: start,
             range: {
-                'min': [0],
-                'max': [maxTotalPrice]
+                'min': [minRange],
+                'max': [maxRange]
             },
             connect: true,
             format: wNumb({
@@ -1134,7 +1169,7 @@ $(document).ready(function () {
         $("#input-number_1").keyup(function () {
             activeInputVal = parseInt($(this).val());
             maxInputVal = parseInt($("#maxpricem2").val());
-            console.log(activeInputVal, minPrice, maxPrice);
+            //console.log(activeInputVal, minPrice, maxPrice);
             if (activeInputVal < parseInt($("#input-number_2").val())) {
                 leftRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([leftRange, null]);

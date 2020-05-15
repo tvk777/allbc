@@ -1,11 +1,11 @@
 <?php
 use yii\helpers\Html;
 $counts = [];
-
+//debug($bars);
 if(!empty($bars)){
     if($type==1){
         $counts = $bars['type1']['count'];
-        $maxTotalPrice = round($bars['type1']['max']/$rate);
+        $maxRange = round($bars['type1']['max']/$rate);
         if(empty($minmax)) {
           $minPrice = round($bars['type1']['min']/$rate);
           $maxPrice = round($bars['type1']['max']/$rate);
@@ -13,7 +13,7 @@ if(!empty($bars)){
         }
     } else {
         $counts = $bars['type3']['count'];
-        $maxTotalPrice = round($bars['type3']['max']/$rate);
+        $maxRange = round($bars['type3']['max']/$rate);
         if(empty($minmax)) {
             $minPrice = round($bars['type3']['min']/$rate);
             $maxPrice = round($bars['type3']['max']/$rate);
@@ -21,11 +21,14 @@ if(!empty($bars)){
         }
     }
 }
+$emptyPriceText=Yii::t('app', 'Price');
+
 $js = <<< JS
-var currency = $currency;
-minPrice = $minmax[0];
-maxPrice = $minmax[1];
-maxTotalPrice = $maxTotalPrice;
+var currency = $currency,
+minPrice = $minmax[0],
+maxPrice = $minmax[1],
+maxRange = $maxRange,
+pricetext = '$emptyPriceText';
 JS;
 
 $this->registerJs( $js, $position = yii\web\View::POS_HEAD, $key = null );

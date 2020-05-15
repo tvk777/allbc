@@ -5,7 +5,9 @@ use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 
+//debug($items[0]['bc']);
 //debug($conditions);
+//[type] => 3
 //debug($items[1]['bc']->minPrice);
 //debug($items[0]['places']);
 //debug($items[0]->place);
@@ -89,6 +91,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                 'currentLanguage' => $currentLanguage,
                                 'currency' => $currency,
                                 'rate' => $rate,
+                                'type' => $conditions['type']
                             ]);
                         }
                     }
@@ -116,6 +119,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                 'currentLanguage' => $currentLanguage,
                                 'currency' => $currency,
                                 'rate' => $rate,
+                                'type' => $conditions['type']
                             ]);
                         }
                     }

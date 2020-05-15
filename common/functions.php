@@ -1,26 +1,29 @@
 <?php
 use yii\helpers\ArrayHelper;
 
-function debug($arr){
-    echo '<pre>'.print_r($arr, true).'</pre>';
+function debug($arr)
+{
+    echo '<pre>' . print_r($arr, true) . '</pre>';
 }
 
 //return true if all values of array is empty
-function isEmptyValues ($arr){
+function isEmptyValues($arr)
+{
     $flag = true;
-    foreach($arr as $val){
-       if(strlen(trim($val))>0){
-           $flag=false;
-           break;
-       }
+    foreach ($arr as $val) {
+        if (strlen(trim($val)) > 0) {
+            $flag = false;
+            break;
+        }
     }
     return $flag;
 }
 
 //get content for default language if no translate
-function getDefaultTranslate($attribute, $suffix, $translates, $notMulti = false){
-    $att = $attribute.'_'.$suffix;
-    if($notMulti && $suffix=='ru') return $translates->$attribute;
+function getDefaultTranslate($attribute, $suffix, $translates, $notMulti = false)
+{
+    $att = $attribute . '_' . $suffix;
+    if ($notMulti && $suffix == 'ru') return $translates->$attribute;
     if ($translates->$att && $translates->$att != '') {
         $content = $translates->$att;
     } else {
@@ -29,11 +32,12 @@ function getDefaultTranslate($attribute, $suffix, $translates, $notMulti = false
     return $content;
 }
 
-function getLangInflect($model, $suffix){
-    switch ($suffix){
+function getLangInflect($model, $suffix)
+{
+    switch ($suffix) {
         case 'ru':
             return $model->inflect;
-        break;
+            break;
         case 'ua':
             return $model->inflect_ua;
             break;
@@ -58,17 +62,19 @@ function folder_exist($folder)
     return is_dir($path) ? $path : false;
 }
 
-function FilterAndTrim($arr){
-    return array_filter($arr, function($item) {
+function FilterAndTrim($arr)
+{
+    return array_filter($arr, function ($item) {
         return !empty(trim($item));
     });
 }
 
-function getUniqueArray($key, $array){
+function getUniqueArray($key, $array)
+{
     $arrayKeys = array(); // массив для хранения ключей
     $resultArray = array(); // выходной массив
-    foreach($array as $one){ // проходим циклом по всему исходному массиву
-        if(!in_array($one[$key], $arrayKeys)){ // если такого значения еще не встречаласть, то
+    foreach ($array as $one) { // проходим циклом по всему исходному массиву
+        if (!in_array($one[$key], $arrayKeys)) { // если такого значения еще не встречаласть, то
             $arrayKeys[] = $one[$key]; // пишем значение ключа в массив, для дальнейшей проверки
             $resultArray[] = $one; // записываем уникальное значение в выходной массив
         }
@@ -78,44 +84,99 @@ function getUniqueArray($key, $array){
 
 //возвращает true false в зависимости от того есть ли добавочная стоимость к минимальному значению
 //на входе принимает массив из BcPlacesView Object - офисов для БЦ
-function getPlusForBC ($places){
+function getPlusForBC($places)
+{
     $arr = ArrayHelper::map($places, 'pid', 'uah_price');
-    $arrNotNull = array_filter($arr, function ($v) { return !empty($v); });
-    $min = count($arrNotNull)>0 ? min($arrNotNull) : null;
-    foreach($places as $place){
-        if(!is_null($min) && $place->uah_price === $min){
-            if($place->kop>0 || $place->tax==1 || $place->tax==5 || $place->opex>0){
+    $arrNotNull = array_filter($arr, function ($v) {
+        return !empty($v);
+    });
+    $min = count($arrNotNull) > 0 ? min($arrNotNull) : null;
+    foreach ($places as $place) {
+        if (!is_null($min) && $place->uah_price === $min) {
+            if ($place->kop > 0 || $place->tax == 1 || $place->tax == 5 || $place->opex > 0) {
                 return true;
-            } 
+            }
         }
     }
     return false;
 }
 
-function getBcMinPrice ($item, $currency, $rate) {
+function getBcMinPrice($item, $currency, $rate)
+{
     //$currency=4;
-    if(empty($item['bc']->minPrice)) return Yii::t('app', 'price con.');
+    if (empty($item['bc']->minPrice)) return Yii::t('app', 'price con.');
     $plus = getPlusForBC($item['places']) ? '++' : '';
-    $text=getCurrencyText($currency);
-    return round($item['bc']->minPrice/$rate).$plus.' '.$text;
+    $text = getCurrencyText($currency);
+    return round($item['bc']->minPrice / $rate) . $plus . ' ' . $text[0];
+}
+function getBcMinPriceAll($item, $currency, $rate)
+{
+    //$currency=4;
+    if (empty($item['bc']->minPriceAll)) return Yii::t('app', 'price con.');
+    $plus = getPlusForBC($item['places']) ? '++' : '';
+    $text = getCurrencyText($currency);
+    return round($item['bc']->minPriceAll / $rate) . $plus . ' ' . $text[1];
 }
 
-function getCurrencyText ($currency){
-    switch ($currency){
+function getExtraPriceForBC($places)
+{
+    $extraPrices = [];
+    $extraPrices['plus'] = false;
+    $extraPrices['forAll'] = false;
+    $arr = ArrayHelper::map($places, 'pid', 'uah_price');
+    $arrNotNull = array_filter($arr, function ($v) {
+        return !empty($v);
+    });
+    $min = count($arrNotNull) > 0 ? min($arrNotNull) : null;
+    foreach ($places as $place) {
+        if (!is_null($min) && $place->uah_price === $min) {
+            if ($place->kop > 0 || $place->tax == 1 || $place->tax == 5 || $place->opex > 0) {
+                $extraPrices['plus'] = true;
+            }
+            $extraPrices['forAll'] = round($place->uah_price * $place->m2);
+        }
+    }
+    return $extraPrices;
+}
+
+function getBcMinPrices($item, $currency, $rate)
+{
+    $minPrices = [];
+    $extra = getExtraPriceForBC($item['places']);
+    if (!$extra['forAll']) {
+        $minPrices['forM2'] = $minPrices['forAll'] = Yii::t('app', 'price con.');
+    } else {
+        $plus = $extra['plus'] ? '++' : '';
+        $text = getCurrencyText($currency);
+        $minPrices['forM2'] = round($item['bc']->minPrice / $rate) . $plus . ' ' . $text[0];
+        $minPrices['forAll'] = round($extra['forAll'] / $rate) . $plus . ' ' . $text[1];
+    }
+    return $minPrices;
+}
+
+function getCurrencyText($currency)
+{
+    $text = [];
+    switch ($currency) {
         case 1:
-            $text = Yii::t('app', '&#8372;/m²/month');
+            $text[0] = Yii::t('app', '&#8372;/m²/month');
+            $text[1] = Yii::t('app', '&#8372;/month');
             break;
         case 2:
-            $text = Yii::t('app', '$/m²/month');
+            $text[0] = Yii::t('app', '$/m²/month');
+            $text[1] = Yii::t('app', '$/month');
             break;
         case 3:
-            $text = Yii::t('app', '€/m²/month');
+            $text[0] = Yii::t('app', '€/m²/month');
+            $text[1] = Yii::t('app', '€/month');
             break;
         case 4:
-            $text = Yii::t('app', '₽/m²/month');
+            $text[0] = Yii::t('app', '₽/m²/month');
+            $text[1] = Yii::t('app', '₽/month');
             break;
         default:
-            $text = Yii::t('app', '&#8372;/m²/month');
+            $text[0] = Yii::t('app', '&#8372;/m²/month');
+            $text[1] = Yii::t('app', '&#8372;/month');
             break;
     }
     return $text;
@@ -124,21 +185,24 @@ function getCurrencyText ($currency){
 
 //возвращает true false в зависимости от того есть ли добавочная стоимость к минимальному значению
 //на входе принимает массив из BcPlacesView Object - офисов для БЦ
-function getPlusForPlace ($place){
-            if($place->kop>0 || $place->tax==1 || $place->tax==5 || $place->opex>0){
-                return true;
-            }
+function getPlusForPlace($place)
+{
+    if ($place->kop > 0 || $place->tax == 1 || $place->tax == 5 || $place->opex > 0) {
+        return true;
+    }
     return false;
 }
+
 //toDo: сделать расчет цены с накладными для $prices['forAll']
-function getPlacePrices ($place, $rate){
+function getPlacePrices($place, $rate)
+{
     $prices['forM2'] = Yii::t('app', 'con.');
     $prices['forAll'] = Yii::t('app', 'con.');
     $placePlus = getPlusForPlace($place) ? '++' : '';
-    if($place->con_price != 1 && !empty($place->uah_price)){
-        $price = round($place->uah_price/$rate);
-        $prices['forM2'] = $price.$placePlus;
-        $prices['forAll'] = $price*$place->m2.$placePlus;
+    if ($place->con_price != 1 && !empty($place->uah_price)) {
+        $price = round($place->uah_price / $rate);
+        $prices['forM2'] = $price . $placePlus;
+        $prices['forAll'] = $price * $place->m2 . $placePlus;
     }
-return $prices;
+    return $prices;
 }

@@ -111,6 +111,7 @@ class BcItemsSearch extends BcItems
         $params['result'] = !empty($params['result']) ? $params['result'] : 'offices';
         $params['target'] = !empty($params['target']) ? $params['target'] : 1;
         $params['lang'] = !empty($params['lang']) ? $params['lang'] : 'ua';
+        $params['type'] = !empty($params['type']) ? $params['type'] : 1;
         return $params;
     }
 
@@ -133,7 +134,7 @@ class BcItemsSearch extends BcItems
             'phide' => 0,
             'city_id' => $params['city'],
             'country_id' => $params['country'],
-            //'percent_commission' => $params['commission']
+            'percent_commission' => $params['commission']
         ]);
         if ($params['result'] == 'bc') {
             $query->andWhere(['no_bc' => null]);
@@ -167,23 +168,42 @@ class BcItemsSearch extends BcItems
 
             switch ($params['currency']) {
                 case 1:
-                    $query->andFilterWhere(['>=', 'uah_price', $params['pricemin']]);
-                    $query->andFilterWhere(['<=', 'uah_price', $params['pricemax']]);
+                    if ($params['type'] == 1) {
+                        $query->andFilterWhere(['>=', 'uah_price', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'uah_price', $params['pricemax']]);
+                    } else {
+                        $query->andFilterWhere(['>=', 'uah_price_all', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'uah_price_all', $params['pricemax']]);
+                    }
                     break;
                 case 2:
-                    $query->andFilterWhere(['>=', 'usd_price', $params['pricemin']]);
-                    $query->andFilterWhere(['<=', 'usd_price', $params['pricemax']]);
+                    if ($params['type'] == 1) {
+                        $query->andFilterWhere(['>=', 'usd_price', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'usd_price', $params['pricemax']]);
+                    } else {
+                        $query->andFilterWhere(['>=', 'usd_price_all', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'usd_price_all', $params['pricemax']]);
+                    }
                     break;
                 case 3:
-                    $query->andFilterWhere(['>=', 'eur_price', $params['pricemin']]);
-                    $query->andFilterWhere(['<=', 'eur_price', $params['pricemax']]);
+                    if ($params['type'] == 1) {
+                        $query->andFilterWhere(['>=', 'eur_price', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'eur_price', $params['pricemax']]);
+                    } else {
+                        $query->andFilterWhere(['>=', 'eur_price_all', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'eur_price_all', $params['pricemax']]);
+                    }
                     break;
                 case 4:
-                    $query->andFilterWhere(['>=', 'rub_price', $params['pricemin']]);
-                    $query->andFilterWhere(['<=', 'rub_price', $params['pricemax']]);
+                    if ($params['type'] == 1) {
+                        $query->andFilterWhere(['>=', 'rub_price', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'rub_price', $params['pricemax']]);
+                    } else {
+                        $query->andFilterWhere(['>=', 'rub_price_all', $params['pricemin']]);
+                        $query->andFilterWhere(['<=', 'rub_price_all', $params['pricemax']]);
+                    }
                     break;
             }
-            $query->andFilterWhere(['percent_commission' => $params['commission']]);
         }
         return $query;
     }
@@ -194,10 +214,18 @@ class BcItemsSearch extends BcItems
         if (!empty($params['sort'])) {
             switch ($params['sort']) {
                 case 'price_desc':
-                    $query->orderBy('con_price, uah_price DESC');
+                    if($params['type']==1) {
+                        $query->orderBy('con_price, uah_price DESC');
+                    } else {
+                        $query->orderBy('con_price, uah_price_all DESC');
+                    }
                     break;
                 case 'price_asc':
-                    $query->orderBy('con_price, uah_price ASC');
+                    if($params['type']==1) {
+                        $query->orderBy('con_price, uah_price ASC');
+                    } else {
+                        $query->orderBy('con_price, uah_price_all ASC');
+                    }
                     break;
                 case 'm2_desc':
                     $query->orderBy('m2 DESC');
@@ -298,6 +326,17 @@ class BcItemsSearch extends BcItems
                 $arr = array_filter(ArrayHelper::getColumn($places, 'uah_price'));
                 if (!empty($arr)) {
                     $allForPage[$key]['bc']->minPrice = min($arr);
+                }
+                $arr2 = array_filter(ArrayHelper::getColumn($places, 'uah_price_all'));
+                if (!empty($arr2)) {
+                    $allForPage[$key]['bc']->minPriceAll = min($arr2);
+                }
+
+                $arrM2 = array_filter(ArrayHelper::getColumn($places, 'm2'));
+                $arrM2min = array_filter(ArrayHelper::getColumn($places, 'm2min'));
+                $arr = array_filter(ArrayHelper::merge($arrM2, $arrM2min));
+                if (!empty($arr)) {
+                    $allForPage[$key]['bc']->minM2 = min($arr);
                 }
             }
         } else {

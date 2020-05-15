@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use kriptograf\wishlist\widgets\WishlistButton;
+
 $paramTarget = $target == 1 ? 'rent' : 'sell';
 //$href = Url::to(['page/bc_item', 'slug' => $item->slug->slug, 'target' => $paramTarget]);
 //$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
@@ -16,14 +17,20 @@ if ($result == 'bc') {
     $district = $cardItem->bcitem->district ? $cardItem->bcitem->district->name . ' р-н' : '';
     $address = $cardItem->bcitem->address;
     $plus = getPlusForBC($item['places']) ? '++' : '';
-    $minPrice = getBcMinPrice ($item, $currency, $rate);
+    //$minPrice = getBcMinPrice($item, $currency, $rate);
+    //$minPrices = getBcMinPrices($item, $currency, $rate);
+    $minPrice = $type == 1 ? getBcMinPrice($item, $currency, $rate) : getBcMinPriceAll($item, $currency, $rate);
     $itemPlaces = $item['places'];
     $itemSubway = !empty($cardItem->bcitem->subways[0]) ? $cardItem->bcitem->subways[0] : null;
     $itemClass = $cardItem->bcitem->class->name;
     $slides = !empty($cardItem->bcitem->slides) ? $cardItem->bcitem->slides : null;
     $itemComission = $cardItem->bcitem->percent_commission;
     $building = 'bc';
-
+    /*debug($minPrices);
+    [forM2] => 3500 ₴/м²/міс $/м²/міс
+    [forAll] => 315000 ₴/міс
+    filter[type] = 1 || 3
+    */
 } else {
     $cardItem = $item->place->bcitem; //bc
     $placeItem = $item->place; //place
@@ -38,8 +45,9 @@ if ($result == 'bc') {
     $address = $cardItem->street;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
     $placePrices = getPlacePrices($item, $rate);
-    $minPrice = $placePrices['forM2'].' '.getCurrencyText ($currency);
-
+    $minPrice = $type == 1
+        ? $placePrices['forM2'] . ' ' . getCurrencyText($currency)[0]
+        : $placePrices['forAll'] . ' ' . getCurrencyText($currency)[1];
     $itemPlaces = null;
     $placesInfo = null;
     $itemSubway = !empty($cardItem->subways[0]) ? $cardItem->subways[0] : null;
@@ -104,7 +112,8 @@ if (!empty($itemSubway)) {
                     <? if (!empty($slides)) : ?>
                         <? foreach ($slides as $slide): ?>
                             <div class="slide">
-                                <a href="<?= $slide['big'] ?>" class="img_box" data-fancybox="card_1<?= $cardItem->id ?>"
+                                <a href="<?= $slide['big'] ?>" class="img_box"
+                                   data-fancybox="card_1<?= $cardItem->id ?>"
                                    data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></a>
                             </div>
                         <? endforeach; ?>
@@ -113,13 +122,13 @@ if (!empty($itemSubway)) {
             </div>
             <div class="object_thumb_descript">
                 <?= Html::a($itemName, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
-                <div class="inline">
-                    <div class="cl_pill_class">
-                        <span class="item-type">Тип: </span>
+
+                <div class="cl_pill_class">
+                    <span class="item-type">
                         <span class="item-type-name">Бизнес центр </span>
                         <span class="item-class"><?= $itemClass ?></span>
-                        <span class="item-id">ID: <?= $id ?></span>
-                    </div>
+                    </span>
+                    <span class="item-id">ID: <?= $id ?></span>
                 </div>
                 <div class="card-address">
                     <div class="adres">
@@ -133,10 +142,12 @@ if (!empty($itemSubway)) {
                 <div class="thumb_5_footer">
 
                     <? if ($result == 'bc') : ?>
-                        <div class="free_office">
-                            <a href="<?= $href ?>"
-                               class="green_pill"><?= Yii::t('app', 'Offices') . ': ' . count($itemPlaces) . ' - ' . $minPrice ?>
-                            </a>
+                        <div class="offices-info">
+                            <p><span><?= Yii::t('app', 'Rent') ?>:</span> <?= Yii::t('app', 'from') . ' ' . $minPrice ?>
+                            </p>
+                            <p><span><?= Yii::t('app', 'Offices') ?>
+                                    :</span> <?= count($itemPlaces) . ' - ' . Yii::t('app', 'from') . ' ' . $cardItem->minM2 . 'м²' ?>
+                            </p>
                         </div>
                     <? endif; ?>
                     <? if ($result == 'offices') : ?>
@@ -159,7 +170,7 @@ if (!empty($itemSubway)) {
                             <p>м²</p>
                         </div>
                         <div class="table_cell">
-                            <p><?= getCurrencyText($currency) ?></p>
+                            <p><?= getCurrencyText($currency)[0] ?></p>
                         </div>
                         <div class="table_cell">
                             <p>all in/мес</p>

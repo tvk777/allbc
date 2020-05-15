@@ -6446,6 +6446,21 @@ a.object_card_title:focus {
     color: #272727;
     font-weight: bold;
 }
+.offices-info{
+    padding-top:8px;
+}
+.offices-info p {
+    font-size: 14px;
+    line-height: 16px;
+    color: #272727;
+    font-weight: 700;
+}
+.offices-info p span {
+    font-size: 14px;
+    color: #272727;
+    font-weight: normal;
+}
+
 
 .free_office p a {
     font-size: 14px;
@@ -9437,4 +9452,15 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 .button-filter-search:hover {
     background: #ff7e00;
     color: white;
+}
+.item-type{
+    border-right: 1px solid #cdcece;
+    color:#3eb060;
+    font-size: 13px;
+    font-weight: 700;
+}
+.item-id{
+    padding-left: 5px;
+    color:#000000;
+    font-weight: 700;
 }

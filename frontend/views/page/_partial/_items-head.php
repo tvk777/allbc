@@ -87,7 +87,7 @@ $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
 $this->registerJsVar('maxRange', $maxRange, $this::POS_HEAD);
 $this->registerJsVar('minRange', $minRange, $this::POS_HEAD);
-$this->registerJsVar('maxTotalPrice', $pricesChart['type1']['max'], $this::POS_HEAD);
+//$this->registerJsVar('maxTotalPrice', $pricesChart['type1']['max'], $this::POS_HEAD);
 $this->registerJsVar('currencySymbol', $currencySymbol, $this::POS_HEAD);
 $this->registerJsVar('priceText', $emptyPriceText, $this::POS_HEAD);
 

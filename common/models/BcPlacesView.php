@@ -123,6 +123,7 @@ class BcPlacesView extends \yii\db\ActiveRecord
     public $maxPrice;
     public $minM2;
     public $maxM2;
+    public $minPriceAll;
     /**
      * {@inheritdoc}
      */
