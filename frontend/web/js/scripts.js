@@ -265,14 +265,6 @@ $(document).scroll(function () {
 });
 
 $(document).on('pjax:complete', function (event) {
-    if (currency == 1) {
-        var priceText = '₴ ' + minPrice.toString() + ' - ' + maxPrice.toString();
-    } else if (currency == 2) {
-        var priceText = '$ ' + minPrice.toString() + ' - ' + maxPrice.toString();
-    } else if (currency == 3) {
-        var priceText = '€ ' + minPrice.toString() + ' - ' + maxPrice.toString();
-    }
-    $('.price-filter .item_title_text p').text(priceText);
 
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
@@ -283,6 +275,7 @@ $(document).on('pjax:complete', function (event) {
             maxPrice = parseInt(maxPrice);
             minPrice = parseInt(minPrice);
             maxRange = parseInt(maxRange);
+            minRange = parseInt(minRange);
             start = [minPrice, maxPrice];
             //console.log(start);
         }
@@ -350,7 +343,7 @@ $(document).on('pjax:complete', function (event) {
         });
         var priceFilter = $(".dropdown_item_title.price-filter"), priceTitle = $(".price-filter .item_title_text");
         priceSlider2.noUiSlider.on('change', function (values, handle) {
-            console.log(priceText);
+            //console.log(minRange, values);
             minVal = parseInt($("#input-number_1").val());
             $("#minpricem2").val(minVal);
             maxVal = parseInt($("#input-number_2").val());
@@ -1069,6 +1062,8 @@ $(document).ready(function () {
             $('#currency').val(currency);
             $('#typeF').val(type);
             $('#currF').val(currency);
+            $('.price-filter').removeClass('green_active');
+            $('.price-filter .item_title_text').text(priceText);
             $("#barsForm").submit();
         }
     }, '#price-filter .select_item p');
@@ -1244,7 +1239,7 @@ $(document).ready(function () {
         noUiSlider.create(priceSlider4, {
             start: start,
             range: {
-                'min': [0],
+                'min': [minSqRange],
                 'max': [maxTotal]
             },
             connect: true,

@@ -573,12 +573,10 @@ class PageController extends FrontendController
     {
         if (Yii::$app->request->isPjax) {
             $bars = unserialize(Yii::$app->request->post('bars')[0]);
-            $type = Yii::$app->request->post('type');
             $currency = Yii::$app->request->post('currency');
             $rate = BcValutes::getRate($currency);
             return $this->renderAjax('_partial/_bars', [
                 'bars' => $bars,
-                'type' => $type,
                 'rate' => $rate['rate'],
                 'currency' => $currency,
             ]);
@@ -657,32 +655,19 @@ class PageController extends FrontendController
     protected function getPlacesForPriceChart($prices)
     {
         //debug($prices); die();
-        $countVal['type1']['count'] = [];
-        $countVal['type1']['max'] = 0;
-        $countVal['type1']['min'] = 0;
-        $countVal['type3']['count'] = [];
-        $countVal['type3']['max'] = 0;
-        $countVal['type3']['min'] = 0;
+        $countVal['count'] = [];
+        $countVal['max'] = 0;
+        $countVal['min'] = 0;
 
-            $pr1 = !empty($prices['type1']) ? $prices['type1'] : [];
-            if (count($pr1) > 0) {
-                $minType1 = min($pr1);
-                $maxType1 = max($pr1);
-                $delta = round($maxType1 / 30);
-                $countVal['type1']['count'] = $this->getRanges($pr1, $delta);
-                $countVal['type1']['max'] = $maxType1;
-                $countVal['type1']['min'] = $minType1;
+            if (count($prices) > 0) {
+                $min = min($prices);
+                $max = max($prices);
+                $delta = round($max / 30);
+                $countVal['count'] = $this->getRanges($prices, $delta);
+                $countVal['max'] = $max;
+                $countVal['min'] = $min;
             }
 
-            $pr2 = !empty($prices['type3']) ? $prices['type3'] : [];
-            if (count($pr2) > 0) {
-                $minType3 = min($pr2);
-                $maxType3 = max($pr2);
-                $delta3 = round($maxType3 / 30);
-                $countVal['type3']['count'] = $this->getRanges($pr2, $delta3);
-                $countVal['type3']['max'] = $maxType3;
-                $countVal['type3']['min'] = $minType3;
-            }
         return $countVal;
     }
 

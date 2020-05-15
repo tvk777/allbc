@@ -1,44 +1,55 @@
 <?php
 use yii\helpers\Html;
+
 $counts = [];
 //debug($bars);
-if(!empty($bars)){
-    if($type==1){
-        $counts = $bars['type1']['count'];
-        $maxRange = round($bars['type1']['max']/$rate);
-        if(empty($minmax)) {
-          $minPrice = round($bars['type1']['min']/$rate);
-          $maxPrice = round($bars['type1']['max']/$rate);
-          $minmax = [$minPrice, $maxPrice];   
-        }
-    } else {
-        $counts = $bars['type3']['count'];
-        $maxRange = round($bars['type3']['max']/$rate);
-        if(empty($minmax)) {
-            $minPrice = round($bars['type3']['min']/$rate);
-            $maxPrice = round($bars['type3']['max']/$rate);
-            $minmax = [$minPrice, $maxPrice];
-        }
+if (!empty($bars)) {
+    $counts = $bars['count'];
+    $maxRange = round($bars['max'] / $rate);
+    $minRange = round($bars['min'] / $rate);
+    if (empty($minmax)) {
+        $minPrice = round($bars['min'] / $rate);
+        $maxPrice = round($bars['max'] / $rate);
+        $minmax = [$minPrice, $maxPrice];
     }
 }
-$emptyPriceText=Yii::t('app', 'Price');
+$emptyPriceText = Yii::t('app', 'Price');
+switch ($currency) {
+    case 1:
+        $currencySymbol = '&#8372;';
+        break;
+    case 2:
+        $currencySymbol = '$';
+        break;
+    case 3:
+        $currencySymbol = '€';
+        break;
+    case 4:
+        $currencySymbol = '₽';
+        break;
+    default:
+        $currencySymbol = '&#8372;';
+        break;
+}
 
 $js = <<< JS
 var currency = $currency,
 minPrice = $minmax[0],
 maxPrice = $minmax[1],
 maxRange = $maxRange,
-pricetext = '$emptyPriceText';
+minRange = $minRange,
+priceText = '$emptyPriceText',
+currencySymbol = '$currencySymbol';
 JS;
 
-$this->registerJs( $js, $position = yii\web\View::POS_HEAD, $key = null );
+$this->registerJs($js, $position = yii\web\View::POS_HEAD, $key = null);
 
 ?>
 <div class="bars_range_wrapp  type1">
     <div class="bars">
         <? if (!empty($counts)): ?>
             <? foreach ($counts as $k => $val): ?>
-                <? $valClass = $val>0 ? 'notnull' : ''?>
+                <? $valClass = $val > 0 ? 'notnull' : '' ?>
                 <div class="bar <?= $valClass ?>" data-count-val="<?= $val ?>"></div>
             <? endforeach; ?>
         <? endif; ?>

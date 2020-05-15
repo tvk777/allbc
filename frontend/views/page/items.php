@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+//debug($pricesChart);
 
 //debug($items[0]['bc']);
 //debug($conditions);

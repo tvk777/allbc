@@ -111,7 +111,6 @@ class BcItemsSearch extends BcItems
         $params['result'] = !empty($params['result']) ? $params['result'] : 'offices';
         $params['target'] = !empty($params['target']) ? $params['target'] : 1;
         $params['lang'] = !empty($params['lang']) ? $params['lang'] : 'ua';
-        $params['type'] = !empty($params['type']) ? $params['type'] : 1;
         return $params;
     }
 
@@ -214,18 +213,10 @@ class BcItemsSearch extends BcItems
         if (!empty($params['sort'])) {
             switch ($params['sort']) {
                 case 'price_desc':
-                    if($params['type']==1) {
                         $query->orderBy('con_price, uah_price DESC');
-                    } else {
-                        $query->orderBy('con_price, uah_price_all DESC');
-                    }
                     break;
                 case 'price_asc':
-                    if($params['type']==1) {
                         $query->orderBy('con_price, uah_price ASC');
-                    } else {
-                        $query->orderBy('con_price, uah_price_all ASC');
-                    }
                     break;
                 case 'm2_desc':
                     $query->orderBy('m2 DESC');
@@ -327,10 +318,6 @@ class BcItemsSearch extends BcItems
                 if (!empty($arr)) {
                     $allForPage[$key]['bc']->minPrice = min($arr);
                 }
-                $arr2 = array_filter(ArrayHelper::getColumn($places, 'uah_price_all'));
-                if (!empty($arr2)) {
-                    $allForPage[$key]['bc']->minPriceAll = min($arr2);
-                }
 
                 $arrM2 = array_filter(ArrayHelper::getColumn($places, 'm2'));
                 $arrM2min = array_filter(ArrayHelper::getColumn($places, 'm2min'));
@@ -351,21 +338,25 @@ class BcItemsSearch extends BcItems
         $count_ofices = count($fullPlaces); //count offices
 
         $forChartsQuery = BcPlacesView::find()
-            ->andFilterWhere(['city_id' => $params['city']])->all(); //если в условиях только город
+            ->andFilterWhere(
+                [
+                    'active' => 1,
+                    'approved' => 1,
+                    'hide' => 0,
+                    'phide' => 0,
+                    'city_id' => $params['city'],
+                    'country_id' => $params['country'],
+                ]
+            )->all();
         //$forChartsQuery = $this->filterConditions($forChartsQuery, $params, true)->all(); //условия фильтра для графиков, если они нужны
 
         $m2 = ArrayHelper::getColumn($forChartsQuery, 'm2'); //m2 array
         $m2min = ArrayHelper::getColumn($forChartsQuery, 'm2min'); //m2min array
         $m2ForChart = array_filter(ArrayHelper::merge($m2, $m2min)); //all m2 array for chart
 
-        $pricesForChart = [];
-        foreach ($forChartsQuery as $one) {
-            if ($one->uah_price > 0) {
-                $pricesForChart['type1'][] = $one->uah_price;
-                $pricesForChart['type3'][] = round($one->uah_price * $one->m2);
-            }
-        }
 
+        $pricesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'uah_price'));
+//debug($pricesForChart); die();
 
         $result = [];
         $result['params'] = $params;
