@@ -894,6 +894,22 @@ $(document).ready(function () {
         }
     });
 
+
+    $(".dropdown_subway_title").on('click', function (e) {
+        e.preventDefault();
+        parentBlock = $(this).closest(".dropdown_subway_wrap");
+        dropdowmMenu = parentBlock.find(".dropdown_item_menu");
+        if (dropdowmMenu.is(":hidden")) {
+            dropdowmMenu.slideDown(300);
+            parentBlock.addClass("active");
+            getBarsChart();
+        } else {
+            dropdowmMenu.slideUp(300);
+            parentBlock.removeClass("active");
+        }
+    });
+
+
     $("#map_box .mask").on("click", function (e) {
         e.preventDefault();
         $(".dropdown_item_menu").slideUp(300);
@@ -1459,6 +1475,55 @@ $(document).ready(function () {
         }
         //console.log(count, districtTitle);
     });
+
+    $("[data-subway]").on("click", function () {
+        var id = $(this).attr('for'),
+            input = $("#" + id),
+            count,
+            targetSpan = $(".subways .count"),
+            subwayTitle = $(".subway-filter");
+        count = $(this).closest(".metro_checkboxies").find("input.more-filters:checked").length;
+        if (!input.is(':checked')) {
+            count++;
+        } else {
+            count--;
+        }
+        if (count > 0) {
+            targetSpan.text(': ' + count);
+            subwayTitle.addClass('green_active');
+        } else {
+            targetSpan.text('');
+            subwayTitle.removeClass('green_active');
+        }
+    });
+
+    $("label.all-subways").on("click", function () {
+        var parent, inputs,
+            id = $(this).attr('for'),
+            input = $("#" + id),
+            targetSpan = $(".subways .count"),
+            subwayTitle = $(".subway-filter");
+
+        parent = $(this).closest(".checkbox_wrapp");
+        inputs = parent.find('input.more-filters:checkbox');
+
+        if (input.is(':checked')){
+            inputs.prop('checked', false);
+        } else {
+            inputs.prop('checked', true);
+        }
+
+        count = $(this).closest(".metro_checkboxies").find("input.more-filters:checked").length;
+        console.log(count);
+        if (count > 0) {
+            targetSpan.text(': ' + count);
+            subwayTitle.addClass('green_active');
+        } else {
+            targetSpan.text('');
+            subwayTitle.removeClass('green_active');
+        }
+    });
+
 
     $("[data-filter]").on("click", function () {
         var id = $(this).attr('for'),

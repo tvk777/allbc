@@ -2,7 +2,9 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+$currentLanguage = Yii::$app->language;
 
+//debug($filters['subways']);
 if ($seo->target == 1) {
     $targetText = Yii::t('app', 'Rent');
     $rentSelected = 'selected';
@@ -16,21 +18,8 @@ $defaultDist = 1000;
 $defaultName = Yii::t('app', 'Subway');
 $metroVal = $defaultDist;
 $metroValclear = '';
-if (!empty($filters['subways'])) {
-    if (!empty($params['subway'])) {
-        foreach ($filters['subways'] as $subway) {
-            if ($subway->id == $params['subway']) {
-                $metroId = $subway->id;
-                $metroName = $subway->name;
-            }
-        }
-    } else {
-        $metroId = '';
-        $metroName = $defaultName;
-    }
-    if (!empty($params['walk_dist'])) {
-        $metroVal = $metroValclear = $params['walk_dist'];
-    }
+if (!empty($params['walk_dist'])) {
+    $metroVal = $metroValclear = $params['walk_dist'];
 }
 $this->registerJsVar('metroVal', $metroVal, $this::POS_HEAD);
 $this->registerJsVar('defaultDist', $defaultDist, $this::POS_HEAD);
@@ -111,7 +100,7 @@ if ((!empty($params['pricemin']) && $params['pricemin'] != round($minpricesChart
 $activeSubway = '';
 $removeCss = '';
 //$activeSubway = (!empty($params['walk_dist']) || !empty($params['subway'])) ? 'green_active' : '';
-if (!empty($params['walk_dist']) || !empty($params['subway'])) {
+if (!empty($params['walk_dist']) || !empty($params['subways'])) {
     $activeSubway = 'green_active';
     $removeCss = 'style="display:block;"';
 }
@@ -119,7 +108,6 @@ if (!empty($params['walk_dist']) || !empty($params['subway'])) {
 $activeDistricts = (!empty($params['districts']) && count($params['districts'])) ? 'green_active' : '';
 $activeClasses = !empty($params['classes']) ? 'green_active' : '';
 $activeStatuses = !empty($params['statuses']) ? 'green_active' : '';
-
 
 
 $sortText = Yii::t('app', 'Sort');
@@ -155,6 +143,8 @@ if ($result === 'bc') {
     $officeLink = '<span class="active">' . Yii::t('app', 'Offices') . '</span>';
     $bcLink = '<a href="' . $urlRezult . '">' . Yii::t('app', 'Business centers') . '</a>';
 }
+
+$colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
 
 ?>
 <?= Html::beginForm(['page/bars'], 'post', ['data-pjax' => true, 'id' => 'barsForm']) ?>
@@ -332,51 +322,21 @@ if ($result === 'bc') {
                         </div>
                     <? endif; ?>
                     <? if (!empty($filters['subways'])): ?>
-                        <div class="item_wrapp novisible_1024">
-                            <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title subway-filter <?= $activeSubway ?>">
-                                    <div class="item_title_text subways"><?= Yii::t('app', 'Subway') ?></div>
+                        <div class="item_wrapp">
+                            <div class="dropdown_subway_wrap">
+                                <div class="dropdown_subway_title subway-filter <?= $activeSubway ?>">
+                                    <? $subwayText = (!empty($params['subways']) && count($params['subways']) > 0)
+                                        ? ': ' . count($params['subways'])
+                                        : '';
+                                    ?>
+                                    <div class="item_title_text subways">
+                                        <?= Yii::t('app', 'Subway') . '<span class="count">' . $subwayText . '</span>' ?>
+                                    </div>
                                 </div>
-                                <div class="dropdown_item_menu dropdown_item_menu_4">
+                                <div class="dropdown_item_menu dropdown_item_menu_subways">
                                     <div class="metro_box">
                                         <input type="hidden" name="filter[walk_dist]" id="walk_dist"
                                                value="<?= $metroValclear ?>"/>
-
-                                        <? if (!empty($filters['branches'])): ?>
-                                            <div class="metro_two_cols">
-                                                <div class="col">
-                                                    <h4><?= Yii::t('app', 'Metro line') ?></h4>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="radio_metro_wrapp">
-                                                        <? foreach ($filters['branches'] as $branch) : ?>
-                                                            <? if ($branch == 1) : ?>
-                                                                <div class="radio_wrapp metro_radio branch">
-                                                                    <input class="red-branch" data-branch="1"
-                                                                           type="checkbox" id="metro_1"/>
-                                                                    <label for="metro_1"><i
-                                                                            class="red_metro"></i></label>
-                                                                </div>
-                                                            <? elseif ($branch == 2) : ?>
-                                                                <div class="radio_wrapp metro_radio branch">
-                                                                    <input class="green-branch" data-branch="2"
-                                                                           type="checkbox" id="metro_2"/>
-                                                                    <label for="metro_2"><i
-                                                                            class="green_metro"></i></label>
-                                                                </div>
-                                                            <? elseif ($branch == 3) : ?>
-                                                                <div class="radio_wrapp metro_radio branch">
-                                                                    <input class="blue-branch" data-branch="3"
-                                                                           type="checkbox" id="metro_3"/>
-                                                                    <label for="metro_3"><i
-                                                                            class="blue_metro"></i></label>
-                                                                </div>
-                                                            <? endif; ?>
-                                                        <? endforeach; ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <? endif; ?>
                                         <div class="metro_two_cols">
                                             <div class="col">
                                                 <h4><?= Yii::t('app', 'To the subway') ?></h4>
@@ -389,30 +349,42 @@ if ($result === 'bc') {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="select_4_wrapp select_4_2">
-                                        <div class="custom_select_2">
-                                            <div class="custom_select_title" id="metro_name">
-                                                <i class="remove" <?= $removeCss ?> ></i><span><?= $metroName ?></span>
-                                            </div>
-                                            <div class="custom_select_list">
-                                                <? foreach ($filters['subways'] as $subway) : ?>
-                                                    <?
-                                                    if (isset($params['subway']) && $subway->id == $params['subway']) {
-                                                        $checked_subway = 'selected';
+                                    <div class="metro_checkboxies">
+                                        <? if (count($filters['subways']) > 1) {
+                                            $branchName[1] = Yii::t('app', 'Red line');
+                                            $branchName[2] = Yii::t('app', 'Blue line');
+                                            $branchName[3] = Yii::t('app', 'Green line');
+                                        } else {
+                                            $branchName[1] = Yii::t('app', 'All stations');
+                                        }
+                                        //debug($branchName);
+
+                                        ?>
+                                        <? foreach ($filters['subways'] as $k => $branch) : ?>
+                                            <div class="checkbox_wrapp <?= $colSubways ?> column<?= $k ?>">
+                                                <div class="checkbox">
+                                                    <input class="all-subways" type="checkbox" id="branch<?= $k ?>">
+                                                    <label class="all-subways"
+                                                           for="branch<?= $k ?>"><?= $branchName[$k] ?></label>
+                                                </div>
+                                                <? foreach ($branch as $subway) : ?>
+                                                    <? if (!empty($params['subways']) && in_array($subway->id, $params['subways'])) {
+                                                        $checked_subway = 'checked';
                                                     } else {
                                                         $checked_subway = '';
                                                     }
                                                     ?>
-
-                                                    <div class="subway_custom_select_item <?= $checked_subway ?>"
-                                                         data-subway="<?= $subway->id ?>"
-                                                         data-branch="<?= $subway->branch_id ?>">
-                                                        <span><?= $subway->name ?></span></div>
+                                                    <div class="checkbox">
+                                                        <input class="more-filters" type="checkbox"
+                                                               name="filter[subways][]"
+                                                               value="<?= $subway->id ?>"
+                                                               id="sb_<?= $subway->id ?>" <?= $checked_subway ?> >
+                                                        <label for="sb_<?= $subway->id ?>"
+                                                               data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway);?></label>
+                                                    </div>
                                                 <? endforeach; ?>
-                                                <input type="hidden" name="filter[subway]" value="<?= $metroId ?>"
-                                                       id="subway"/>
                                             </div>
-                                        </div>
+                                        <? endforeach; ?>
                                     </div>
                                 </div>
                             </div>

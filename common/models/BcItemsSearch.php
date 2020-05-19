@@ -101,7 +101,7 @@ class BcItemsSearch extends BcItems
         $params['percent_commission'] = !empty($params['percent_commission']) ? $params['percent_commission'] : null;
         $params['classes'] = !empty($params['classes']) ? $params['classes'] : null;
         $params['districts'] = !empty($params['districts']) ? $params['districts'] : null;
-        $params['subway'] = !empty($params['subway']) ? $params['subway'] : null;
+        $params['subways'] = !empty($params['subways']) ? $params['subways'] : null;
         $params['walk_dist'] = !empty($params['walk_dist']) ? $params['walk_dist'] : null;
         $params['m2min'] = !empty($params['m2min']) ? $params['m2min'] : null;
         $params['m2max'] = !empty($params['m2max']) ? $params['m2max'] : null;
@@ -141,7 +141,7 @@ class BcItemsSearch extends BcItems
         $query->andFilterWhere(['in', 'class_id', $params['classes']]);
         $query->andFilterWhere(['in', 'district_id', $params['districts']]);
         $query->andFilterWhere(['in', 'status_id', $params['statuses']]);
-        $query->andFilterWhere(['in', 'subway_id', $params['subway']]);
+        $query->andFilterWhere(['in', 'subway_id', $params['subways']]);
         $query->andFilterWhere(['<', 'walk_distance', $params['walk_dist']]);
 
         if (!$exclude) {

@@ -99,5 +99,9 @@ return [
     'Type/Class' => 'Тип/Клас',
     'Condition' => 'Стан',
     'Metro line' => 'Гілка метро',
-    'To the subway' => 'До метро'
+    'To the subway' => 'До метро',
+    'Red line' => 'Червона лінія',
+    'Blue line' => 'Синя лінія',
+    'Green line' => 'Зелена лінія',
+    'All stations' => 'Всі станції',
 ];

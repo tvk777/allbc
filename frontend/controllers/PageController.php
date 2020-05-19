@@ -353,7 +353,7 @@ class PageController extends FrontendController
             $searchParams['districts'] = $seo->districts ? ArrayHelper::getColumn($seo->districts, 'district_id') : '';
             $searchParams['price'] = $seo->price;
             $searchParams['walk_dist'] = '';
-            $searchParams['subway'] = '';
+            $searchParams['subways'] = '';
             $searchParams['statuses'] = [];
         } else {
 
@@ -364,7 +364,7 @@ class PageController extends FrontendController
             $params['statuses'] = isset($params['statuses']) ? $params['statuses'] : [];
             $params['comission'] = isset($params['comission']) ? $params['comission'] : '';
             $params['walk_dist'] = isset($params['walk_dist']) ? $params['walk_dist'] : '';
-            $params['subway'] = isset($params['subway']) ? $params['subway'] : '';
+            $params['subways'] = isset($params['subways']) ? $params['subways'] : '';
             $params['user'] = isset($params['user']) ? $params['user'] : '';
             $params['visibles'] = isset($params['visibles']) ? $params['visibles'] : [];
 
@@ -375,7 +375,7 @@ class PageController extends FrontendController
             $searchParams['statuses'] = count($params['statuses']) > 0 ? $params['statuses'] : '';
             $searchParams['commission'] = $params['comission'] == 'on' ? 0 : '';
             $searchParams['walk_dist'] = !empty($params['walk_dist']) ? $params['walk_dist'] : '';
-            $searchParams['subway'] = !empty($params['subway']) ? $params['subway'] : '';
+            $searchParams['subways'] = !empty($params['subways']) ? $params['subways'] : '';
             $searchParams['user'] = !empty($params['user']) ? $params['user'] : '';
             $searchParams['visibles'] = !empty($params['visibles']) ? $params['visibles'] : [];
 
@@ -404,7 +404,7 @@ class PageController extends FrontendController
         //$whereCondition['pricemin'] = 10;
         //$whereCondition['pricemax'] = 20;
         //$whereCondition['user'] = 259;
-        //$whereCondition['subway'] = 305;
+        //$whereCondition['subways'] = 305;
         //$whereCondition['walk_dist'] = 1500;
         //$whereCondition['classes'] = [1, 2];
         //$whereCondition['districts'] = [45, 46];
@@ -586,6 +586,7 @@ class PageController extends FrontendController
 
     protected function getDataForFilter($city)
     {
+        //$city=5;
         $filters = [];
         $districts = GeoDistricts::find();
         $subways = GeoSubways::find();
@@ -594,14 +595,35 @@ class PageController extends FrontendController
         }
         if (!empty($where)) {
             $districts->where($where);
-            $subways->where($where);
+            $subways->where($where)->orderBy('branch_id, sort_order');
         }
-        $filters['subways'] = $subways = $subways->all();
-        $branches = array_unique(ArrayHelper::getColumn($subways, 'branch_id'));
+        //$filters['subways'] = $subways = $subways->all();
+        $subways = $subways->all();
+        foreach($subways as $sub){
+            switch ($sub->branch_id){
+                case 1:
+                    $filters['subways'][1][] = $sub;
+                    $branches[1]=1;
+                    break;
+                case 2:
+                    $filters['subways'][2][] = $sub;
+                    $branches[2]=2;
+                    break;
+                case 3:
+                    $filters['subways'][3][] = $sub;
+                    $branches[3]=3;
+                    break;
+            }
+        }
+        sort($branches);
+//debug(ArrayHelper::getColumn($filters['subways'][1], 'name')); die();
+
+        /*$branches = array_unique(ArrayHelper::getColumn($subways, 'branch_id'));
         $branches = array_filter($branches, function ($value) {
             return !is_null($value) && $value !== '';
         });
-        sort($branches);
+        sort($branches);*/
+//debug($branches); die();
         $filters['branches'] = $branches;
         $filters['district'] = $districts->all();
 
