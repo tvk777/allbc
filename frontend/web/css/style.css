@@ -3836,7 +3836,6 @@ a.green_pill {
 
 .item_title_text, .seo_catalog_urls .custom_select_title a, .seo_catalog_urls .custom_select_title p {
     display: inline-block;
-    vertical-align: middle;
     margin-bottom: 2px;
     color: #000000;
     font-size: 16px;
@@ -9509,4 +9508,76 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 }
 .price .select_input:after {
     top:20px;
+}
+.target .switch {
+    cursor:pointer;
+    display: inline-block;
+    vertical-align: top;
+    width: 108px;
+    text-align: left;
+    height: 40px;
+    border: 1px solid #3eb060;
+    background-color: #3eb060;
+    padding: 8px 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.target .switch ul:after {
+    display: block;
+    content: "";
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-image: url(../img/switch.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+
+.target .switch ul{
+    position:relative;
+}
+.target .switch ul li{
+    color:#ffffff;
+    visibility: hidden;
+    position:absolute;
+    width: calc(100% - 20px);
+    text-align: center;
+
+    -webkit-transition: -webkit-transform 2s;
+    -webkit-transition-property: transform;
+    -webkit-transition-duration: .3s;
+    -webkit-transition-timing-function: ease;
+
+    -moz-transition-property: transform;
+    -moz-transition-duration: .3s;
+    -moz-transition-timing-function: ease;
+
+    -ms-transition-property: transform;
+    -ms-transition-duration: .3s;
+    -ms-transition-timing-function: ease;
+
+    -o-transition-property: transform;
+    -o-transition-duration: .3s;
+    -o-transition-timing-function: ease;
+
+    transition-property: transform;
+    transition-duration: .3s;
+    transition-timing-function: ease;
+}
+.target .switch ul li.active {
+    transform: rotateY(0deg);
+    visibility: visible;
+}
+.target .switch ul .back {
+    transform: rotateY(90deg);
 }

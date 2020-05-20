@@ -588,6 +588,9 @@ class PageController extends FrontendController
     {
         //$city=5;
         $filters = [];
+        $filters['subways'] = [];
+        $filters['branches'] = [];
+
         $districts = GeoDistricts::find();
         $subways = GeoSubways::find();
         if ($city != 0) {
@@ -599,32 +602,27 @@ class PageController extends FrontendController
         }
         //$filters['subways'] = $subways = $subways->all();
         $subways = $subways->all();
-        foreach($subways as $sub){
-            switch ($sub->branch_id){
-                case 1:
-                    $filters['subways'][1][] = $sub;
-                    $branches[1]=1;
-                    break;
-                case 2:
-                    $filters['subways'][2][] = $sub;
-                    $branches[2]=2;
-                    break;
-                case 3:
-                    $filters['subways'][3][] = $sub;
-                    $branches[3]=3;
-                    break;
+        if(!empty($subways)) {
+            foreach ($subways as $sub) {
+                switch ($sub->branch_id) {
+                    case 1:
+                        $filters['subways'][1][] = $sub;
+                        $branches[1] = 1;
+                        break;
+                    case 2:
+                        $filters['subways'][2][] = $sub;
+                        $branches[2] = 2;
+                        break;
+                    case 3:
+                        $filters['subways'][3][] = $sub;
+                        $branches[3] = 3;
+                        break;
+                }
             }
+            sort($branches);
+            $filters['branches'] = $branches;
         }
-        sort($branches);
-//debug(ArrayHelper::getColumn($filters['subways'][1], 'name')); die();
 
-        /*$branches = array_unique(ArrayHelper::getColumn($subways, 'branch_id'));
-        $branches = array_filter($branches, function ($value) {
-            return !is_null($value) && $value !== '';
-        });
-        sort($branches);*/
-//debug($branches); die();
-        $filters['branches'] = $branches;
         $filters['district'] = $districts->all();
 
         $filters['classes'] = BcClasses::find()->all();

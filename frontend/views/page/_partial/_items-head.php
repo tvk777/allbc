@@ -7,12 +7,14 @@ $currentLanguage = Yii::$app->language;
 //debug($filters['subways']);
 if ($seo->target == 1) {
     $targetText = Yii::t('app', 'Rent');
-    $rentSelected = 'selected';
-    $saleSelected = '';
+    $targetValue = 1;
+    $backText = Yii::t('app', 'Sale');
+    $backValue = 2;
 } else {
     $targetText = Yii::t('app', 'Sale');
-    $saleSelected = 'selected';
-    $rentSelected = '';
+    $targetValue = 2;
+    $backText = Yii::t('app', 'Rent');
+    $backValue = 1;
 }
 $defaultDist = 1000;
 $defaultName = Yii::t('app', 'Subway');
@@ -163,20 +165,11 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                 <div class="left filters">
                     <!--аренда-продажа-->
                     <div class="item_wrapp target novisible_767 target">
-                        <div class="dropdow_item_wrapp">
-                            <div class="select_2_wrapp">
-                                <div class="custom_select_2">
-                                    <div class="custom_select_title green_active"><a href="#"><?= $targetText ?></a>
-                                    </div>
-                                    <div class="custom_select_list">
-                                        <div data-value="1" class="sel-type custom_select_item <?= $rentSelected ?>"><a
-                                                href="#"><?= Yii::t('app', 'Rent') ?></a>
-                                        </div>
-                                        <div data-value="2" class="sel-type custom_select_item <?= $saleSelected ?>"><a
-                                                href="#"><?= Yii::t('app', 'Sale') ?></a></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="switch">
+                            <ul>
+                                <li class="front  active" data-value="<?= $targetValue ?>"><?= $targetText ?></li>
+                                <li class="back" data-value="<?= $backValue ?>"><?= $backText ?></li>
+                            </ul>
                         </div>
                     </div>
                     <!--площадь-->
@@ -313,7 +306,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                        value="<?= $district->id ?>"
                                                        id="ch_<?= $district->id ?>" <?= $checked_district ?> >
                                                 <label for="ch_<?= $district->id ?>"
-                                                       data-count="district"><?= $district->name ?></label>
+                                                       data-district="district"><?= $district->name ?></label>
                                             </div>
                                         </div>
                                     <? endforeach; ?>
