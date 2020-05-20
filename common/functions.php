@@ -194,12 +194,26 @@ function getPlusForPlace($place)
 }
 
 //toDo: сделать расчет цены с накладными для $prices['forAll']
-function getPlacePrices($place, $rate)
+function getPlacePrices($place, $currency, $rate)
 {
     $prices['forM2'] = Yii::t('app', 'con.');
     $prices['forAll'] = Yii::t('app', 'con.');
-    $placePlus = getPlusForPlace($place) ? '++' : '';
     if ($place->con_price != 1 && !empty($place->uah_price)) {
+        $text = getCurrencyText($currency);
+        $placePlus = getPlusForPlace($place) ? '++' : '';
+        $price = round($place->uah_price / $rate);
+        $prices['forM2'] = $price . $placePlus. ' ' . $text[0];
+        $prices['forAll'] = $price * $place->m2 . $placePlus. ' ' . $text[1];
+    }
+    return $prices;
+}
+
+function getPlacePrice($place, $rate)
+{
+    $prices['forM2'] = Yii::t('app', 'con.');
+    $prices['forAll'] = Yii::t('app', 'con.');
+    if ($place->con_price != 1 && !empty($place->uah_price)) {
+        $placePlus = getPlusForPlace($place) ? '++' : '';
         $price = round($place->uah_price / $rate);
         $prices['forM2'] = $price . $placePlus;
         $prices['forAll'] = $price * $place->m2 . $placePlus;

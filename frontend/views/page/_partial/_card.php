@@ -17,9 +17,9 @@ if ($result == 'bc') {
     $district = $cardItem->bcitem->district ? $cardItem->bcitem->district->name . ' р-н' : '';
     $address = $cardItem->bcitem->address;
     $plus = getPlusForBC($item['places']) ? '++' : '';
-    //$minPrice = getBcMinPrice($item, $currency, $rate);
+    $minPrice = getBcMinPrice($item, $currency, $rate);
     //$minPrices = getBcMinPrices($item, $currency, $rate);
-    $minPrice = $type == 1 ? getBcMinPrice($item, $currency, $rate) : getBcMinPriceAll($item, $currency, $rate);
+    //$minPrice = $type == 1 ? getBcMinPrice($item, $currency, $rate) : getBcMinPriceAll($item, $currency, $rate);
     $itemPlaces = $item['places'];
     $itemSubway = !empty($cardItem->bcitem->subways[0]) ? $cardItem->bcitem->subways[0] : null;
     $itemClass = $cardItem->bcitem->class->name;
@@ -44,10 +44,8 @@ if ($result == 'bc') {
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
     $address = $cardItem->street;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
-    $placePrices = getPlacePrices($item, $rate);
-    $minPrice = $type == 1
-        ? $placePrices['forM2'] . ' ' . getCurrencyText($currency)[0]
-        : $placePrices['forAll'] . ' ' . getCurrencyText($currency)[1];
+    $placePrices = getPlacePrices($item, $currency, $rate);
+    $minPrice = $placePrices['forM2'];
     $itemPlaces = null;
     $placesInfo = null;
     $itemSubway = !empty($cardItem->subways[0]) ? $cardItem->subways[0] : null;
@@ -151,11 +149,9 @@ if (!empty($itemSubway)) {
                         </div>
                     <? endif; ?>
                     <? if ($result == 'offices') : ?>
-                        <div class="thumb_5_footer_col">
-                            <p><?= $minmax ?></p>
-                        </div>
-                        <div class="thumb_5_footer_col">
-                            <p><?= $minPrice ?>
+                        <div class="offices-info">
+                            <p><span><?= Yii::t('app', 'Rent') ?>:</span> <?= $minPrice ?></p>
+                            <p><span><?= Yii::t('app', 'Square') ?>:</span> <?= $minmax ?></p>
                         </div>
                     <? endif; ?>
 
@@ -181,7 +177,7 @@ if (!empty($itemSubway)) {
                     <? if ($itemPlaces): ?>
                         <? foreach ($itemPlaces as $k => $place): ?>
                             <?
-                            $prices = getPlacePrices($place, $rate);
+                            $prices = getPlacePrice($place, $rate);
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">

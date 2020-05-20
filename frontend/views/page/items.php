@@ -55,6 +55,15 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         <input id="submit_main_form" type="hidden">
     </form>
 
+    <?php Pjax::begin([
+        'enableReplaceState' => true,
+        'enablePushState' => true,
+        'options' => ['id' => 'cardsPjax'],
+        'formSelector' => '#filterForm',
+        //'timeout' => 10000, 
+        //'clientOptions' => ['method' => 'GET']
+    ]); ?>
+
     <? echo $this->render('_partial/_items-head', [
         'seo' => $seo,
         'countValM2' => $countValM2,
@@ -65,16 +74,6 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'result' => $result,
         'countPlaces' => $countPlaces
     ]); ?>
-
-    <?php Pjax::begin([
-        'enableReplaceState' => true,
-        'enablePushState' => true,
-        'options' => ['id' => 'cardsPjax'],
-        //'clientOptions' => ['method' => 'POST']
-    ]);
-    //$pages->params = $params;
-    //debug($pages);
-    ?>
 
     <div class="append-elem" data-append-elem="map_index"></div>
 
