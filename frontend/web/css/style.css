@@ -9482,6 +9482,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     background: #ff7e00;
     color: white;
 }
+.button-filter-search:focus, .button-filter-search:active {
+    color: white;
+}
 
 .item-type {
     border-right: 1px solid #cdcece;

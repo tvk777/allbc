@@ -109,6 +109,7 @@ function getBcMinPrice($item, $currency, $rate)
     $text = getCurrencyText($currency);
     return round($item['bc']->minPrice / $rate) . $plus . ' ' . $text[0];
 }
+
 function getBcMinPriceAll($item, $currency, $rate)
 {
     //$currency=4;
@@ -193,30 +194,48 @@ function getPlusForPlace($place)
     return false;
 }
 
-//toDo: сделать расчет цены с накладными для $prices['forAll']
-function getPlacePrices($place, $currency, $rate)
+//цена с текстом валюты для страницы выдачи офисов
+function getPlacePrices($place, $currency, $rates, $taxes)
 {
     $prices['forM2'] = Yii::t('app', 'con.');
     $prices['forAll'] = Yii::t('app', 'con.');
     if ($place->con_price != 1 && !empty($place->uah_price)) {
         $text = getCurrencyText($currency);
         $placePlus = getPlusForPlace($place) ? '++' : '';
-        $price = round($place->uah_price / $rate);
-        $prices['forM2'] = $price . $placePlus. ' ' . $text[0];
-        $prices['forAll'] = $price * $place->m2 . $placePlus. ' ' . $text[1];
+        $price = round($place->uah_price / $rates[$currency]);
+        $prices['forM2'] = $price . $placePlus . ' ' . $text[0];
+        $prices['forAll'] = round(calculateRentPrice($place, $taxes, $rates) / $rates[$currency]). ' ' . $text[1];
     }
     return $prices;
 }
 
-function getPlacePrice($place, $rate)
+
+function getPlacePrice($place, $currency, $rates, $taxes)
 {
     $prices['forM2'] = Yii::t('app', 'con.');
     $prices['forAll'] = Yii::t('app', 'con.');
     if ($place->con_price != 1 && !empty($place->uah_price)) {
         $placePlus = getPlusForPlace($place) ? '++' : '';
-        $price = round($place->uah_price / $rate);
+        $price = round($place->uah_price / $rates[$currency]);
         $prices['forM2'] = $price . $placePlus;
-        $prices['forAll'] = $price * $place->m2 . $placePlus;
+        $prices['forAll'] = round(calculateRentPrice($place, $taxes, $rates) / $rates[$currency]);
     }
     return $prices;
+}
+
+//price from bc_places_view
+function calculateRentPrice($place, $taxes, $rates)
+{
+    $plusKop = $place->kop>0 ? ($place->m2 + ($place->m2*$place->kop)/100) : $place->m2;
+    $stavkaTax = $place->tax==1 || $place->tax==4
+        ? $place->uah_price + ($place->uah_price*$taxes[$place->tax])/100
+        : $place->uah_price;
+    $opexValuteId = !empty($place->opex_valute_id) ? $place->opex_valute_id : 1;
+    $opex_uah = $place->opex * $rates[$opexValuteId];
+    $opex = $place->opex_tax==1 || $place->opex_tax==4
+        ? $opex_uah + ($opex_uah*$taxes[$place->opex_tax])/100
+        : $opex_uah;
+    $stavka = $stavkaTax + $opex;
+
+    return $plusKop * $stavka;
 }

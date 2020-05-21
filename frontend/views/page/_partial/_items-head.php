@@ -78,8 +78,8 @@ switch ($currency) {
 
 $minpricesChart = $pricesChart['min'];
 $maxpricesChart = $pricesChart['max'];
-$minRange = round($minpricesChart / $rate);
-$maxRange = round($maxpricesChart / $rate);
+$minRange = round($minpricesChart / $rates[$currency]);
+$maxRange = round($maxpricesChart / $rates[$currency]);
 $minPrice = !empty($params['pricemin']) ? $params['pricemin'] : $minRange;
 $maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : $maxRange;
 $min_max = $currencySymbol . ' ' . $minPrice . '-' . $maxPrice;
@@ -97,8 +97,8 @@ $this->registerJsVar('currencySymbol', $currencySymbol, $this::POS_HEAD);
 $this->registerJsVar('priceText', $emptyPriceText, $this::POS_HEAD);
 
 
-if ((!empty($params['pricemin']) && $params['pricemin'] != round($minpricesChart / $rate)) ||
-    (!empty($params['pricemax']) && $params['pricemax'] != round($maxpricesChart / $rate))
+if ((!empty($params['pricemin']) && $params['pricemin'] != round($minpricesChart / $rates[$currency])) ||
+    (!empty($params['pricemax']) && $params['pricemax'] != round($maxpricesChart / $rates[$currency]))
 ) {
     $activePrice = 'green_active';
 }
@@ -268,7 +268,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                     <?= $this->render('_bars', [
                                         'bars' => $pricesChart,
                                         'currency' => $currency,
-                                        'rate' => $rate,
+                                        'rate' => $rates[$currency],
                                         'symbol' => $currencySymbol,
                                         'minmax' => [$minPrice, $maxPrice]
                                     ]);

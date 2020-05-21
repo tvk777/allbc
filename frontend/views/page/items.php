@@ -62,7 +62,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'filters' => $filters,
         'params' => $params,
         'pricesChart' => $pricesChart,
-        'rate' => $rate,
+        'rates' => $rates,
         'result' => $result,
         'countPlaces' => $countPlaces
     ]); ?>
@@ -90,8 +90,9 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                 'result' => $result,
                                 'currentLanguage' => $currentLanguage,
                                 'currency' => $currency,
-                                'rate' => $rate,
-                                'type' => $conditions['type']
+                                'rates' => $rates,
+                                'type' => $conditions['type'],
+                                'taxes' => $taxes
                             ]);
                         }
                     }
@@ -118,8 +119,9 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                 'result' => $result,
                                 'currentLanguage' => $currentLanguage,
                                 'currency' => $currency,
-                                'rate' => $rate,
-                                'type' => $conditions['type']
+                                'rates' => $rates,
+                                'type' => $conditions['type'],
+                                'taxes' => $taxes
                             ]);
                         }
                     }

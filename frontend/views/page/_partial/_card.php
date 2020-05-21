@@ -17,25 +17,18 @@ if ($result == 'bc') {
     $district = $cardItem->bcitem->district ? $cardItem->bcitem->district->name . ' р-н' : '';
     $address = $cardItem->bcitem->address;
     $plus = getPlusForBC($item['places']) ? '++' : '';
-    $minPrice = getBcMinPrice($item, $currency, $rate);
-    //$minPrices = getBcMinPrices($item, $currency, $rate);
-    //$minPrice = $type == 1 ? getBcMinPrice($item, $currency, $rate) : getBcMinPriceAll($item, $currency, $rate);
+    $minPrice = getBcMinPrice($item, $currency, $rates[$currency]);
+    //$priceForAll = '';
     $itemPlaces = $item['places'];
     $itemSubway = !empty($cardItem->bcitem->subways[0]) ? $cardItem->bcitem->subways[0] : null;
     $itemClass = getDefaultTranslate('name', $currentLanguage, $cardItem->bcitem->class, true);
     $slides = !empty($cardItem->bcitem->slides) ? $cardItem->bcitem->slides : null;
     $itemComission = $cardItem->bcitem->percent_commission;
     $building = 'bc';
-    /*debug($minPrices);
-    [forM2] => 3500 ₴/м²/міс $/м²/міс
-    [forAll] => 315000 ₴/міс
-    filter[type] = 1 || 3
-    */
 } else {
     $cardItem = $item->place->bcitem; //bc
     $placeItem = $item->place; //place
     $id = $placeItem->id;
-    //debug($item); die();
     $itemPlaces = null;
     $modelWishlist = $placeItem;
     $itemName = getDefaultTranslate('name', $currentLanguage, $placeItem, true);
@@ -44,8 +37,9 @@ if ($result == 'bc') {
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
     $address = $cardItem->street;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
-    $placePrices = getPlacePrices($item, $currency, $rate);
+    $placePrices = getPlacePrices($item, $currency, $rates, $taxes);
     $minPrice = $placePrices['forM2'];
+    //$priceForAll = $placePrices['forAll'];
     $itemPlaces = null;
     $placesInfo = null;
     $itemSubway = !empty($cardItem->subways[0]) ? $cardItem->subways[0] : null;
@@ -176,7 +170,7 @@ if (!empty($itemSubway)) {
                     <? if ($itemPlaces): ?>
                         <? foreach ($itemPlaces as $k => $place): ?>
                             <?
-                            $prices = getPlacePrice($place, $rate);
+                            $prices = getPlacePrice($place, $currency, $rates, $taxes);
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use common\models\BcPlacesPrice;
 use common\models\BcPlacesSellPrice;
 use common\models\BcValutes;
+use common\models\Taxes;
 use common\models\ViewsCounter;
 use Yii;
 use yii\web\Controller;
@@ -458,19 +459,18 @@ class PageController extends FrontendController
 
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearchFromView($whereCondition);
-        //$result = $searchModel->seoSearch($whereCondition);
-        $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [
-            'countPlaces' => '<span id="countOfices">'.$result['count_ofices'].'</span>',
-        ]);
 
         $this->result = !empty($params) && !empty($params['result']) ? $params['result'] : 'bc';
 
         $targetLinks = SeoCatalogUrls::find()->where(['id' => 88])->one();
         $mainRent = trim($targetLinks->main_rent_link_href, '/');
         $mainSell = trim($targetLinks->main_sell_link_href, '/');
-        //$currency = !empty($params['currency']) ? $params['currency'] : 4;
         $currency = $whereCondition['currency'];
-        $rate = BcValutes::getRate($currency);
+        //$rate = BcValutes::getRate($currency);
+        $rates = BcValutes::find()->select(['id', 'rate'])->asArray()->all();
+        $rates = ArrayHelper::getColumn(ArrayHelper::index($rates, 'id'), 'rate');
+        $taxes = Taxes::find()->select(['id', 'value'])->where(['id' => 1])->orWhere(['id' => 4])->asArray()->all();
+        $taxes = ArrayHelper::getColumn(ArrayHelper::index($taxes, 'id'), 'value');
         return $this->render('items', [
             'seo' => $seo,
             'city' => $city,
@@ -488,8 +488,9 @@ class PageController extends FrontendController
             'conditions' => $whereCondition,
             'pricesChart' => $this->getPlacesForPriceChart($result['pricesForChart']),
             'countValM2' => $this->getPlacesForM2Chart($result['m2ForChart']),
-            'rate' => $rate['rate'],
-            'currency' => $currency
+            'rates' => $rates,
+            'currency' => $currency,
+            'taxes' => $taxes
         ]);
     }
 
