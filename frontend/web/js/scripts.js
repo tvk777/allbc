@@ -265,7 +265,9 @@ $(document).scroll(function () {
 });
 
 $(document).on('pjax:complete', function (event) {
-
+    //alert(countOfices);
+    $("#countOfices").text(countOfices);
+    
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
             maxPrice = 0;

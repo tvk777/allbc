@@ -460,7 +460,7 @@ class PageController extends FrontendController
         $result = $searchModel->seoSearchFromView($whereCondition);
         //$result = $searchModel->seoSearch($whereCondition);
         $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [
-            'countPlaces' => $result['count_ofices'],
+            'countPlaces' => '<span id="countOfices">'.$result['count_ofices'].'</span>',
         ]);
 
         $this->result = !empty($params) && !empty($params['result']) ? $params['result'] : 'bc';
@@ -475,7 +475,8 @@ class PageController extends FrontendController
             'seo' => $seo,
             'city' => $city,
             'items' => $result['allForPage'],
-            'countPlaces' => $countPlaces,
+            //'countPlaces' => $countPlaces,
+            'countPlaces' => $result['count_ofices'],
             'pages' => $result['pages'],
             'markers' => $result['markers'],
             'center' => json_encode($center),

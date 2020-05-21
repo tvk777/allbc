@@ -55,14 +55,6 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         <input id="submit_main_form" type="hidden">
     </form>
 
-    <?php Pjax::begin([
-        'enableReplaceState' => true,
-        'enablePushState' => true,
-        'options' => ['id' => 'cardsPjax'],
-        'formSelector' => '#filterForm',
-        //'timeout' => 10000, 
-        //'clientOptions' => ['method' => 'GET']
-    ]); ?>
 
     <? echo $this->render('_partial/_items-head', [
         'seo' => $seo,
@@ -73,6 +65,14 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'rate' => $rate,
         'result' => $result,
         'countPlaces' => $countPlaces
+    ]); ?>
+    <?php Pjax::begin([
+        'enableReplaceState' => true,
+        'enablePushState' => true,
+        'options' => ['id' => 'cardsPjax'],
+        'formSelector' => '#filterForm',
+        'timeout' => 10000,
+        'clientOptions' => ['method' => 'GET']
     ]); ?>
 
     <div class="append-elem" data-append-elem="map_index"></div>
@@ -125,11 +125,13 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                     }
                     ?>
                 </div>
-                <? echo LinkPager::widget([
-                    'pagination' => $pages,
-                ]); ?>
             </div>
         </div>
+
+        <? echo LinkPager::widget([
+            'pagination' => $pages,
+        ]); ?>
+
         <div class="append-elem" data-append-desktop-elem="map_index" data-min-screen="1024">
             <div class="object_map">
                 <div class="map_scroll">
@@ -147,7 +149,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
     </div>
     <?
     $script = <<< JS
- var map, mar, markers = [], id, geojson = $markers, center = $center, zoom = $zoom;
+ var map, mar, markers = [], id, geojson = $markers, center = $center, zoom = $zoom, countOfices = $countPlaces;
 JS;
     $this->registerJs($script, $position = $this::POS_BEGIN);
     Pjax::end();

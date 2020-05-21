@@ -3,6 +3,9 @@ use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 $currentLanguage = Yii::$app->language;
+$countPlacesText = Yii::t('app', 'Found: {countPlaces} offices', [
+    'countPlaces' => '<span id="countOfices">'.$countPlaces.'</span>',
+]);
 
 //debug($filters['subways']);
 if ($seo->target == 1) {
@@ -468,7 +471,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
             <div class="left">
                 <div class="inlines_wrapp">
                     <div class="inline count">
-                        <p><?= $countPlaces ?> </p>
+                        <p><?= $countPlacesText ?> </p>
                     </div>
                     <div class="inline result">
                         <span>Выводить:</span>
