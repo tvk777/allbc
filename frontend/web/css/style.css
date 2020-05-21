@@ -4006,12 +4006,17 @@ input.all-subways:checked + label.all-subways:before{
 }
 
 
-.map_object_header .inline.result a {
+.map_object_header .inline.result a,
+.map_object_header .inline.result label{
     display: inline-block;
     padding: 5px 10px;
+    font-weight: 400;
+    cursor:pointer;
 }
 
-.map_object_header .inline.result .active, .map_object_header .inline.result a:hover {
+.map_object_header .inline.result .active,
+.map_object_header .inline.result a:hover,
+.map_object_header .inline.result input:checked + label{
     background: #3eb060;
     border-radius: 15px;
     color: white;
@@ -4019,7 +4024,8 @@ input.all-subways:checked + label.all-subways:before{
     display: inline-block;
 }
 
-.map_object_header .inline.result .active {
+.map_object_header .inline.result .active,
+.map_object_header .inline.result input:checked + label{
     font-weight: 600;
 }
 
@@ -9587,4 +9593,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 }
 .target .switch ul .back {
     transform: rotateY(90deg);
+}
+.order label{
+    font-weight: 400;
+    cursor:pointer;
 }

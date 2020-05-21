@@ -2,9 +2,10 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+
 $currentLanguage = Yii::$app->language;
 $countPlacesText = Yii::t('app', 'Found: {countPlaces} offices', [
-    'countPlaces' => '<span id="countOfices">'.$countPlaces.'</span>',
+    'countPlaces' => '<span id="countOfices">' . $countPlaces . '</span>',
 ]);
 
 //debug($filters['subways']);
@@ -139,14 +140,12 @@ if (!empty($conditions) && !empty($conditions['sort'])) {
     }
 }
 
-$urlRezult = Yii::$app->request->pathInfo;
 if ($result === 'bc') {
-    $bcLink = '<span class="active">' . Yii::t('app', 'Business centers') . '</span>';
-    $officeLink = '<a href="' . $urlRezult . '">' . Yii::t('app', 'Offices') . '</a>';
+    $bcChecked = 'checked';
+    $officesChecked = '';
 } else {
-    $urlRezult .= '?filter[result]=bc';
-    $officeLink = '<span class="active">' . Yii::t('app', 'Offices') . '</span>';
-    $bcLink = '<a href="' . $urlRezult . '">' . Yii::t('app', 'Business centers') . '</a>';
+    $bcChecked = '';
+    $officesChecked = 'checked';
 }
 
 $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
@@ -376,7 +375,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                                value="<?= $subway->id ?>"
                                                                id="sb_<?= $subway->id ?>" <?= $checked_subway ?> >
                                                         <label for="sb_<?= $subway->id ?>"
-                                                               data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway, true);?></label>
+                                                               data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway, true); ?></label>
                                                     </div>
                                                 <? endforeach; ?>
                                             </div>
@@ -408,7 +407,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                        id="ch_3_<?= $class->id ?>" <?= $checked_classes ?>>
                                                 <label for="ch_3_<?= $class->id ?>"
                                                        data-filter="filters_1">
-                                                    <?= getDefaultTranslate('name', $currentLanguage, $class, true);?>
+                                                    <?= getDefaultTranslate('name', $currentLanguage, $class, true); ?>
                                                 </label>
                                             </div>
                                         </div>
@@ -477,14 +476,18 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                     </div>
                     <div class="inline result">
                         <span>Выводить:</span>
-                        <?= $bcLink ?>
-                        <?= $officeLink ?>
+                        <input class="submit_filter" type="radio" name="filter[result]" value="bc"
+                               id="bc_result" <?= $bcChecked ?>/>
+                        <label for="bc_result"><?= Yii::t('app', 'Business centers') ?></label>
+                        <input class="submit_filter" type="radio" name="filter[result]" value="offices"
+                               id="offices_result" <?= $officesChecked ?>/>
+                        <label for="offices_result"><?= Yii::t('app', 'Offices') ?></label>
                     </div>
                     <div class="item_wrapp novisible_1024">
                         <div class="resp_filter_inner">
                             <div class="checkbox">
                                 <? $comChecked = !empty($params['comission']) && $params['comission'] == 'on' ? 'checked' : '' ?>
-                                <input class="more-filters" type="checkbox" name="filter[comission]"
+                                <input class="more-filters submit_filter" type="checkbox" name="filter[comission]"
                                        id="ch_1_2" <?= $comChecked ?>/>
                                 <label for="ch_1_2">Без комиссии</label>
                             </div>
@@ -503,42 +506,52 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                         ['class' => 'green_pill green_pill_2 modal-form size-middle']
                     ) ?>
                 </div>
-                <!--сортировка-->
+                <!--сортировка с фильтром-->
                 <div class="custom_select_wrapp custom_select_wrapp_2">
                     <div class="custom_select">
                         <div>
-                            <input type="text" class="select_res" value="$/м²/mec" readonly="readonly">
                             <p class="select_input"><span class="sel_val"><?= $sortText ?></span></p>
                         </div>
-                        <div class="dropdown_select">
+                        <div class="dropdown_select order">
                             <div class="select_item">
                                 <p>
-                                    <a href="<?= Url::current(['sort' => 'price_asc']) ?>"><?= Yii::t('app', 'Ascending prices') ?></a>
+                                    <input class="submit_filter" type="radio" name="filter[sort]" value="price_asc"
+                                           id="price_asc"/>
+                                    <label for="price_asc"><?= Yii::t('app', 'Ascending prices') ?></label>
                                 </p>
                             </div>
                             <div class="select_item">
                                 <p>
-                                    <a href="<?= Url::current(['sort' => 'price_desc']) ?>"><?= Yii::t('app', 'Descending prices') ?></a>
+                                    <input class="submit_filter" type="radio" name="filter[sort]" value="price_desc"
+                                           id="price_desc"/>
+                                    <label for="price_desc"><?= Yii::t('app', 'Descending prices') ?></label>
                                 </p>
                             </div>
                             <div class="select_item">
                                 <p>
-                                    <a href="<?= Url::current(['sort' => 'm2_asc']) ?>"><?= Yii::t('app', 'Ascending area') ?></a>
+                                    <input class="submit_filter" type="radio" name="filter[sort]" value="m2_asc"
+                                           id="m2_asc"/>
+                                    <label for="m2_asc"><?= Yii::t('app', 'Ascending area') ?></label>
                                 </p>
                             </div>
                             <div class="select_item">
                                 <p>
-                                    <a href="<?= Url::current(['sort' => 'm2_desc']) ?>"><?= Yii::t('app', 'Descending area') ?></a>
+                                    <input class="submit_filter" type="radio" name="filter[sort]" value="m2_desc"
+                                           id="m2_desc"/>
+                                    <label for="m2_desc"><?= Yii::t('app', 'Descending area') ?></label>
                                 </p>
                             </div>
                             <div class="select_item">
                                 <p>
-                                    <a href="<?= Url::current(['sort' => 'updated_at']) ?>"><?= Yii::t('app', 'By date added') ?></a>
+                                    <input class="submit_filter" type="radio" name="filter[sort]" value="updated_at"
+                                           id="updated_at"/>
+                                    <label for="updated_at"><?= Yii::t('app', 'By date added') ?></label>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

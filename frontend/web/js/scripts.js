@@ -265,9 +265,8 @@ $(document).scroll(function () {
 });
 
 $(document).on('pjax:complete', function (event) {
-    //alert(countOfices);
     $("#countOfices").text(countOfices);
-    
+
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
             maxPrice = 0;
@@ -1087,6 +1086,8 @@ $(document).ready(function () {
     }, '#price-filter .select_item p');
 
 
+
+
     // Range Slider
 //console.log(minPrice, maxPrice, maxRange);
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
@@ -1624,9 +1625,13 @@ $(document).ready(function () {
         $(".filter-form").submit();
     });
 
-    $("#ch_1_2").on("change", function (e) {
+    $("input.submit_filter").on("change", function (e) {
         $(".filter-form").submit();
     });
+
+
+
+
 
     /*$(".filter-form .remove").on("click", function () {
      $(".checkbox .more-filters").attr('checked', false);
