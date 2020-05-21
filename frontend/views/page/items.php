@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+
 //debug($pricesChart);
 
 //debug($items[0]['bc']);
@@ -129,10 +130,11 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 </div>
             </div>
         </div>
-
-        <? echo LinkPager::widget([
-            'pagination' => $pages,
-        ]); ?>
+        <div class="row">
+            <? echo LinkPager::widget([
+                'pagination' => $pages,
+            ]); ?>
+        </div>
 
         <div class="append-elem" data-append-desktop-elem="map_index" data-min-screen="1024">
             <div class="object_map">
