@@ -22,7 +22,7 @@ if ($result == 'bc') {
     //$minPrice = $type == 1 ? getBcMinPrice($item, $currency, $rate) : getBcMinPriceAll($item, $currency, $rate);
     $itemPlaces = $item['places'];
     $itemSubway = !empty($cardItem->bcitem->subways[0]) ? $cardItem->bcitem->subways[0] : null;
-    $itemClass = $cardItem->bcitem->class->name;
+    $itemClass = getDefaultTranslate('name', $currentLanguage, $cardItem->bcitem->class, true);
     $slides = !empty($cardItem->bcitem->slides) ? $cardItem->bcitem->slides : null;
     $itemComission = $cardItem->bcitem->percent_commission;
     $building = 'bc';
@@ -49,7 +49,7 @@ if ($result == 'bc') {
     $itemPlaces = null;
     $placesInfo = null;
     $itemSubway = !empty($cardItem->subways[0]) ? $cardItem->subways[0] : null;
-    $itemClass = $cardItem->class->name;
+    $itemClass = getDefaultTranslate('name', $currentLanguage, $cardItem->class, true);
     $slides = !empty($cardItem->slides) ? $cardItem->slides : null;
     if (!empty($item->slides)) {
         $slides = $item->slides;
@@ -123,15 +123,14 @@ if (!empty($itemSubway)) {
 
                 <div class="cl_pill_class">
                     <span class="item-type">
-                        <span class="item-type-name">Бизнес центр </span>
                         <span class="item-class"><?= $itemClass ?></span>
                     </span>
                     <span class="item-id">ID: <?= $id ?></span>
                 </div>
                 <div class="card-address">
                     <div class="adres">
+                        <p><?= $address ?></p>
                         <h5><?= $district ?>, г. <?= $city ?></h5>
-                        <p>(<?= $address ?>)</p>
                     </div>
                     <div class="metro_wrapp">
                         <p><?= $subway ?></p>

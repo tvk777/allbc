@@ -376,7 +376,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                                value="<?= $subway->id ?>"
                                                                id="sb_<?= $subway->id ?>" <?= $checked_subway ?> >
                                                         <label for="sb_<?= $subway->id ?>"
-                                                               data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway);?></label>
+                                                               data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway, true);?></label>
                                                     </div>
                                                 <? endforeach; ?>
                                             </div>
@@ -407,7 +407,9 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                        value="<?= $class->id ?>"
                                                        id="ch_3_<?= $class->id ?>" <?= $checked_classes ?>>
                                                 <label for="ch_3_<?= $class->id ?>"
-                                                       data-filter="filters_1"><?= $class->name ?></label>
+                                                       data-filter="filters_1">
+                                                    <?= getDefaultTranslate('name', $currentLanguage, $class, true);?>
+                                                </label>
                                             </div>
                                         </div>
                                     <? endforeach; ?>

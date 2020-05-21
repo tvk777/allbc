@@ -9585,7 +9585,3 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 .target .switch ul .back {
     transform: rotateY(90deg);
 }
-.left.filters {
-    display:flex;
-    justify-content: space-between;
-}
