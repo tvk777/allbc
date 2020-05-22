@@ -84,7 +84,7 @@ function getUniqueArray($key, $array)
 
 //возвращает true false в зависимости от того есть ли добавочная стоимость к минимальному значению
 //на входе принимает массив из BcPlacesView Object - офисов для БЦ
-function getPlusForBC($places)
+function getPlusForBC($places, $target)
 {
     $arr = ArrayHelper::map($places, 'pid', 'uah_price');
     $arrNotNull = array_filter($arr, function ($v) {
@@ -93,7 +93,10 @@ function getPlusForBC($places)
     $min = count($arrNotNull) > 0 ? min($arrNotNull) : null;
     foreach ($places as $place) {
         if (!is_null($min) && $place->uah_price === $min) {
-            if ($place->kop > 0 || $place->tax == 1 || $place->tax == 5 || $place->opex > 0) {
+            if ($target == 1 && ($place->kop > 0 || $place->tax == 1 || $place->tax == 4 || $place->opex > 0)) {
+                return true;
+            }
+            if ($target == 2 && ($place->kop > 0 || $place->tax == 1 || $place->tax == 4)) {
                 return true;
             }
         }
@@ -101,12 +104,12 @@ function getPlusForBC($places)
     return false;
 }
 
-function getBcMinPrice($item, $currency, $rate)
+function getBcMinPrice($item, $currency, $rate, $target)
 {
     //$currency=4;
     if (empty($item['bc']->minPrice)) return Yii::t('app', 'price con.');
-    $plus = getPlusForBC($item['places']) ? '++' : '';
-    $text = getCurrencyText($currency);
+    $plus = getPlusForBC($item['places'], $target) ? '++' : '';
+    $text = $target==1 ? getCurrencyText($currency) : getCurrencySellText($currency);
     return round($item['bc']->minPrice / $rate) . $plus . ' ' . $text[0];
 }
 
@@ -183,42 +186,82 @@ function getCurrencyText($currency)
     return $text;
 }
 
+function getCurrencySellText($currency)
+{
+    $text = [];
+    switch ($currency) {
+        case 1:
+            $text[0] = Yii::t('app', '&#8372;/m²');
+            $text[1] = '&#8372;';
+            break;
+        case 2:
+            $text[0] = Yii::t('app', '$/m²');
+            $text[1] = '$';
+            break;
+        case 3:
+            $text[0] = Yii::t('app', '€/m²');
+            $text[1] = '€';
+            break;
+        case 4:
+            $text[0] = Yii::t('app', '₽/m²');
+            $text[1] = '₽';
+            break;
+        default:
+            $text[0] = Yii::t('app', '&#8372;/m²');
+            $text[1] = '&#8372;';
+            break;
+    }
+    return $text;
+}
+
+
 
 //возвращает true false в зависимости от того есть ли добавочная стоимость к минимальному значению
 //на входе принимает массив из BcPlacesView Object - офисов для БЦ
-function getPlusForPlace($place)
+function getPlusForPlace($place, $target)
 {
-    if ($place->kop > 0 || $place->tax == 1 || $place->tax == 5 || $place->opex > 0) {
+    if ($target == 1 && ($place->kop > 0 || $place->tax == 1 || $place->tax == 4 || $place->opex > 0)) {
+        return true;
+    }
+    if ($target == 2 && ($place->kop > 0 || $place->tax == 1 || $place->tax == 4)) {
         return true;
     }
     return false;
 }
 
 //цена с текстом валюты для страницы выдачи офисов
-function getPlacePrices($place, $currency, $rates, $taxes)
+function getPlacePrices($place, $currency, $rates, $taxes, $target)
 {
     $prices['forM2'] = Yii::t('app', 'con.');
     $prices['forAll'] = Yii::t('app', 'con.');
     if ($place->con_price != 1 && !empty($place->uah_price)) {
-        $text = getCurrencyText($currency);
-        $placePlus = getPlusForPlace($place) ? '++' : '';
+        $text = $target==1 ? getCurrencyText($currency) : getCurrencySellText($currency);
+        $placePlus = getPlusForPlace($place, $target) ? '++' : '';
         $price = round($place->uah_price / $rates[$currency]);
         $prices['forM2'] = $price . $placePlus . ' ' . $text[0];
-        $prices['forAll'] = round(calculateRentPrice($place, $taxes, $rates) / $rates[$currency]). ' ' . $text[1];
+        if ($target == 1) {
+            $prices['forAll'] = round(calculateRentPrice($place, $taxes, $rates) / $rates[$currency]) . ' ' . $text[1];
+        } else {
+            $prices['forAll'] = round(calculateSellPrice($place, $taxes, $rates) / $rates[$currency]). ' ' . $text[1];
+        }
     }
     return $prices;
 }
 
 
-function getPlacePrice($place, $currency, $rates, $taxes)
+function getPlacePrice($place, $currency, $rates, $taxes, $target)
 {
     $prices['forM2'] = Yii::t('app', 'con.');
     $prices['forAll'] = Yii::t('app', 'con.');
     if ($place->con_price != 1 && !empty($place->uah_price)) {
-        $placePlus = getPlusForPlace($place) ? '++' : '';
+        $placePlus = getPlusForPlace($place, $target) ? '++' : '';
         $price = round($place->uah_price / $rates[$currency]);
         $prices['forM2'] = $price . $placePlus;
-        $prices['forAll'] = round(calculateRentPrice($place, $taxes, $rates) / $rates[$currency]);
+        if ($target == 1) {
+            $prices['forAll'] = round(calculateRentPrice($place, $taxes, $rates) / $rates[$currency]);
+        } else {
+            $prices['forAll'] = round(calculateSellPrice($place, $taxes, $rates) / $rates[$currency]);
+        }
     }
     return $prices;
 }
@@ -226,16 +269,26 @@ function getPlacePrice($place, $currency, $rates, $taxes)
 //price from bc_places_view
 function calculateRentPrice($place, $taxes, $rates)
 {
-    $plusKop = $place->kop>0 ? ($place->m2 + ($place->m2*$place->kop)/100) : $place->m2;
-    $stavkaTax = $place->tax==1 || $place->tax==4
-        ? $place->uah_price + ($place->uah_price*$taxes[$place->tax])/100
+    $plusKop = $place->kop > 0 ? ($place->m2 + ($place->m2 * $place->kop) / 100) : $place->m2;
+    $stavkaTax = $place->tax == 1 || $place->tax == 4
+        ? $place->uah_price + ($place->uah_price * $taxes[$place->tax]) / 100
         : $place->uah_price;
     $opexValuteId = !empty($place->opex_valute_id) ? $place->opex_valute_id : 1;
     $opex_uah = $place->opex * $rates[$opexValuteId];
-    $opex = $place->opex_tax==1 || $place->opex_tax==4
-        ? $opex_uah + ($opex_uah*$taxes[$place->opex_tax])/100
+    $opex = $place->opex_tax == 1 || $place->opex_tax == 4
+        ? $opex_uah + ($opex_uah * $taxes[$place->opex_tax]) / 100
         : $opex_uah;
     $stavka = $stavkaTax + $opex;
+
+    return $plusKop * $stavka;
+}
+//price from bc_places_view
+function calculateSellPrice($place, $taxes, $rates)
+{
+    $plusKop = $place->kop > 0 ? ($place->m2 + ($place->m2 * $place->kop) / 100) : $place->m2;
+    $stavka = $place->tax == 1 || $place->tax == 4
+        ? $place->uah_price + ($place->uah_price * $taxes[$place->tax]) / 100
+        : $place->uah_price;
 
     return $plusKop * $stavka;
 }

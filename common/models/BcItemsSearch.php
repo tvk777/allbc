@@ -283,8 +283,14 @@ class BcItemsSearch extends BcItems
         $pageSize = 8;
 
         //запрос всех строк по условиям фильтра
-        $fullQuery = BcPlacesView::find()
-            ->with('bcitem', 'bcitem.images', 'bcitem.class', 'place', 'place.images');
+        if ($params['target'] == 1) {
+            $fullQuery = BcPlacesView::find()
+                ->with('bcitem', 'bcitem.images', 'bcitem.class', 'place', 'place.images');
+        } else {
+            $fullQuery = BcPlacesSellView::find()
+                ->with('bcitem', 'bcitem.images', 'bcitem.class', 'place', 'place.images');
+        }
+
         $filtredQuery = $this->filterConditions($fullQuery, $params);
         $filtredQuery = $this->orderByConditions($filtredQuery, $params)->all();//Полный запрос всех отфильтрованных и отсортированных строк
 
@@ -337,8 +343,12 @@ class BcItemsSearch extends BcItems
         $markers = $this->getMapMarkers($itemsForMarkers, $params);
         $count_ofices = count($fullPlaces); //count offices
 
-        $forChartsQuery = BcPlacesView::find()
-            ->andFilterWhere(
+        if ($params['target'] == 1) {
+            $forChartsQuery = BcPlacesView::find();
+        } else {
+            $forChartsQuery = BcPlacesSellView::find();
+        }
+        $forChartsQuery = $forChartsQuery->andFilterWhere(
                 [
                     'active' => 1,
                     'approved' => 1,

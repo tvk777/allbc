@@ -283,7 +283,7 @@ class BcPlacesSell extends ActiveRecord
 
     public function getBcitem()
     {
-        return $this->hasOne(BcItems::className(), ['id' => 'item_id'])->with('translations');
+        return $this->hasOne(BcItems::className(), ['id' => 'item_id']);
     }
 
     public function getOffice()

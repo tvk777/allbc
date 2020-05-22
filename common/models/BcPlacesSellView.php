@@ -4,17 +4,16 @@ namespace common\models;
 
 use Yii;
 
-class BcPlacesView extends \yii\db\ActiveRecord
+class BcPlacesSellView extends \yii\db\ActiveRecord
 {
     public $minPrice;
     public $maxPrice;
     public $minM2;
     public $maxM2;
-    public $minPriceAll;
 
     public static function tableName()
     {
-        return 'bc_places_view';
+        return 'bc_places_sell_view';
     }
 
     public function getBcitem()
@@ -23,7 +22,7 @@ class BcPlacesView extends \yii\db\ActiveRecord
     }
     public function getPlace()
     {
-        return $this->hasOne(BcPlaces::className(), ['id' => 'pid']);
+        return $this->hasOne(BcPlacesSell::className(), ['id' => 'pid']);
     }
 
 }

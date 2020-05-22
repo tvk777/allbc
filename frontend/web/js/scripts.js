@@ -263,12 +263,12 @@ $(document).scroll(function () {
     getfilterNavParams();
     getCardParams();
 });
-
-$(document).on('pjax:complete', function (event) {
+$(document).on('pjax:complete', '#cardsPjax', function (event) {
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible");
+});
 
-
+$(document).on('pjax:complete', '#barsPjax', function (event) {
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
             maxPrice = 0;
@@ -397,10 +397,6 @@ $(document).on('pjax:complete', function (event) {
         });
         getBarsChart();
     }
-
-
-
-
 });
 
 
@@ -1172,7 +1168,7 @@ $(document).ready(function () {
         });
         var priceFilter = $(".dropdown_item_title.price-filter"), priceTitle = $(".price-filter .item_title_text");
         priceSlider2.noUiSlider.on('change', function (values, handle) {
-            console.log(priceText);
+            //console.log(priceText);
             minVal = parseInt($("#input-number_1").val());
             $("#minpricem2").val(minVal);
             maxVal = parseInt($("#input-number_2").val());
@@ -1623,6 +1619,7 @@ $(document).ready(function () {
 
     $(".filter-form .submit").on("click", function (e) {
         e.preventDefault();
+        $("#map_box .mask").addClass("visible");
         $(".filter-form").submit();
     });
 
@@ -1633,6 +1630,7 @@ $(document).ready(function () {
     });
 
     $("input.submit_filter").on("change", function (e) {
+        $("#map_box .mask").addClass("visible");
         $(".filter-form").submit();
     });
 

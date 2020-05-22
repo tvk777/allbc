@@ -16,8 +16,8 @@ if ($result == 'bc') {
     $city = $cardItem->bcitem->city->name;
     $district = $cardItem->bcitem->district ? $cardItem->bcitem->district->name . ' р-н' : '';
     $address = $cardItem->bcitem->address;
-    $plus = getPlusForBC($item['places']) ? '++' : '';
-    $minPrice = getBcMinPrice($item, $currency, $rates[$currency]);
+    $plus = getPlusForBC($item['places'], $target) ? '++' : '';
+    $minPrice = getBcMinPrice($item, $currency, $rates[$currency], $target);
     //$priceForAll = '';
     $itemPlaces = $item['places'];
     $itemSubway = !empty($cardItem->bcitem->subways[0]) ? $cardItem->bcitem->subways[0] : null;
@@ -37,7 +37,7 @@ if ($result == 'bc') {
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
     $address = $cardItem->street;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
-    $placePrices = getPlacePrices($item, $currency, $rates, $taxes);
+    $placePrices = getPlacePrices($item, $currency, $rates, $taxes, $target);
     $minPrice = $placePrices['forM2'];
     //$priceForAll = $placePrices['forAll'];
     $itemPlaces = null;
@@ -159,10 +159,10 @@ if (!empty($itemSubway)) {
                             <p>м²</p>
                         </div>
                         <div class="table_cell">
-                            <p><?= getCurrencyText($currency)[0] ?></p>
+                            <p><?= $target==1 ? getCurrencyText($currency)[0] : getCurrencySellText($currency)[0] ?></p>
                         </div>
                         <div class="table_cell">
-                            <p>all in/мес</p>
+                            <p><?= $target==1 ? 'all in/мес' : 'all in' ?></p>
                         </div>
                         <div class="table_cell">
                         </div>
@@ -170,7 +170,7 @@ if (!empty($itemSubway)) {
                     <? if ($itemPlaces): ?>
                         <? foreach ($itemPlaces as $k => $place): ?>
                             <?
-                            $prices = getPlacePrice($place, $currency, $rates, $taxes);
+                            $prices = getPlacePrice($place, $currency, $rates, $taxes, $target);
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">

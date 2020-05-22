@@ -56,23 +56,23 @@ $activePrice = '';
 
 switch ($currency) {
     case 1:
-        $selectText = Yii::t('app', '&#8372;/m²/month');
+        $selectText = $targetValue == 1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²');
         $currencySymbol = '&#8372;';
         break;
     case 2:
-        $selectText = Yii::t('app', '$/m²/month');
+        $selectText = $targetValue == 1 ? Yii::t('app', '$/m²/month') : Yii::t('app', '$/m²');
         $currencySymbol = '$';
         break;
     case 3:
-        $selectText = Yii::t('app', '€/m²/month');
+        $selectText = $targetValue == 1 ? Yii::t('app', '€/m²/month') : Yii::t('app', '€/m²');
         $currencySymbol = '€';
         break;
     case 4:
-        $selectText = Yii::t('app', '€/m²/month');
+        $selectText = $targetValue == 1 ? Yii::t('app', '₽/m²/month') : Yii::t('app', '₽/m²');
         $currencySymbol = '₽';
         break;
     default:
-        $selectText = Yii::t('app', '&#8372;/m²/month');
+        $selectText = $targetValue == 1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²');
         $currencySymbol = '&#8372;';
         break;
 }
@@ -239,16 +239,16 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                     </div>
                                                     <div class="dropdown_select" id="price-filter">
                                                         <div class="select_item">
-                                                            <p data-currency="1"><?= Yii::t('app', '&#8372;/m²/month') ?></p>
+                                                            <p data-currency="1"><?= $targetValue==1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²')  ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="2"><?= Yii::t('app', '$/m²/month') ?></p>
+                                                            <p data-currency="2"><?= $targetValue==1 ? Yii::t('app', '$/m²/month') : Yii::t('app', '$/m²')  ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="3"><?= Yii::t('app', '€/m²/month') ?></p>
+                                                            <p data-currency="3"><?= $targetValue==1 ? Yii::t('app', '€/m²/month') : Yii::t('app', '€/m²')  ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="4"><?= Yii::t('app', '₽/m²/month') ?></p>
+                                                            <p data-currency="4"><?= $targetValue==1 ? Yii::t('app', '₽/m²/month') : Yii::t('app', '₽/m²')  ?></p>
                                                         </div>
                                                     </div>
                                                 </div>
