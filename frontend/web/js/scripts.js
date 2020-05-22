@@ -266,6 +266,8 @@ $(document).scroll(function () {
 
 $(document).on('pjax:complete', function (event) {
     $("#countOfices").text(countOfices);
+    $("#map_box .mask").removeClass("visible");
+
 
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
@@ -400,6 +402,8 @@ $(document).on('pjax:complete', function (event) {
 
 
 });
+
+
 
 $(document).ready(function () {
     var countDiv = $("#count"),
@@ -903,10 +907,12 @@ $(document).ready(function () {
         if (dropdowmMenu.is(":hidden")) {
             dropdowmMenu.slideDown(300);
             parentBlock.addClass("active");
+            $("#map_box .mask").addClass("visible");
             getBarsChart();
         } else {
             dropdowmMenu.slideUp(300);
             parentBlock.removeClass("active");
+            $("#map_box .mask").removeClass("visible");
         }
     });
 
@@ -1622,6 +1628,7 @@ $(document).ready(function () {
 
     $(".button-filter-search").on("click", function (e) {
         e.preventDefault();
+        $("#map_box .mask").addClass("visible");
         $(".filter-form").submit();
     });
 
