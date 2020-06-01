@@ -1174,10 +1174,12 @@ textarea:focus {
     color: #ffffff;
 }
 
-.lang_switch {
+/*.lang_switch {
     width: 74px;
+}*/
+.dropdowm_wrapp.lang_switch .p_width{
+    padding: 3px 0;
 }
-
 .lang_switch .dropdown_menu {
     min-width: 74px;
 }
@@ -1887,15 +1889,17 @@ img.logo_black {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.promo-slider-bc h1 {
+.promo-slider-bc h1, .slider-content h1 {
     color: white;
     margin: 0;
+    text-align: center;
 }
 
-.promo-slider-bc h2 {
+.promo-slider-bc h2, .slider-content h2 {
     font-size: 25px;
     line-height: 28px;
     color: white;
+    text-align: center;
 }
 
 .promo-slider div.show {
@@ -3959,13 +3963,23 @@ label.all-subways {
     cursor: pointer;
     padding-left: 27px;
     position: relative;
-    color: #000000;
     font-size: 14px;
     font-weight: 400;
+    color: #000000;
 }
 label.all-subways {
     font-size: 18px;
 }
+.column1 label.all-subways {
+    color: #d74343;
+}
+.column2 label.all-subways {
+    color: #0197c9;
+}
+.column3 label.all-subways {
+    color: #3eb060;
+}
+
 .checkbox label:before,
 label.all-subways:before {
     display: block;
@@ -4792,11 +4806,20 @@ input.all-subways:checked + label.all-subways:before{
 }
 
 .map_object_header .count p {
-    margin-bottom: 0;
+    margin-bottom: 4px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color:#333333;
 }
 
 .inlines_wrapp {
     margin: 0 -9px;
+}
+.resp_filter_inner.comission .checkbox {
+    margin-top:6px;
+}
+.resp_filter_inner.comission .checkbox label{
+    padding-top:3px;
+    padding-left: 23px;
 }
 
 .inlines_wrapp .inline {
@@ -5118,7 +5141,7 @@ input.all-subways:checked + label.all-subways:before{
     min-height: 210px;
     border: 1px solid #cdcece;
     border-top: none;
-    padding: 23px 15px 2px 15px;
+    padding: 5px 15px 2px 15px;
     position: relative;
     z-index: 2;
     background-color: #ffffff;
@@ -5126,6 +5149,24 @@ input.all-subways:checked + label.all-subways:before{
 
 .object_card:hover .object_thumb_descript {
     border-color: transparent;
+}
+.blue_p {
+    display: inline-block;
+    vertical-align: top;
+    padding: 1px 16px;
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    color:#ffffff;
+}
+.blue_p .red_span{
+    background-color: #d74343;
+    padding: 3px 5px 3px 5px;
+}
+.blue_p .blue_span{
+    background-color: #01a8d4;
+    padding: 3px 5px 3px 5px;
 }
 
 .red_p {
@@ -5192,6 +5233,12 @@ a.object_card_title:focus {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.adres h5,
+.adres h5 a,
+.adres p,
+.adres p a{
+    margin:5px 0;
+}
 
 .adres p a:hover {
     text-decoration: underline;
@@ -5222,16 +5269,19 @@ a.object_card_title:focus {
 }
 
 .object_card .adres {
-    min-height: 60px;
+    /*min-height: 60px;*/
 }
 
 .object_card .two_cols_2_col:nth-child(2) {
     width: 47px;
 }
 
+.object_thumb_descript .cl_pill_class{
+    border-top: 1px solid #cdcece;
+    padding-top:5px;
+}
+
 .metro_wrapp {
-    padding-top: 8px;
-    height: 30px;
 }
 
 .metro_wrapp p i {
@@ -5245,6 +5295,8 @@ a.object_card_title:focus {
     color: #272727;
     font-size: 14px;
     font-weight: normal;
+    line-height:22px;
+    margin-bottom: 5px;
 }
 
 .metro_wrapp p a:hover {
@@ -9494,15 +9546,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 
 .item-type {
     border-right: 1px solid #cdcece;
-    color: #3eb060;
     font-size: 13px;
-    font-weight: 700;
 }
 
 .item-id {
     padding-left: 5px;
-    color: #000000;
-    font-weight: 700;
 }
 .metro_checkboxies .checkbox{
     display:block;

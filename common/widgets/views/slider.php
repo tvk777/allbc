@@ -7,11 +7,12 @@ $this->registerCssFile('/css/sliderResponsive.css');
         <div style="background-image:url(<?= $img['url'] ?>)">
         </div>
     <? endforeach; ?>
-    <div class="slider-content">
-        <h1><?= $text[0] ?></h1>
-        <h2><?= $text[1] ?></h2>
-    </div>
 </div>
+<div class="slider-content row">
+    <h1><?= $text[0] ?></h1>
+    <h2><?= $text[1] ?></h2>
+</div>
+
 
 
 

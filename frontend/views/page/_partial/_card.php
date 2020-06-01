@@ -83,10 +83,13 @@ if (!empty($itemSubway)) {
         <div class="inner_wrapp">
             <div class="object_slider_wrapp">
                 <div class="object_slider_header">
-                    <div class="inline p_info red_p">
-                        <p><?= Yii::t('app', 'Commission') . ': ' . $itemComission ?> %</p>
-                    </div>
-
+                    <? if (!Yii::$app->user->isGuest) : ?>
+                        <div class="inline p_info blue_p">
+                            <span
+                                class="blue_span"><?= Yii::t('app', 'Commission') . ': </span><span class="red_span">' . $itemComission ?>
+                                %</span>
+                        </div>
+                    <? endif; ?>
                     <div class="inline">
                         <div class="black_circle_2">
                             <?= WishlistButton::widget([
@@ -159,10 +162,10 @@ if (!empty($itemSubway)) {
                             <p>м²</p>
                         </div>
                         <div class="table_cell">
-                            <p><?= $target==1 ? getCurrencyText($currency)[0] : getCurrencySellText($currency)[0] ?></p>
+                            <p><?= $target == 1 ? getCurrencyText($currency)[0] : getCurrencySellText($currency)[0] ?></p>
                         </div>
                         <div class="table_cell">
-                            <p><?= $target==1 ? 'all in/мес' : 'all in' ?></p>
+                            <p><?= $target == 1 ? 'all in/мес' : 'all in' ?></p>
                         </div>
                         <div class="table_cell">
                         </div>

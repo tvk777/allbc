@@ -18,7 +18,7 @@ $currentLanguage = Yii::$app->language;
     <div class="slider_3">
     <?php foreach ($model as $one): ?>
         <?php
-        //debug($one->slug);
+        //debug($one);
         $minmax = $one->getMinMaxM2($one->places);
         $minmax = is_array($minmax) ? $minmax['min'] . ' m² ...' . $minmax['max'] . ' m²' : $minmax . ' m²';
         $minPrice = $one->getMinPrice($one->places)['price'];

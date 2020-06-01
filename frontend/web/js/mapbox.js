@@ -37,7 +37,7 @@
     }
 
 
-    $(document).on({
+    /*$(document).on({
         mouseenter: function () {
             if ($(this).attr('data-id')) {
                 if ($('#onMap').prop('checked') == true && $('#searchonmap').prop('checked') == false && markers[$(this).attr('data-id')]._lngLat !== 'undefined') {
@@ -60,7 +60,7 @@
                 }
             }
         }
-    }, ".objects_cards .object_card");
+    }, ".objects_cards .object_card");*/
 
     $(document).on({
         change: function () {
@@ -136,7 +136,7 @@
         mapboxgl.accessToken = 'pk.eyJ1Ijoic2RiLXN0dWRpbyIsImEiOiJjanl3amJ5NHUweTdiM2JuNGV0b3VvOXlhIn0.4EWyUOq1U6Ib_bZi4-d2KQ';
         map = new mapboxgl.Map({
             container: 'object_map',
-            style: 'mapbox://styles/mapbox/streets-v10',
+            style: 'mapbox://styles/mapbox/light-v10',
             center: center,
             zoom: zoom,
         });

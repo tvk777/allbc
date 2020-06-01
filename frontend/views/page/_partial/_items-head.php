@@ -484,7 +484,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                         <label for="offices_result"><?= Yii::t('app', 'Offices') ?></label>
                     </div>
                     <div class="item_wrapp novisible_1024">
-                        <div class="resp_filter_inner">
+                        <div class="resp_filter_inner comission">
                             <div class="checkbox">
                                 <? $comChecked = !empty($params['comission']) && $params['comission'] == 'on' ? 'checked' : '' ?>
                                 <input class="more-filters submit_filter" type="checkbox" name="filter[comission]"

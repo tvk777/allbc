@@ -83,7 +83,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
             <div class="w_half">
                 <div class="objects_cards">
                     <?
-                    for ($i = 0; $i <= 3; $i++) {
+                    for ($i = 0; $i <= 7; $i++) {
                         if (isset($items[$i])) {
                             echo $this->render('_partial/_card', [
                                 'item' => $items[$i],
@@ -112,7 +112,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
             <div class="w_half">
                 <div class="objects_catalog objects_cards">
                     <?
-                    for ($i = 4; $i <= 7; $i++) {
+                    for ($i = 8; $i <= 16; $i++) {
                         if (isset($items[$i])) {
                             echo $this->render('_partial/_card', [
                                 'item' => $items[$i],

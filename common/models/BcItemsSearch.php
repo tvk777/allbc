@@ -280,7 +280,7 @@ class BcItemsSearch extends BcItems
     public function seoSearchFromView($params)
     {
         $params = $this->initParams($params);
-        $pageSize = 8;
+        $pageSize = 16;
 
         //запрос всех строк по условиям фильтра
         if ($params['target'] == 1) {
