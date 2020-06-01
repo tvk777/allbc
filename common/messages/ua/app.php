@@ -32,6 +32,7 @@ return [
     'Commission' => 'Комісія',
     'square' => 'площа',
     'from' => 'від',
+    'to' => 'до',
     'price con.' => 'ціна дог.',
     'offices' => 'офісів',
     'New offers' => 'Нові пропозиції',

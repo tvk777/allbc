@@ -330,6 +330,7 @@ class BcItemsSearch extends BcItems
                 $arr = array_filter(ArrayHelper::merge($arrM2, $arrM2min));
                 if (!empty($arr)) {
                     $allForPage[$key]['bc']->minM2 = min($arr);
+                    $allForPage[$key]['bc']->maxM2 = max($arr);
                 }
             }
         } else {

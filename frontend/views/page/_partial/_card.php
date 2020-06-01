@@ -7,6 +7,8 @@ $paramTarget = $target == 1 ? 'rent' : 'sell';
 //$href = '/' . $item->slug->slug . '?target=' . $paramTarget;
 //$itemName = getDefaultTranslate('name', $currentLanguage, $item);
 //echo 'text='.getCurrencyText ($currency);
+//debug($item['bc']);
+
 if ($result == 'bc') {
     $cardItem = $item['bc'];
     $id = $cardItem->id;
@@ -25,6 +27,18 @@ if ($result == 'bc') {
     $slides = !empty($cardItem->bcitem->slides) ? $cardItem->bcitem->slides : null;
     $itemComission = $cardItem->bcitem->percent_commission;
     $building = 'bc';
+    $priceInfo = '';
+    $squareInfo = '';
+    $countItemPlaces = count($itemPlaces);
+    if ($countItemPlaces > 1) {
+        $priceInfo = Yii::t('app', 'from') . ' ' . $minPrice;
+        $squareInfo = count($itemPlaces) . ' - '. $cardItem->minM2 . '-'. $cardItem->maxM2. 'м²';
+    } elseif ($countItemPlaces==1) {
+        $priceInfo = $minPrice;
+        $itemPlace = $itemPlaces[0];
+        $squareInfo = $itemPlace->m2min ? $itemPlace->m2min.'-'.$itemPlace->m2. 'м²' : $itemPlace->m2. 'м²';
+        //$squareInfo = $cardItem->minM2 . 'м²';
+    }
 } else {
     $cardItem = $item->place->bcitem; //bc
     $placeItem = $item->place; //place
@@ -137,10 +151,10 @@ if (!empty($itemSubway)) {
 
                     <? if ($result == 'bc') : ?>
                         <div class="offices-info">
-                            <p><span><?= Yii::t('app', 'Rent') ?>:</span> <?= Yii::t('app', 'from') . ' ' . $minPrice ?>
+                            <p><span><?= Yii::t('app', 'Rent') ?>:</span> <?= $priceInfo ?>
                             </p>
                             <p><span><?= Yii::t('app', 'Offices') ?>
-                                    :</span> <?= count($itemPlaces) . ' - ' . Yii::t('app', 'from') . ' ' . $cardItem->minM2 . 'м²' ?>
+                                    :</span> <?= $squareInfo ?>
                             </p>
                         </div>
                     <? endif; ?>
@@ -177,7 +191,8 @@ if (!empty($itemSubway)) {
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">
-                                    <p><?= $place->m2 ?></p>
+                                    <? $squ = $place->m2min ? $place->m2min.'-'.$place->m2 : $place->m2 ?>
+                                    <p><?= $squ ?></p>
                                 </div>
                                 <div class="table_cell">
                                     <p><?= $prices['forM2'] ?></p>
