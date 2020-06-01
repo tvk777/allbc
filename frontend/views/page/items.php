@@ -101,6 +101,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 </div>
             </div>
         </div>
+        <? if($city==1) : ?>
         <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
             <div class="row">
                 <div class="w_half">
@@ -108,6 +109,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 </div>
             </div>
         </div>
+        <? endif; ?>
         <div class="row">
             <div class="w_half">
                 <div class="objects_catalog objects_cards">

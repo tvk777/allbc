@@ -3980,6 +3980,10 @@ label.all-subways {
     color: #3eb060;
 }
 
+.card-address {
+    min-height: 73px;
+}
+
 .checkbox label:before,
 label.all-subways:before {
     display: block;
