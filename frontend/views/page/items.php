@@ -73,7 +73,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'options' => ['id' => 'cardsPjax'],
         'formSelector' => '#filterForm',
         'timeout' => 10000,
-        'clientOptions' => ['method' => 'GET']
+        'clientOptions' => ['method' => 'POST']
     ]); ?>
 
     <div class="append-elem" data-append-elem="map_index"></div>
@@ -134,7 +134,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         </div>
         <div class="row">
             <?
-            debug($pages);
+            //debug($pages->offset);
             echo LinkPager::widget([
                 'pagination' => $pages,
             ]); ?>

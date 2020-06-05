@@ -445,8 +445,7 @@ class PageController extends FrontendController
         }
         $params = [];
 
-        if (Yii::$app->request->get('filter')) $params = Yii::$app->request->get('filter');
-        if (Yii::$app->request->get('sort')) $params['sort'] = Yii::$app->request->get('sort');
+        if (Yii::$app->request->post('filter')) $params = Yii::$app->request->post('filter');
 
         if (Yii::$app->request->isPjax) {
             if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
@@ -491,83 +490,6 @@ class PageController extends FrontendController
             'rates' => $rates,
             'currency' => $currency,
             'taxes' => $taxes
-        ]);
-    }
-
-    //страница выдачи каталога - до переделки фильтров
-    public function _actionSeo_catalog_urls($slug)
-    {
-        $seo = SeoCatalogUrls::find()
-            ->with('city')
-            ->joinWith(['slug'])
-            //->with('city', 'classes', 'branch', 'country', 'districts', 'statuses', 'subways')
-            ->where(['slug' => $slug])
-            ->multilingual()
-            ->one();
-
-        if ($seo->city->city_id !== 0) {
-            $city = $seo->city->city;
-            $city_id = $city->id;
-        } else {
-            $city = 0;
-            $city_id = 0;
-        }
-
-        if ($city !== 0) {
-            $center = [$city->lng, $city->lat];
-            $zoom = $city->zoom;
-        } else {
-            $center = [30.52340000, 50.45010000]; //Ukraine
-            $zoom = 6;
-        }
-        $params = [];
-
-        if (Yii::$app->request->get('filter')) $params = Yii::$app->request->get('filter');
-        if (Yii::$app->request->get('sort')) $params['sort'] = Yii::$app->request->get('sort');
-
-        if (Yii::$app->request->isPjax) {
-            if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
-            if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) $center = Yii::$app->request->post('center');
-            if (Yii::$app->request->post('zoom') && Yii::$app->request->post('zoom') != 0) $zoom = Yii::$app->request->post('zoom');
-        }
-
-
-        $whereCondition = $this->getFilter($seo, $params);
-
-        $searchModel = new BcItemsSearch();
-        $result = $searchModel->seoSearch($whereCondition);
-//debug($params); die();
-        //$countPlacesNum = $params['result']=='bc' ? count($result['places']) : count($result['places']);
-        $countPlaces = Yii::t('app', 'Found: {countPlaces} offices', [
-            'countPlaces' => count($result['places']),
-        ]);
-
-        $this->result = !empty($params) && !empty($params['result']) ? $params['result'] : 'bc';
-
-        $targetLinks = SeoCatalogUrls::find()->where(['id' => 88])->one();
-        $mainRent = trim($targetLinks->main_rent_link_href, '/');
-        $mainSell = trim($targetLinks->main_sell_link_href, '/');
-        //$currency = !empty($params['currency']) ? $params['currency'] : 1;
-        $currency = 2;
-        $rate = BcValutes::getRate($currency);
-        return $this->render('items', [
-            'seo' => $seo,
-            'city' => $city,
-            'items' => $result['bcItems'],
-            'countPlaces' => $countPlaces,
-            'pages' => $result['pages'],
-            'markers' => $result['markers'],
-            'center' => json_encode($center),
-            'zoom' => $zoom,
-            'places' => $result['places'],
-            'countValM2' => $this->getPlacesForM2Chart($result['places_for_charts']),
-            'filters' => $this->getDataForFilter($city_id),
-            'mainRent' => $mainRent,
-            'mainSell' => $mainSell,
-            'params' => $params,
-            'conditions' => $whereCondition,
-            'pricesChart' => $this->getPlacesForPriceChart($result['places_for_charts'], $seo->target),
-            'rate' => $rate['rate']
         ]);
     }
 

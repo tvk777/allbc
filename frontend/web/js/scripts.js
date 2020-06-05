@@ -375,6 +375,15 @@ $(document).scroll(function () {
     getfilterNavParams();
     getCardParams();
 });
+
+/*$(".pagination a").on('click', function (e) {
+    $("#map_box .mask").addClass("visible");
+});*/
+
+$(document).on('pjax:start', '#cardsPjax', function (event) {
+    $("#map_box .mask").addClass("visible");
+});
+
 $(document).on('pjax:complete', '#cardsPjax', function (event) {
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible");
@@ -879,6 +888,7 @@ $(document).ready(function () {
             parentBlock.removeClass("active");
         }
     });
+
 
 
     $(".dropdown_subway_title").on('click', function (e) {
@@ -1469,34 +1479,17 @@ $(document).ready(function () {
 
     $(".filter-form .submit").on("click", function (e) {
         e.preventDefault();
-        $("#map_box .mask").addClass("visible");
         $(".filter-form").submit();
     });
 
     $(".button-filter-search").on("click", function (e) {
         e.preventDefault();
-        $("#map_box .mask").addClass("visible");
         $(".filter-form").submit();
     });
 
     $("input.submit_filter").on("change", function (e) {
-        $("#map_box .mask").addClass("visible");
         $(".filter-form").submit();
     });
-
-
-    /*$(".filter-form .remove").on("click", function () {
-     $(".checkbox .more-filters").attr('checked', false);
-     $("#metro_val").text(defaultDist);
-     $("#metro_name").html(defaultName);
-     $("#metro_name_val a").html(defaultName);
-     priceSlider3.noUiSlider.set(defaultDist);
-     $("#walk_dist").val('');
-     $("#subway").val('');
-     $("#pill_ch_1").attr('checked', true);
-     $("#pill_ch_2").attr('checked', false);
-     $(".filter-form").submit();
-     });*/
 
     $(".filter-form .m2-filter .remove").on("click", function () {
         $("#maxm2").val('');
