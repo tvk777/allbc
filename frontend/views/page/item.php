@@ -267,7 +267,7 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                                                 $subwayIco = '<i class="metro"></i>';
                                         }
 
-                                        $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subway]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
+                                        $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subways][]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
                                         <div class="metro_wrapp">
                                             <p><?= $subway; ?></p>
                                         </div>

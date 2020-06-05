@@ -85,7 +85,6 @@ class PageController extends FrontendController
 
         $broker = $item->brokers ? $item->brokers[0]->userInfo : User::findOne(8);
 
-
         $data['model'] = $model;
         $data['targetId'] = $targetId;
         $data['seoClass'] = $seoClass;
@@ -114,6 +113,7 @@ class PageController extends FrontendController
     public function actionBc_places_sell($slug)
     {
         $data = $this->officeData($slug, 'sell');
+
         $this->result = 'offices';
         return $this->render('place', [
             'model' => $data['model'],
@@ -122,56 +122,9 @@ class PageController extends FrontendController
             'mainRent' => $data['mainRent'],
             'mainSell' => $data['mainSell'],
             'item' => $data['item'],
+            'broker' => $data['broker'],
         ]);
     }
-
-    //страница офиса
-    /*public function actionBc_places($slug)
-    {
-        $target = Yii::$app->request->get('target');
-        $targetId = $target == 'sell' ? 2 : 1;
-
-        $query = BcPlaces::find()->joinWith(['slug']);
-        $model = $query->where(['slug' => $slug])->one();
-        $item = $model->no_bc === 1 ? $model->office : $model->bcitem; //bc or office for this place
-
-
-        $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
-        $mainRent = trim($seo->main_rent_link_href, '/');
-        $mainSell = trim($seo->main_sell_link_href, '/');
-
-        if ($item->class) {
-            $class = $item->class->id;
-            $city = $item->city->id;
-            $classes = SeoCatalogUrlsBcclasses::find()->select('catalog_url_id')->where(['bc_class_id' => $class])->asArray()->all();
-            $classes = ArrayHelper::getColumn($classes, 'catalog_url_id');
-            $cities = SeoCatalogUrlsCities::find()->select('catalog_url_id')->where(['city_id' => $city])->andWhere(['in', 'catalog_url_id', $classes])->asArray()->all();
-            $cities = ArrayHelper::getColumn($cities, 'catalog_url_id');
-            $seoClass = SeoCatalogUrls::find()->where(['target' => $targetId])->andWhere(['in', 'id', $cities])->multilingual()->one();
-        }
-
-        $viewCounter = ViewsCounter::find()->where(['item_id' => $model->id])->andWhere(['model' => 'bc_places'])->one();
-        if (!(count($viewCounter) > 0)) {
-            $viewCounter = new ViewsCounter();
-            $viewCounter->item_id = $model->id;
-            $viewCounter->model = 'bc_places';
-            $viewCounter->count_view = 0;
-            $viewCounter->save();
-        }
-        //debug($viewCounter); die();
-        $viewCounter->processCountViewItem();
-
-
-        return $this->render('place', [
-            'model' => $model,
-            'target' => $targetId,
-            'seoClass' => $seoClass,
-            'mainRent' => $mainRent,
-            'mainSell' => $mainSell,
-            'item' => $item
-        ]);
-    }*/
-
 
     //страница бизнес-центра
     public function actionBc_items($slug)
@@ -376,6 +329,7 @@ class PageController extends FrontendController
             $searchParams['statuses'] = count($params['statuses']) > 0 ? $params['statuses'] : '';
             $searchParams['commission'] = $params['comission'] == 'on' ? 0 : '';
             $searchParams['walk_dist'] = !empty($params['walk_dist']) ? $params['walk_dist'] : '';
+            //debug($params); die();
             $searchParams['subways'] = !empty($params['subways']) ? $params['subways'] : '';
             $searchParams['user'] = !empty($params['user']) ? $params['user'] : '';
             $searchParams['visibles'] = !empty($params['visibles']) ? $params['visibles'] : [];
@@ -443,10 +397,15 @@ class PageController extends FrontendController
             $center = [30.52340000, 50.45010000]; //Ukraine
             $zoom = 6;
         }
+
+        $paramsPost = [];
+        $paramsGet = [];
         $params = [];
 
-        if (Yii::$app->request->post('filter')) $params = Yii::$app->request->post('filter');
-
+        if (Yii::$app->request->post('filter')) $paramsPost = Yii::$app->request->post('filter');
+        if (Yii::$app->request->get('filter')) $paramsGet = Yii::$app->request->get('filter');
+        $params = array_merge($paramsPost, $paramsGet);
+//debug($params);
         if (Yii::$app->request->isPjax) {
             if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
             if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) $center = Yii::$app->request->post('center');
@@ -455,7 +414,7 @@ class PageController extends FrontendController
 
 
         $whereCondition = $this->getFilter($seo, $params);
-
+        //debug($whereCondition);
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearchFromView($whereCondition);
 
