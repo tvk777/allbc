@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\BcItems;
@@ -135,6 +136,13 @@ class BcItemsSearch extends BcItems
             'country_id' => $params['country'],
             'percent_commission' => $params['commission']
         ]);
+
+        if (!empty($params['user'])) {
+            $userItemsIds = $this->getItemsByUser($params['user']);
+            $query->andFilterWhere(['in', 'id', $userItemsIds]);
+            return $query;
+        }
+
         if ($params['result'] == 'bc') {
             $query->andWhere(['no_bc' => null]);
         }
@@ -280,7 +288,7 @@ class BcItemsSearch extends BcItems
     public function seoSearchFromView($params)
     {
         $params = $this->initParams($params);
-        $pageSize = 16;
+        $pageSize = Yii::$app->settings->page_size;
 
         //запрос всех строк по условиям фильтра
         if ($params['target'] == 1) {

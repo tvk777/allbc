@@ -404,7 +404,7 @@ class PageController extends FrontendController
 
         if (Yii::$app->request->post('filter')) $paramsPost = Yii::$app->request->post('filter');
         if (Yii::$app->request->get('filter')) $paramsGet = Yii::$app->request->get('filter');
-        $params = array_merge($paramsPost, $paramsGet);
+        $params = ArrayHelper::merge($paramsPost, $paramsGet);
 //debug($params);
         if (Yii::$app->request->isPjax) {
             if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
