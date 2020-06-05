@@ -151,7 +151,8 @@ if (!empty($itemSubway)) {
 
                     <? if ($result == 'bc') : ?>
                         <div class="offices-info">
-                            <p><span><?= Yii::t('app', 'Rent') ?>:</span> <?= $priceInfo ?>
+                            <p><span><?= $target == 1 ? Yii::t('app', 'Rent') : Yii::t('app', 'Cost') ?>:</span>
+                                <?= $priceInfo ?>
                             </p>
                             <p><span><?= Yii::t('app', 'Offices') ?>
                                     :</span> <?= $squareInfo ?>
@@ -160,7 +161,8 @@ if (!empty($itemSubway)) {
                     <? endif; ?>
                     <? if ($result == 'offices') : ?>
                         <div class="offices-info">
-                            <p><span><?= Yii::t('app', 'Rent') ?>:</span> <?= $minPrice ?></p>
+                            <p><span><?= $target == 1 ? Yii::t('app', 'Rent') : Yii::t('app', 'Cost') ?>:</span>
+                                <?= $minPrice ?></p>
                             <p><span><?= Yii::t('app', 'Square') ?>:</span> <?= $minmax ?></p>
                         </div>
                     <? endif; ?>

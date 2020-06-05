@@ -4237,6 +4237,9 @@ input.all-subways:checked + label.all-subways:before{
     position: relative;
     z-index: 2;
 }
+.col.msg .custom_select_wrapp {
+    max-width: 70px;
+}
 
 .custom_select_wrapp .custom_select {
     left: -5px;
@@ -4486,6 +4489,15 @@ input.all-subways:checked + label.all-subways:before{
 .metro_two_cols_2 .col:nth-child(1) {
     width: 175px;
 }
+.metro_two_cols_2 .col.price{
+    width: auto;
+    padding-right:10px;
+}
+.metro_two_cols .col.msg{
+    width: auto;
+}
+
+
 
 .metro_two_cols .col:nth-child(1) h4 {
     padding: 10px 0;

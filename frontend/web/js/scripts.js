@@ -268,6 +268,7 @@ $(document).on('pjax:complete', '#cardsPjax', function (event) {
     $("#map_box .mask").removeClass("visible");
 });
 
+/*
 $(document).on('pjax:complete', '#barsPjax', function (event) {
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
@@ -398,6 +399,7 @@ $(document).on('pjax:complete', '#barsPjax', function (event) {
         getBarsChart();
     }
 });
+*/
 
 
 
@@ -1091,7 +1093,6 @@ $(document).ready(function () {
 
 
     // Range Slider
-//console.log(minPrice, maxPrice, maxRange);
     if (document.getElementById("range_slider_2")) { //price slider ₴/м²/mec
         if (maxRange === null) {
             maxPrice = 0;
@@ -1100,9 +1101,9 @@ $(document).ready(function () {
         } else {
             maxPrice = parseInt(maxPrice);
             minPrice = parseInt(minPrice);
-            maxRange = parseInt(maxRange);
+            maxRange = parseInt(maxPriceRange);
+            maxPriceTotal = parseInt(maxPriceTotal);
             start = [minPrice, maxPrice];
-            //console.log(start);
         }
 
         priceSlider2 = document.getElementById("range_slider_2");
@@ -1113,15 +1114,16 @@ $(document).ready(function () {
         noUiSlider.create(priceSlider2, {
             start: start,
             range: {
-                'min': [minRange],
-                'max': [maxRange]
+                'min': [0],
+                '99%': [maxRange, maxPriceTotal-maxRange],
+                'max': [maxPriceTotal]
             },
             connect: true,
             format: wNumb({
                 decimals: 0
             })
         });
-
+        var priceFilter = $(".dropdown_item_title.price-filter"), priceTitle = $(".price-filter .item_title_text");
         priceSlider2.noUiSlider.on('update', function (values, handle) {
             minVal = parseInt(values[0]);
             maxVal = parseInt(values[1]);
@@ -1144,6 +1146,19 @@ $(document).ready(function () {
             $("[data-filters-index='filters_3'] .minVal2").html(leftRange);
             $("[data-filters-index='filters_3'] .maxVal2").html(rightRange);
             $(".price_resp").html($("#price_sel").html());
+
+            if (values[0] > minRange  || values[1] < maxRange) {
+                priceFilter.addClass('green_active');
+                priceTitle.html(currencySymbol + ' ' + minVal + '-' + maxVal);
+                $("#minpricem2").val(minVal);
+                $("#maxpricem2").val(maxVal);
+            } else {
+                priceFilter.removeClass('green_active');
+                priceTitle.html(priceText);
+                $("#minpricem2").val('');
+                $("#maxpricem2").val('');
+            }
+
         });
         priceSlider2.noUiSlider.on('set', function (values, handle) {
             setTimeout(function () {
@@ -1166,55 +1181,26 @@ $(document).ready(function () {
             $("[data-filters-index='filters_3'] .maxVal2").html(maxVal);
             $(".price_resp").html($("#price_sel").html());
         });
-        var priceFilter = $(".dropdown_item_title.price-filter"), priceTitle = $(".price-filter .item_title_text");
+
         priceSlider2.noUiSlider.on('change', function (values, handle) {
-            //console.log(priceText);
             minVal = parseInt($("#input-number_1").val());
-            $("#minpricem2").val(minVal);
             maxVal = parseInt($("#input-number_2").val());
-            $("#maxpricem2").val(maxVal);
-            if (minRange != values[0] || maxRange != values[1]) {
-                priceFilter.addClass('green_active');
-                priceTitle.html(currencySymbol + ' ' + minVal + '-' + maxVal);
-            } else {
-                priceFilter.removeClass('green_active');
-                priceTitle.html(priceText);
-            }
         });
 
         $("#input-number_1").keyup(function () {
             activeInputVal = parseInt($(this).val());
             maxInputVal = parseInt($("#maxpricem2").val());
-            //console.log(activeInputVal, minPrice, maxPrice);
             if (activeInputVal < parseInt($("#input-number_2").val())) {
                 leftRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([leftRange, null]);
             }
-            $("#minpricem2").val(activeInputVal);
-            if (minRange != activeInputVal || maxRange != maxInputVal) {
-                priceFilter.addClass('green_active');
-                priceTitle.html(currencySymbol + ' ' + activeInputVal + '-' + maxInputVal);
-            } else {
-                priceFilter.removeClass('green_active');
-                priceTitle.html(priceText);
-            }
-
         });
         $("#input-number_2").keyup(function () {
             activeInputVal = parseInt($(this).val());
             minInputVal = parseInt($("#minpricem2").val());
-
             if (activeInputVal > parseInt($("#input-number_1").val())) {
                 rightRange = parseInt($(this).val());
                 priceSlider2.noUiSlider.set([null, rightRange]);
-            }
-            $("#maxpricem2").val(activeInputVal);
-            if (minRange != minInputVal || maxRange != activeInputVal) {
-                priceFilter.addClass('green_active');
-                priceTitle.html(currencySymbol + ' ' + minInputVal + '-' + activeInputVal);
-            } else {
-                priceFilter.removeClass('green_active');
-                priceTitle.html(priceText);
             }
         });
     }
@@ -1253,14 +1239,19 @@ $(document).ready(function () {
         } else {
             maxM2 = parseInt(maxM2);
             minM2 = parseInt(minM2);
+            maxSqRange = parseInt(maxSqRange);
             maxTotal = parseInt(maxTotal);
             start = [minM2, maxM2];
         }
         priceSlider4 = document.getElementById("range_slider_4");
+        if (priceSlider4.noUiSlider) {
+            priceSlider4.noUiSlider.destroy();
+        }
         noUiSlider.create(priceSlider4, {
             start: start,
             range: {
-                'min': [minSqRange],
+                'min': [0],
+                '99%': [maxSqRange, maxTotal-maxSqRange],
                 'max': [maxTotal]
             },
             connect: true,
@@ -1268,9 +1259,7 @@ $(document).ready(function () {
                 decimals: 0
             })
         });
-        inputNumberMin = document.getElementById("input-number_5");
-        inputNumberMax = document.getElementById("input-number_6");
-
+        var sqFilter = $(".dropdown_item_title.m2-filter"), sqTitle = $(".m2-filter .item_title_text");
         priceSlider4.noUiSlider.on('update', function (values, handle) {
             minVal = parseInt(values[0]);
             maxVal = parseInt(values[1]);
@@ -1292,6 +1281,20 @@ $(document).ready(function () {
             });
             $("[data-filters-index='filters_4'] .minVal").html(minVal);
             $("[data-filters-index='filters_4'] .maxVal").html(maxVal);
+
+            if (values[0]>minSqRange || values[1]<maxSqRange) {
+                sqFilter.addClass('green_active');
+                sqTitle.html(minVal + '-' + maxVal + 'м²');
+                $("#minm2").val(minVal);
+                $("#maxm2").val(maxVal);
+            } else {
+                sqFilter.removeClass('green_active');
+                sqTitle.html(sqText);
+                $("#minm2").val('');
+                $("#maxm2").val('');
+            }
+
+
         });
 
         priceSlider4.noUiSlider.on('set', function (values, handle) {
@@ -1311,20 +1314,10 @@ $(document).ready(function () {
             }, 500);
         });
 
-        var sqFilter = $(".dropdown_item_title.m2-filter"), sqTitle = $(".m2-filter .item_title_text");
         priceSlider4.noUiSlider.on('change', function (values, handle) {
-            //console.log(values, minSqRange, maxSqRange, sqText);
+            console.log(values, minSqRange, maxSqRange, sqText);
             minVal = parseInt($("#input-number_5").val());
-            $("#minm2").val(minVal);
             maxVal = parseInt($("#input-number_6").val());
-            $("#maxm2").val(maxVal);
-            if (minSqRange != values[0] || maxSqRange != values[1]) {
-                sqFilter.addClass('green_active');
-                sqTitle.html(minVal + '-' + maxVal + 'м²');
-            } else {
-                sqFilter.removeClass('green_active');
-                sqTitle.html(sqText);
-            }
         });
 
 
@@ -1335,14 +1328,6 @@ $(document).ready(function () {
                 leftRange = parseInt($(this).val());
                 priceSlider4.noUiSlider.set([leftRange, null]);
             }
-            $("#minm2").val(activeInputVal);
-            if (minSqRange != activeInputVal || maxSqRange != maxInputVal) {
-                sqFilter.addClass('green_active');
-                sqTitle.html(activeInputVal + '-' + maxInputVal + 'м²');
-            } else {
-                sqFilter.removeClass('green_active');
-                sqTitle.html(sqText);
-            }
         });
         $("#input-number_6").keyup(function () {
             activeInputVal = parseInt($(this).val());
@@ -1350,14 +1335,6 @@ $(document).ready(function () {
             if (activeInputVal > parseInt($("#input-number_5").val())) {
                 rightRange = parseInt($(this).val());
                 priceSlider4.noUiSlider.set([null, rightRange]);
-            }
-            $("#maxm2").val(activeInputVal);
-            if (minSqRange != minInputVal || maxSqRange != activeInputVal) {
-                sqFilter.addClass('green_active');
-                sqTitle.html(minInputVal + '-' + activeInputVal + 'м²');
-            } else {
-                sqFilter.removeClass('green_active');
-                sqTitle.html(sqText);
             }
         });
     }

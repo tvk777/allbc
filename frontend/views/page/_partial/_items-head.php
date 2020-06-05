@@ -34,11 +34,11 @@ $activeM2 = '';
 $squText = Yii::t('app', 'Square');
 $emptySquText = Yii::t('app', 'Square');
 $minM2 = !empty($params['m2min']) ? $params['m2min'] : $countValM2['min'];
-$maxM2 = !empty($params['m2max']) ? $params['m2max'] : $countValM2['max'];
+$maxM2 = !empty($params['m2max']) ? $params['m2max'] : $countValM2['maxVal'];
 
 
 //echo 'minpar='.$params['m2min'].' maxpar='.$params['m2max'].' min='.$countValM2['min'].' max='.$countValM2['max'];
-$filterM2empty = (empty($params['m2min']) && empty($params['m2max'])) || ($params['m2min'] == $countValM2['min'] && $params['m2max'] == $countValM2['max']);
+$filterM2empty = (empty($params['m2min']) && empty($params['m2max'])) || ($params['m2min'] <= $countValM2['min'] && $params['m2max'] >= $countValM2['maxVal']);
 if (!$filterM2empty) {
     $activeM2 = 'green_active';
     $squText = $minM2 . '-' . $maxM2 . 'м²';
@@ -46,10 +46,15 @@ if (!$filterM2empty) {
 $this->registerJsVar('maxM2', $maxM2, $this::POS_HEAD);
 $this->registerJsVar('minM2', $minM2, $this::POS_HEAD);
 $this->registerJsVar('maxTotal', $countValM2['max'], $this::POS_HEAD);
-$this->registerJsVar('maxSqRange', $countValM2['max'], $this::POS_HEAD);
+$this->registerJsVar('maxSqRange', $countValM2['maxVal'], $this::POS_HEAD);
 $this->registerJsVar('minSqRange', $countValM2['min'], $this::POS_HEAD);
 $this->registerJsVar('sqText', $emptySquText, $this::POS_HEAD);
 
+/*echo '$maxM2='.$maxM2.'</br>';
+echo '$minM2='.$minM2.'</br>';
+echo '$maxTotal='.$countValM2['max'].'</br>';
+echo '$maxSqRange='.$countValM2['maxVal'].'</br>';
+echo '$minSqRange='.$countValM2['min'].'</br>';*/
 
 $currency = !empty($params['currency']) ? $params['currency'] : 1;
 $activePrice = '';
@@ -78,30 +83,36 @@ switch ($currency) {
 }
 
 $minpricesChart = $pricesChart['min'];
-$maxpricesChart = $pricesChart['max'];
+$maxpricesChart = $pricesChart['maxVal'];
+$maxPriceTotal = $pricesChart['max'];
 $minRange = round($minpricesChart / $rates[$currency]);
 $maxRange = round($maxpricesChart / $rates[$currency]);
 $minPrice = !empty($params['pricemin']) ? $params['pricemin'] : $minRange;
 $maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : $maxRange;
 $min_max = $currencySymbol . ' ' . $minPrice . '-' . $maxPrice;
+//echo '$maxRange='.$maxRange;
 
-$priceText = (empty($params['pricemin']) && empty($params['pricemax'])) || ($params['pricemin'] == $minRange && $params['pricemax'] == $maxRange)
-    ? Yii::t('app', 'Price')
-    : $min_max;
-$emptyPriceText = Yii::t('app', 'Price');
+$priceText = Yii::t('app', 'Price');
 //var_dump($params['pricemin']==$minPrice && $params['pricemax']==$maxPrice);
 $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
-$this->registerJsVar('maxRange', $maxRange, $this::POS_HEAD);
+$this->registerJsVar('maxPriceRange', $maxRange, $this::POS_HEAD);
 $this->registerJsVar('minRange', $minRange, $this::POS_HEAD);
+$this->registerJsVar('maxPriceTotal', $maxPriceTotal, $this::POS_HEAD);
 $this->registerJsVar('currencySymbol', $currencySymbol, $this::POS_HEAD);
-$this->registerJsVar('priceText', $emptyPriceText, $this::POS_HEAD);
+$this->registerJsVar('priceText', $priceText, $this::POS_HEAD);
 
+/*echo '$maxPrice='.$maxPrice.'</br>';
+echo '$minPrice='.$minPrice.'</br>';
+echo '$minRange='.$minRange.'</br>';
+echo '$maxPriceRange='.$maxRange.'</br>';
+echo '$maxPriceTotal='.$maxPriceTotal.'</br>';*/
 
-if ((!empty($params['pricemin']) && $params['pricemin'] != round($minpricesChart / $rates[$currency])) ||
-    (!empty($params['pricemax']) && $params['pricemax'] != round($maxpricesChart / $rates[$currency]))
+if ((!empty($params['pricemin']) && $params['pricemin'] > round($minpricesChart / $rates[$currency])) ||
+    (!empty($params['pricemax']) && $params['pricemax'] < round($maxpricesChart / $rates[$currency]))
 ) {
     $activePrice = 'green_active';
+    $priceText = $min_max;
 }
 $activeSubway = '';
 $removeCss = '';
@@ -225,10 +236,10 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                             <div class="dropdown_item_menu price_w">
                                 <div class="append-elem" data-append-desktop-elem="7" data-min-screen="1024">
                                     <div class="metro_two_cols metro_two_cols_2">
-                                        <div class="col">
-                                            <h4><?= Yii::t('app', 'Rents') ?>,</h4>
+                                        <div class="col price">
+                                            <h4><?= $targetValue==1 ? Yii::t('app', 'Rents') : Yii::t('app', 'Cost') ?>,</h4>
                                         </div>
-                                        <div class="col">
+                                        <div class="col msg">
                                             <div class="custom_select_wrapp">
                                                 <div class="custom_select">
                                                     <div>

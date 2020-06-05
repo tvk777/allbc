@@ -31,7 +31,7 @@
             type: 'POST',
             data: {visibles: visibles, center: cn, zoom: zm},
             container: '#cardsPjax',
-            async: false,
+            async: true,
         });
         console.log(visibles);
     }

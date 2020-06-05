@@ -1,6 +1,6 @@
 <?php
 return [
-    'bootstrap' => ['debug'],
+    'bootstrap' => ['debug', 'settings'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -18,6 +18,9 @@ return [
         'image' => [
             'class' => 'yii\image\ImageDriver',
             'driver' => 'Imagick',  //GD or Imagick
+        ],
+        'settings' => [ 
+            'class' => 'common\components\Settings',
         ],
     ],
     'controllerMap' => [

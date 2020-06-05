@@ -486,8 +486,8 @@ class PageController extends FrontendController
             'mainSell' => $mainSell,
             'params' => $params,
             'conditions' => $whereCondition,
-            'pricesChart' => $this->getPlacesForPriceChart($result['pricesForChart']),
-            'countValM2' => $this->getPlacesForM2Chart($result['m2ForChart']),
+            'pricesChart' => $this->getPlacesForPriceChart($result['pricesForChart'], $seo->target),
+            'countValM2' => $this->getPlacesForM2Chart($result['m2ForChart'], $seo->target),
             'rates' => $rates,
             'currency' => $currency,
             'taxes' => $taxes
@@ -633,23 +633,28 @@ class PageController extends FrontendController
         return $filters;
     }
 
-    protected function getPlacesForM2Chart($m2Arr)
+    protected function getPlacesForM2Chart($m2Arr, $target)
     {
+        $parts = Yii::$app->settings->partsM2;
+        $maxValue = $target==1 ? Yii::$app->settings->maxM2 : Yii::$app->settings->maxM2Sell;
         $countVal = [];
         $countVal['count'] = [];
         $countVal['max'] = 0;
         $countVal['min'] = 0;
         if (count($m2Arr) > 0) {
-            //$m2s = ArrayHelper::getColumn($places, 'm2');
+            $m2ArrLimited = array_filter($m2Arr, function($k) use ($maxValue) {
+                return $k <= $maxValue;
+            });
+
             $max = max($m2Arr);
             $min = min($m2Arr);
-            $delta = round($max / 30);
+            $delta = round($maxValue / $parts);
 
-            $countVal['count'] = $this->getRanges($m2Arr, $delta);
+            $countVal['count'] = $this->getRanges($m2ArrLimited, $delta, $parts);
+            $countVal['maxVal'] = $maxValue;
             $countVal['max'] = $max;
             $countVal['min'] = $min;
         }
-
         return $countVal;
     }
 
@@ -674,22 +679,29 @@ class PageController extends FrontendController
         return $countVal;
     }
 
-    protected function getPlacesForPriceChart($prices)
+    protected function getPlacesForPriceChart($prices, $target)
     {
-        //debug($prices); die();
+        $parts = Yii::$app->settings->partsPrice;
+        $maxValue = $target==1 ? Yii::$app->settings->maxPrice : Yii::$app->settings->maxPriceSell;
         $countVal['count'] = [];
         $countVal['max'] = 0;
         $countVal['min'] = 0;
 
             if (count($prices) > 0) {
+                $pricesLimited = array_filter($prices, function($k) use ($maxValue) {
+                    return $k <= $maxValue;
+                });
+
                 $min = min($prices);
                 $max = max($prices);
-                $delta = round($max / 30);
-                $countVal['count'] = $this->getRanges($prices, $delta);
+                $delta = round($maxValue / $parts);
+
+                $countVal['count'] = $this->getRanges($pricesLimited, $delta, $parts);
+                $countVal['maxVal'] = $maxValue;
                 $countVal['max'] = $max;
                 $countVal['min'] = $min;
             }
-
+//debug($countVal); die();
         return $countVal;
     }
 
@@ -755,17 +767,17 @@ class PageController extends FrontendController
         return $countVal;
     }
 
-    protected function getRanges($arr, $delta)
+    protected function getRanges($arr, $delta, $parts)
     {
-        $countVal = array_fill(0, 30, 0);
+        $countVal = array_fill(0, $parts+1, 0);
         foreach ($arr as $k => $val) {
             $index = floor($val / $delta);
-            if ($index >= 30) $index = 29;
+            if ($index >= $parts) $index = $parts-1;
             $countVal[$index] += 1;
         }
+        $countVal[$parts] = 0;
         return $countVal;
     }
-
 
 }
 

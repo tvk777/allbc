@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
-
+//echo Yii::$app->settings->maxM2;
 //debug($pricesChart);
 
 //debug($items[0]['bc']);
@@ -133,7 +133,9 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
             </div>
         </div>
         <div class="row">
-            <? echo LinkPager::widget([
+            <?
+            debug($pages);
+            echo LinkPager::widget([
                 'pagination' => $pages,
             ]); ?>
         </div>
@@ -162,6 +164,7 @@ JS;
     ?>
 
     <div class="bottom_coord"></div>
+
 </section>
 <?= $this->render('_partial/_items-foot', [
     'seo' => $seo,
