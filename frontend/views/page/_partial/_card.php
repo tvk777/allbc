@@ -42,6 +42,7 @@ if ($result == 'bc') {
 } else {
     $cardItem = $item->place->bcitem; //bc
     $placeItem = $item->place; //place
+    //debug($placeItem);
     $id = $placeItem->id;
     $itemPlaces = null;
     $modelWishlist = $placeItem;
@@ -92,7 +93,7 @@ if (!empty($itemSubway)) {
 }
 ?>
 
-<div class="object_card" data-id="<?= $cardItem->id ?>">
+<div class="object_card" data-id="<?= $id ?>">
     <div class="border_wrapp">
         <div class="inner_wrapp">
             <div class="object_slider_wrapp">

@@ -410,6 +410,10 @@ class PageController extends FrontendController
             if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
             if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) $center = Yii::$app->request->post('center');
             if (Yii::$app->request->post('zoom') && Yii::$app->request->post('zoom') != 0) $zoom = Yii::$app->request->post('zoom');
+
+            if (Yii::$app->request->post('streetId')) {
+                //debug(Yii::$app->request->post('streetId')); die();
+            }
         }
 
 

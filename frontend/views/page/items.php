@@ -67,18 +67,19 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'result' => $result,
         'countPlaces' => $countPlaces
     ]); ?>
-    <?php Pjax::begin([
-        'enableReplaceState' => true,
-        'enablePushState' => true,
-        'options' => ['id' => 'cardsPjax'],
-        'formSelector' => '#filterForm',
-        'timeout' => 10000,
-        'clientOptions' => ['method' => 'POST']
-    ]); ?>
 
     <div class="append-elem" data-append-elem="map_index"></div>
 
     <div class="map_object_templ">
+        <?php Pjax::begin([
+            'enableReplaceState' => true,
+            'enablePushState' => true,
+            'options' => ['id' => 'cardsPjax'],
+            'formSelector' => '#filterForm',
+            'timeout' => 10000,
+            'clientOptions' => ['method' => 'POST']
+        ]); ?>
+
         <div class="row">
             <div class="w_half">
                 <div class="objects_cards">
@@ -139,6 +140,13 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 'pagination' => $pages,
             ]); ?>
         </div>
+        <?
+        $script = <<< JS
+ var map, mar, markers = [], id, geojson = $markers, center = $center, zoom = $zoom, countOfices = $countPlaces;
+JS;
+        $this->registerJs($script, $position = $this::POS_BEGIN);
+        Pjax::end();
+        ?>
 
         <div class="append-elem" data-append-desktop-elem="map_index" data-min-screen="1024">
             <div class="object_map">
@@ -155,13 +163,6 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         </div>
     </div>
     </div>
-    <?
-    $script = <<< JS
- var map, mar, markers = [], id, geojson = $markers, center = $center, zoom = $zoom, countOfices = $countPlaces;
-JS;
-    $this->registerJs($script, $position = $this::POS_BEGIN);
-    Pjax::end();
-    ?>
 
     <div class="bottom_coord"></div>
 
