@@ -1,5 +1,5 @@
 (function ($) {
-    var visibles = [], lg, lt, ico, element, mapParams = [], searchChecked, showMap;
+    var visibles = [], lg, lt, ico, element, mapParams = [], searchChecked, showMap, refreshMap=false;
     $(window).on('load', function () {
         searchChecked = false;
         showMap = false;
@@ -9,6 +9,13 @@
         searchOnMap();
     });
 
+    $(document).on({
+        click: function () {
+            refreshMap = true;
+        }
+    }, '.submit_filter[name="filter[result]"]');
+
+
     $(document).on('pjax:complete', function (event) {
         $(".map_object_templ").addClass("map_show");
         $("#onMap").prop("checked", showMap);
@@ -17,7 +24,10 @@
             $(".object_map").removeClass("visible");
         }
         $("#searchonmap").prop("checked", searchChecked);
-        //initMap();
+        if(refreshMap){
+            initMap();
+            refreshMap=false;
+        }
         searchOnMap();
         marker_change_ico(0);
         getCardParams();
