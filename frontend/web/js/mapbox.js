@@ -1,19 +1,23 @@
 (function ($) {
-    var visibles = [], lg, lt, ico, element, mapParams = [], searchChecked, showMap, refreshMap=false;
+    var visibles = [], lg, lt, ico, element, mapParams = [], searchChecked, showMap;
     $(window).on('load', function () {
         searchChecked = false;
         showMap = false;
         $("#searchonmap").prop("checked", searchChecked);
         $("#onMap").prop("checked", showMap);
-        initMap();
+        map = initMap();
+        mapFeatures(map);
         searchOnMap();
+        console.log()
+        if (geojson.result != 'offices') {
+            $('.marker').removeClass('hover');
+        }
     });
 
-    $(document).on({
-        click: function () {
-            refreshMap = true;
-        }
-    }, '.submit_filter[name="filter[result]"]');
+    $(".filter-form").submit(function (event) {
+        searchChecked = false;
+        $('#searchonmap').prop('checked') === false;
+    });
 
 
     $(document).on('pjax:complete', function (event) {
@@ -24,9 +28,12 @@
             $(".object_map").removeClass("visible");
         }
         $("#searchonmap").prop("checked", searchChecked);
-        if(refreshMap){
+        mapFeatures(map);
+        /*if (!searchChecked) {
             initMap();
-            refreshMap=false;
+        }*/
+        if (geojson.result != 'offices') {
+            $('.marker').removeClass('hover');
         }
         searchOnMap();
         marker_change_ico(0);
@@ -137,8 +144,8 @@
                 geojson.features[i].geometry.coordinates[1] >= minLat &&
                 geojson.features[i].geometry.coordinates[1] <= maxLat
             ) {
-            visibles.push(geojson.features[i].properties.id);
-            //console.log(geojson.features[i].geometry.coordinates, visibles);
+                visibles.push(geojson.features[i].properties.id);
+                //console.log(geojson.features[i].geometry.coordinates, visibles);
             }
         }
         center = map.getCenter();
@@ -158,6 +165,9 @@
         });
     }
 
+    function createMarkers() {
+    }
+
 
     function initMap() {
         mapboxgl.accessToken = 'pk.eyJ1Ijoic2RiLXN0dWRpbyIsImEiOiJjanl3amJ5NHUweTdiM2JuNGV0b3VvOXlhIn0.4EWyUOq1U6Ib_bZi4-d2KQ';
@@ -174,9 +184,13 @@
             //defaultLanguage: 'en'
             //defaultLanguage: 'ru'
         }));
+        return map;
+    }
+
 
         //console.log(geojson.features);
-
+     function mapFeatures(map) {
+         console.log(geojson.features.length);
         geojson.features.forEach(function (marker) {
             var el = document.createElement('div'), html = '', id = marker.properties.id;
 
@@ -231,10 +245,13 @@
             map.on('click', 'points', function (e) {
                 var features = map.queryRenderedFeatures(e.point, {layers: ['points']});
                 var markerId = features[0].properties.id;
-                if ($('#onMap').prop('checked') == true && $('#searchonmap').prop('checked') == false && markerId !== 'undefined') {
+                if ($('#onMap').prop('checked') == true
+                    && $('#searchonmap').prop('checked') == false
+                    && geojson.result == 'offices'
+                    && markerId !== 'undefined') {
                     console.log(markerId);
                     marker_change_ico(markerId);
-                    //pjax_street(markerId);
+                    pjax_street(markerId);
                 }
             });
 

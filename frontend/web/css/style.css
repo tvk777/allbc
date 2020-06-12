@@ -4761,7 +4761,6 @@ input.all-subways:checked + label.all-subways:before{
     top: 50px;
     left: 0;
     text-align: center;
-    z-index: 2;
 }
 
 .map_search {
@@ -4772,6 +4771,7 @@ input.all-subways:checked + label.all-subways:before{
     -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3);
     -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3);
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, .3);
+    z-index: 3;
 }
 
 .map_search label {
@@ -8700,6 +8700,7 @@ i.star_2.rem {
     width: 15px;
     height: 15px;
     cursor: pointer;
+    z-index: 9;
 }
 
 .marker.hover {
@@ -8707,7 +8708,7 @@ i.star_2.rem {
     background-size: cover;
     width: 26px;
     height: 35px;
-    z-index: 9;
+    z-index: 2;
 }
 
 .hidden {

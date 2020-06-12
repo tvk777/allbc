@@ -97,6 +97,7 @@ class BcItemsSearch extends BcItems
 
     protected function initParams($params)
     {
+        //$params['page'] = !empty($params['page']) ? $params['page'] : null;
         $params['city'] = !empty($params['city']) ? $params['city'] : null;
         $params['country'] = !empty($params['country']) ? $params['country'] : null;
         $params['percent_commission'] = !empty($params['percent_commission']) ? $params['percent_commission'] : null;
@@ -289,7 +290,8 @@ class BcItemsSearch extends BcItems
     {
         $params = $this->initParams($params);
         $pageSize = Yii::$app->settings->page_size;
-
+        //$pageOffset = !empty($params['page']) ? $pageSize*$params['page'] : 0;
+//debug($pageOffset);
         //запрос всех строк по условиям фильтра
         if ($params['target'] == 1) {
             $fullQuery = BcPlacesView::find()
@@ -375,7 +377,7 @@ class BcItemsSearch extends BcItems
 
 
         $pricesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'uah_price'));
-//debug($pricesForChart); die();
+//debug($pages); die();
 
         $result = [];
         $result['params'] = $params;

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+
 //echo Yii::$app->settings->maxM2;
 //debug($pricesChart);
 
@@ -73,11 +74,12 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
     <div class="map_object_templ">
         <?php Pjax::begin([
             'enableReplaceState' => true,
-            'enablePushState' => true,
+            'enablePushState' => false,
             'options' => ['id' => 'cardsPjax'],
             'formSelector' => '#filterForm',
             'timeout' => 10000,
-            'clientOptions' => ['method' => 'POST']
+            'clientOptions' => ['method' => 'GET'],
+            //'scrollTo' => 1000,
         ]); ?>
 
         <div class="row">
@@ -102,14 +104,14 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 </div>
             </div>
         </div>
-        <? if($city==1) : ?>
-        <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
-            <div class="row">
-                <div class="w_half">
-                    <?= common\widgets\ExpertsWidget::widget(); ?>
+        <? if ($city == 1) : ?>
+            <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
+                <div class="row">
+                    <div class="w_half">
+                        <?= common\widgets\ExpertsWidget::widget(); ?>
+                    </div>
                 </div>
             </div>
-        </div>
         <? endif; ?>
         <div class="row">
             <div class="w_half">
@@ -135,11 +137,12 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         </div>
         <div class="row">
             <?
-            //debug($pages->offset);
             echo LinkPager::widget([
                 'pagination' => $pages,
+                'linkOptions' => ['data-pjax' => 0]
             ]); ?>
         </div>
+
         <?
         $script = <<< JS
  var map, mar, markers = [], id, geojson = $markers, center = $center, zoom = $zoom, countOfices = $countPlaces;
@@ -147,6 +150,7 @@ JS;
         $this->registerJs($script, $position = $this::POS_BEGIN);
         Pjax::end();
         ?>
+
 
         <div class="append-elem" data-append-desktop-elem="map_index" data-min-screen="1024">
             <div class="object_map">

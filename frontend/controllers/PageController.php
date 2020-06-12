@@ -275,6 +275,7 @@ class PageController extends FrontendController
         $currentLanguage = Yii::$app->language;
         $searchParams = [];
         $searchParams['result'] = !empty($params['result']) ? $params['result'] : 'offices';
+        //$searchParams['page'] = !empty($params['page']) ? $params['page'] : null;
         $searchParams['lang'] = $currentLanguage;
         $searchParams['m2min'] = '';
         $searchParams['m2max'] = '';
@@ -288,6 +289,7 @@ class PageController extends FrontendController
         $searchParams['pricemin'] = '';
         $searchParams['pricemax'] = '';
 
+        $searchParams['streetId'] = !empty($params['streetId']) ? $params['streetId'] : null;
         //debug($searchParams);
 
 
@@ -405,20 +407,27 @@ class PageController extends FrontendController
         if (Yii::$app->request->post('filter')) $paramsPost = Yii::$app->request->post('filter');
         if (Yii::$app->request->get('filter')) $paramsGet = Yii::$app->request->get('filter');
         $params = ArrayHelper::merge($paramsPost, $paramsGet);
-//debug($params);
+
+      /*if (Yii::$app->request->get('page')) {
+            $page = ['page' => Yii::$app->request->get('page')];
+            $params = ArrayHelper::merge($params, $page);
+        }*/
+//debug($params); die();
+
         if (Yii::$app->request->isPjax) {
             if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
             if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) $center = Yii::$app->request->post('center');
             if (Yii::$app->request->post('zoom') && Yii::$app->request->post('zoom') != 0) $zoom = Yii::$app->request->post('zoom');
 
-            if (Yii::$app->request->post('streetId')) {
+            if (!empty(Yii::$app->request->post('streetId'))) {
+                $params['streetId'] = Yii::$app->request->post('streetId');
                 //debug(Yii::$app->request->post('streetId')); die();
             }
         }
 
 
         $whereCondition = $this->getFilter($seo, $params);
-        //debug($whereCondition);
+//debug($whereCondition);
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearchFromView($whereCondition);
 
@@ -489,7 +498,7 @@ class PageController extends FrontendController
         }
         //$filters['subways'] = $subways = $subways->all();
         $subways = $subways->all();
-        if(!empty($subways)) {
+        if (!empty($subways)) {
             foreach ($subways as $sub) {
                 switch ($sub->branch_id) {
                     case 1:
@@ -521,13 +530,13 @@ class PageController extends FrontendController
     protected function getPlacesForM2Chart($m2Arr, $target)
     {
         $parts = Yii::$app->settings->partsM2;
-        $maxValue = $target==1 ? Yii::$app->settings->maxM2 : Yii::$app->settings->maxM2Sell;
+        $maxValue = $target == 1 ? Yii::$app->settings->maxM2 : Yii::$app->settings->maxM2Sell;
         $countVal = [];
         $countVal['count'] = [];
         $countVal['max'] = 0;
         $countVal['min'] = 0;
         if (count($m2Arr) > 0) {
-            $m2ArrLimited = array_filter($m2Arr, function($k) use ($maxValue) {
+            $m2ArrLimited = array_filter($m2Arr, function ($k) use ($maxValue) {
                 return $k <= $maxValue;
             });
 
@@ -567,25 +576,25 @@ class PageController extends FrontendController
     protected function getPlacesForPriceChart($prices, $target)
     {
         $parts = Yii::$app->settings->partsPrice;
-        $maxValue = $target==1 ? Yii::$app->settings->maxPrice : Yii::$app->settings->maxPriceSell;
+        $maxValue = $target == 1 ? Yii::$app->settings->maxPrice : Yii::$app->settings->maxPriceSell;
         $countVal['count'] = [];
         $countVal['max'] = 0;
         $countVal['min'] = 0;
 
-            if (count($prices) > 0) {
-                $pricesLimited = array_filter($prices, function($k) use ($maxValue) {
-                    return $k <= $maxValue;
-                });
+        if (count($prices) > 0) {
+            $pricesLimited = array_filter($prices, function ($k) use ($maxValue) {
+                return $k <= $maxValue;
+            });
 
-                $min = min($prices);
-                $max = max($prices);
-                $delta = round($maxValue / $parts);
+            $min = min($prices);
+            $max = max($prices);
+            $delta = round($maxValue / $parts);
 
-                $countVal['count'] = $this->getRanges($pricesLimited, $delta, $parts);
-                $countVal['maxVal'] = $maxValue;
-                $countVal['max'] = $max;
-                $countVal['min'] = $min;
-            }
+            $countVal['count'] = $this->getRanges($pricesLimited, $delta, $parts);
+            $countVal['maxVal'] = $maxValue;
+            $countVal['max'] = $max;
+            $countVal['min'] = $min;
+        }
 //debug($countVal); die();
         return $countVal;
     }
@@ -654,10 +663,10 @@ class PageController extends FrontendController
 
     protected function getRanges($arr, $delta, $parts)
     {
-        $countVal = array_fill(0, $parts+1, 0);
+        $countVal = array_fill(0, $parts + 1, 0);
         foreach ($arr as $k => $val) {
             $index = floor($val / $delta);
-            if ($index >= $parts) $index = $parts-1;
+            if ($index >= $parts) $index = $parts - 1;
             $countVal[$index] += 1;
         }
         $countVal[$parts] = 0;

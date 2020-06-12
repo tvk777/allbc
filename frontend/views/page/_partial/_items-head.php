@@ -8,6 +8,7 @@ $countPlacesText = Yii::t('app', 'Found: {countPlaces} offices', [
     'countPlaces' => '<span id="countOfices">' . $countPlaces . '</span>',
 ]);
 
+
 //debug($filters['subways']);
 if ($seo->target == 1) {
     $targetText = Yii::t('app', 'Rent');
@@ -169,7 +170,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
 
 
 
-<?= Html::beginForm('/' . $seo->slug->slug, 'post', ['data-pjax' => true, 'class' => 'filter-form', 'id' => 'filterForm']) ?>
+<?= Html::beginForm('/' . $seo->slug->slug, 'GET', ['data-pjax' => true, 'class' => 'filter-form', 'id' => 'filterForm']) ?>
 <?= Html::input('hidden', 'filter[result]', $result, ['id' => 'result']) ?>
 <div id="filters">
     <div class="filter_nav">
