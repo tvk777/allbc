@@ -9,7 +9,6 @@ use yii\helpers\Url;
 //debug($pricesChart);
 
 //debug($items[0]['bc']);
-//debug($conditions);
 //[type] => 3
 //debug($items[1]['bc']->minPrice);
 //debug($items[0]['places']);
@@ -66,7 +65,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         'pricesChart' => $pricesChart,
         'rates' => $rates,
         'result' => $result,
-        'countPlaces' => $countPlaces
+        'countPlaces' => $countPlaces,
     ]); ?>
 
     <div class="append-elem" data-append-elem="map_index"></div>
@@ -74,7 +73,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
     <div class="map_object_templ">
         <?php Pjax::begin([
             'enableReplaceState' => true,
-            'enablePushState' => false,
+            'enablePushState' => true,
             'options' => ['id' => 'cardsPjax'],
             'formSelector' => '#filterForm',
             'timeout' => 10000,
@@ -82,14 +81,20 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
             //'scrollTo' => 1000,
         ]); ?>
 
-        <div class="row">
-            <div class="w_half">
-                <div class="objects_cards">
-                    <?
-                    for ($i = 0; $i <= 7; $i++) {
-                        if (isset($items[$i])) {
+        <? //debug($conditions['streetId']); ?>
+        <? if (!empty($conditions['streetId'])) : ?>
+            <div class="row">
+                <? if ($streetName) : ?>
+                    <div class="street-name"><?= $streetName ?>
+                        <button type="button" class="close close_btn close_street"><i class="close_black"></i></button>
+                    </div>
+                <? endif; ?>
+                <div class="w_half">
+                    <div class="objects_cards">
+                        <?
+                        foreach ($items as $item) {
                             echo $this->render('_partial/_card', [
-                                'item' => $items[$i],
+                                'item' => $item,
                                 'target' => $seo->target,
                                 'result' => $result,
                                 'currentLanguage' => $currentLanguage,
@@ -99,49 +104,73 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                 'taxes' => $taxes
                             ]);
                         }
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
-        <? if ($city == 1) : ?>
-            <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
-                <div class="row">
-                    <div class="w_half">
-                        <?= common\widgets\ExpertsWidget::widget(); ?>
+                        ?>
                     </div>
                 </div>
             </div>
-        <? endif; ?>
-        <div class="row">
-            <div class="w_half">
-                <div class="objects_catalog objects_cards">
-                    <?
-                    for ($i = 8; $i <= 16; $i++) {
-                        if (isset($items[$i])) {
-                            echo $this->render('_partial/_card', [
-                                'item' => $items[$i],
-                                'target' => $seo->target,
-                                'result' => $result,
-                                'currentLanguage' => $currentLanguage,
-                                'currency' => $currency,
-                                'rates' => $rates,
-                                'type' => $conditions['type'],
-                                'taxes' => $taxes
-                            ]);
+        <? else: ?>
+
+            <div class="row">
+                <div class="w_half">
+                    <div class="objects_cards">
+                        <?
+                        for ($i = 0; $i <= 7; $i++) {
+                            if (isset($items[$i])) {
+                                echo $this->render('_partial/_card', [
+                                    'item' => $items[$i],
+                                    'target' => $seo->target,
+                                    'result' => $result,
+                                    'currentLanguage' => $currentLanguage,
+                                    'currency' => $currency,
+                                    'rates' => $rates,
+                                    'type' => $conditions['type'],
+                                    'taxes' => $taxes
+                                ]);
+                            }
                         }
-                    }
-                    ?>
+                        ?>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <?
-            echo LinkPager::widget([
-                'pagination' => $pages,
-                'linkOptions' => ['data-pjax' => 0]
-            ]); ?>
-        </div>
+            <? if ($city == 1) : ?>
+                <div class="two_cols_templ_wrapp two_cols_templ_wrapp_2 white_bg">
+                    <div class="row">
+                        <div class="w_half">
+                            <?= common\widgets\ExpertsWidget::widget(); ?>
+                        </div>
+                    </div>
+                </div>
+            <? endif; ?>
+            <div class="row">
+                <div class="w_half">
+                    <div class="objects_catalog objects_cards">
+                        <?
+                        for ($i = 8; $i <= 16; $i++) {
+                            if (isset($items[$i])) {
+                                echo $this->render('_partial/_card', [
+                                    'item' => $items[$i],
+                                    'target' => $seo->target,
+                                    'result' => $result,
+                                    'currentLanguage' => $currentLanguage,
+                                    'currency' => $currency,
+                                    'rates' => $rates,
+                                    'type' => $conditions['type'],
+                                    'taxes' => $taxes
+                                ]);
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <?
+                echo LinkPager::widget([
+                    'pagination' => $pages,
+                    'linkOptions' => ['data-pjax' => 0]
+                ]); ?>
+            </div>
+        <? endif; ?>
 
         <?
         $script = <<< JS

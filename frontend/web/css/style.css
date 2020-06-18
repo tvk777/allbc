@@ -8923,12 +8923,17 @@ i.star_2.rem {
     vertical-align: top;
     width: 15px;
     height: 15px;
-    background-image: url(img/close_black.svg);
+    background-image: url(../img/close_black.svg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-
+.street-name{
+    width: 50%;
+    border-bottom: 1px solid #cdcece;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
 .popup_office_header .close_black {
     position: absolute;
     top: 25px;

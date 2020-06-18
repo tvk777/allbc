@@ -8,7 +8,7 @@
         map = initMap();
         mapFeatures(map);
         searchOnMap();
-        console.log()
+        //console.log(geojson);
         if (geojson.result != 'offices') {
             $('.marker').removeClass('hover');
         }
@@ -21,6 +21,10 @@
 
 
     $(document).on('pjax:complete', function (event) {
+        initMap();
+        mapFeatures(map);
+        //console.log(geojson);
+
         $(".map_object_templ").addClass("map_show");
         $("#onMap").prop("checked", showMap);
         if (!showMap) {
@@ -28,10 +32,6 @@
             $(".object_map").removeClass("visible");
         }
         $("#searchonmap").prop("checked", searchChecked);
-        mapFeatures(map);
-        /*if (!searchChecked) {
-            initMap();
-        }*/
         if (geojson.result != 'offices') {
             $('.marker').removeClass('hover');
         }
@@ -46,12 +46,11 @@
         visibles = vis;
         $.pjax({
             type: 'POST',
-            data: {visibles: visibles, center: cn, zoom: zm},
+            data: {visibles: visibles, center: cn, zoom: zm, result: geojson.result},
             container: '#cardsPjax',
             async: true,
             scrollTo: false
         });
-        //console.log(visibles);
     }
 
     function pjax_street(id) {
@@ -61,10 +60,21 @@
             data: {streetId: streetId},
             container: '#cardsPjax',
             async: true,
-            scrollTo: false
+            //scrollTo: false
         });
-        console.log(streetId);
+        //console.log(streetId);
     }
+//close_street
+    $(document).on({
+        click: function () {
+            $.pjax({
+                type: 'POST',
+                data: {closeStreet: true},
+                container: '#cardsPjax',
+                async: true,
+            });
+        }
+    }, '.close_street');
 
 
     /*$(document).on({
@@ -121,6 +131,7 @@
 
 
     function marker_change_ico(id) {
+        //console.log(id);
         if (id === 0) return false;
         element = $(markers[id]._element);
         $('.marker').removeClass('hover');
@@ -188,9 +199,8 @@
     }
 
 
-        //console.log(geojson.features);
      function mapFeatures(map) {
-         console.log(geojson.features.length);
+         //console.log(geojson.features.length);
         geojson.features.forEach(function (marker) {
             var el = document.createElement('div'), html = '', id = marker.properties.id;
 
@@ -232,7 +242,7 @@
                 map.addImage('pin', image);
                 map.addLayer({
                     "id": "points",
-                    filter: ["!", ["has", "point_count"]],
+                    //filter: ["!", ["has", "point_count"]],
                     "type": "symbol",
                     "source": "bcAllbc",
                     "layout": {
@@ -249,8 +259,9 @@
                     && $('#searchonmap').prop('checked') == false
                     && geojson.result == 'offices'
                     && markerId !== 'undefined') {
-                    console.log(markerId);
-                    marker_change_ico(markerId);
+                    //console.log(markerId);
+                    //marker_change_ico(markerId);
+                    //console.log(markers);
                     pjax_street(markerId);
                 }
             });

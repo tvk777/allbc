@@ -118,7 +118,6 @@ class BcItemsSearch extends BcItems
 
     protected function filterConditions($query, $params, $exclude = false)
     {
-        //debug($params); die();
         if (!empty($params['visibles'])) {
             if ($params['result'] == 'bc') {
                 $query->andFilterWhere(['in', 'id', $params['visibles']]);
@@ -216,16 +215,38 @@ class BcItemsSearch extends BcItems
         return $query;
     }
 
+    protected function filterConditionByStreet($query, $params)
+    {
+        switch ($params['lang']) {
+            case 'ua':
+                $streetField = 'street_ua';
+                break;
+            case 'ru':
+                $streetField = 'street';
+                break;
+            case 'en':
+                $streetField = 'street_en';
+                break;
+            default:
+                $streetField = 'street_ua';
+                break;
+        }
+
+        $street = $this->getStreetName($params['streetId'], $params['target'], $streetField);
+        $query->andFilterWhere(['like', $streetField, $street]);
+        return [$query, $street];
+    }
+
 
     protected function orderByConditions($query, $params)
     {
         if (!empty($params['sort'])) {
             switch ($params['sort']) {
                 case 'price_desc':
-                        $query->orderBy('con_price, uah_price DESC');
+                    $query->orderBy('con_price, uah_price DESC');
                     break;
                 case 'price_asc':
-                        $query->orderBy('con_price, uah_price ASC');
+                    $query->orderBy('con_price, uah_price ASC');
                     break;
                 case 'm2_desc':
                     $query->orderBy('m2 DESC');
@@ -243,6 +264,7 @@ class BcItemsSearch extends BcItems
 
     protected function getMapMarkers($array, $params)
     {
+        //debug($params['result']); die();
         //формирование маркеров для карты
         $markers = [];
         $markers['type'] = 'FeatureCollection';
@@ -290,8 +312,8 @@ class BcItemsSearch extends BcItems
     {
         $params = $this->initParams($params);
         $pageSize = Yii::$app->settings->page_size;
-        //$pageOffset = !empty($params['page']) ? $pageSize*$params['page'] : 0;
-//debug($pageOffset);
+        $streetName = null;
+
         //запрос всех строк по условиям фильтра
         if ($params['target'] == 1) {
             $fullQuery = BcPlacesView::find()
@@ -302,7 +324,18 @@ class BcItemsSearch extends BcItems
         }
 
         $filtredQuery = $this->filterConditions($fullQuery, $params);
-        $filtredQuery = $this->orderByConditions($filtredQuery, $params)->all();//Полный запрос всех отфильтрованных и отсортированных строк
+        $filtredQuery = $this->orderByConditions($filtredQuery, $params);
+
+        if ($params['result'] == 'offices' && !empty($params['streetId'])) {
+            $streetQuery = clone $filtredQuery;
+            $streetParams = $this->filterConditionByStreet($streetQuery, $params);
+            $streetQuery = $streetParams[0];
+            $streetName = $streetParams[1];
+            $streetQuery = $streetQuery->all();
+            $fullStreetsPlaces = getUniqueArray('pid', $streetQuery);
+        }
+
+        $filtredQuery = $filtredQuery->all();//Полный запрос всех отфильтрованных и отсортированных строк
 
         $fullPlaces = getUniqueArray('pid', $filtredQuery);
         $allForPage = [];
@@ -345,6 +378,9 @@ class BcItemsSearch extends BcItems
             }
         } else {
             $itemsForMarkers = $fullPlaces;
+            if ($params['result'] == 'offices' && !empty($params['streetId'])) {
+                $fullPlaces = $fullStreetsPlaces;
+            }
             $pages = new Pagination(['totalCount' => count($fullPlaces), 'pageSize' => $pageSize]);
             $pages->pageSizeParam = false;
             $pages->forcePageParam = false;
@@ -360,15 +396,15 @@ class BcItemsSearch extends BcItems
             $forChartsQuery = BcPlacesSellView::find();
         }
         $forChartsQuery = $forChartsQuery->andFilterWhere(
-                [
-                    'active' => 1,
-                    'approved' => 1,
-                    'hide' => 0,
-                    'phide' => 0,
-                    'city_id' => $params['city'],
-                    'country_id' => $params['country'],
-                ]
-            )->all();
+            [
+                'active' => 1,
+                'approved' => 1,
+                'hide' => 0,
+                'phide' => 0,
+                'city_id' => $params['city'],
+                'country_id' => $params['country'],
+            ]
+        )->all();
         //$forChartsQuery = $this->filterConditions($forChartsQuery, $params, true)->all(); //условия фильтра для графиков, если они нужны
 
         $m2 = ArrayHelper::getColumn($forChartsQuery, 'm2'); //m2 array
@@ -377,10 +413,12 @@ class BcItemsSearch extends BcItems
 
 
         $pricesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'uah_price'));
-//debug($pages); die();
-
+        $center = !empty($markers['features'][0]['geometry']['coordinates']) ? $markers['features'][0]['geometry']['coordinates'] : null;
+//debug($streetName); die();
         $result = [];
+        $result['streetName'] = $streetName;
         $result['params'] = $params;
+        $result['center'] = $center;
         $result['count_ofices'] = $count_ofices; //количество найденных офисов
         $result['m2ForChart'] = $m2ForChart; //массив кв.м. для графика
         $result['pricesForChart'] = $pricesForChart; //массив цен для графика [0] => 425(uah_price) [1] => 45(m2)
@@ -404,6 +442,13 @@ class BcItemsSearch extends BcItems
         $brokerItemsIds = ArrayHelper::getColumn($brokerItems, 'item_id');
         $ids = ArrayHelper::merge($userItemsIds, $brokerItemsIds);
         return $ids;
+    }
+
+    protected function getStreetName($id, $target, $field)
+    {
+        $query = $target == 1 ? BcPlacesView::find() : BcPlacesView::find();
+        $street = $query->select($field)->where(['pid' => $id])->asArray()->one();
+        return $street[$field];
     }
 
 }

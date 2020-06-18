@@ -171,7 +171,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
 
 
 <?= Html::beginForm('/' . $seo->slug->slug, 'GET', ['data-pjax' => true, 'class' => 'filter-form', 'id' => 'filterForm']) ?>
-<?= Html::input('hidden', 'filter[result]', $result, ['id' => 'result']) ?>
+<? //echo Html::input('hidden', 'filter[result]', $result, ['id' => 'result']) ?>
 <div id="filters">
     <div class="filter_nav">
         <div class="row">
@@ -238,7 +238,8 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                 <div class="append-elem" data-append-desktop-elem="7" data-min-screen="1024">
                                     <div class="metro_two_cols metro_two_cols_2">
                                         <div class="col price">
-                                            <h4><?= $targetValue==1 ? Yii::t('app', 'Rents') : Yii::t('app', 'Cost') ?>,</h4>
+                                            <h4><?= $targetValue == 1 ? Yii::t('app', 'Rents') : Yii::t('app', 'Cost') ?>
+                                                ,</h4>
                                         </div>
                                         <div class="col msg">
                                             <div class="custom_select_wrapp">
@@ -251,16 +252,16 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                                     </div>
                                                     <div class="dropdown_select" id="price-filter">
                                                         <div class="select_item">
-                                                            <p data-currency="1"><?= $targetValue==1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²')  ?></p>
+                                                            <p data-currency="1"><?= $targetValue == 1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²') ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="2"><?= $targetValue==1 ? Yii::t('app', '$/m²/month') : Yii::t('app', '$/m²')  ?></p>
+                                                            <p data-currency="2"><?= $targetValue == 1 ? Yii::t('app', '$/m²/month') : Yii::t('app', '$/m²') ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="3"><?= $targetValue==1 ? Yii::t('app', '€/m²/month') : Yii::t('app', '€/m²')  ?></p>
+                                                            <p data-currency="3"><?= $targetValue == 1 ? Yii::t('app', '€/m²/month') : Yii::t('app', '€/m²') ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="4"><?= $targetValue==1 ? Yii::t('app', '₽/m²/month') : Yii::t('app', '₽/m²')  ?></p>
+                                                            <p data-currency="4"><?= $targetValue == 1 ? Yii::t('app', '₽/m²/month') : Yii::t('app', '₽/m²') ?></p>
                                                         </div>
                                                     </div>
                                                 </div>

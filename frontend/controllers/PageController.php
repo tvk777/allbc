@@ -408,23 +408,53 @@ class PageController extends FrontendController
         if (Yii::$app->request->get('filter')) $paramsGet = Yii::$app->request->get('filter');
         $params = ArrayHelper::merge($paramsPost, $paramsGet);
 
-      /*if (Yii::$app->request->get('page')) {
-            $page = ['page' => Yii::$app->request->get('page')];
-            $params = ArrayHelper::merge($params, $page);
-        }*/
-//debug($params); die();
+        $session = Yii::$app->session;
+
+        if (!empty(Yii::$app->request->get('page'))) {
+            if (!Yii::$app->request->post('visibles') && $session->has('visibles')) $params['visibles'] = $session->get('visibles');
+            if (!Yii::$app->request->post('center') && $session->has('center')) $center = $session->get('center');
+            if (!Yii::$app->request->post('zoom') && $session->has('zoom')) $zoom = $session->get('zoom');
+            if (!Yii::$app->request->post('result') && $session->has('result')) $zoom = $session->get('result');
+        } else {
+            if ($session->has('visibles')) $session->remove('visibles');
+            if ($session->has('center')) $session->remove('center');
+            if ($session->has('zoom')) $session->remove('zoom');
+            if ($session->has('result')) $session->remove('result');
+        }
 
         if (Yii::$app->request->isPjax) {
-            if (Yii::$app->request->post('visibles') && Yii::$app->request->post('visibles') != 0) $params['visibles'] = Yii::$app->request->post('visibles');
-            if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) $center = Yii::$app->request->post('center');
-            if (Yii::$app->request->post('zoom') && Yii::$app->request->post('zoom') != 0) $zoom = Yii::$app->request->post('zoom');
+            if (Yii::$app->request->post('visibles') && count(Yii::$app->request->post('visibles')) > 0) {
+                $params['visibles'] = Yii::$app->request->post('visibles');
+                $session->set('visibles', $params['visibles']);
+            }
+            if (Yii::$app->request->post('center') && Yii::$app->request->post('center') != 0) {
+                $center = Yii::$app->request->post('center');
+                $session->set('center', $center);
+            }
+            if (Yii::$app->request->post('zoom') && Yii::$app->request->post('zoom') != 0) {
+                $zoom = Yii::$app->request->post('zoom');
+                $session->set('zoom', $zoom);
+            }
+            if (Yii::$app->request->post('result') && !empty(Yii::$app->request->post('result'))) {
+                $params['result'] = Yii::$app->request->post('result');
+                $session->set('result', $params['result']);
+            }
 
             if (!empty(Yii::$app->request->post('streetId'))) {
                 $params['streetId'] = Yii::$app->request->post('streetId');
-                //debug(Yii::$app->request->post('streetId')); die();
+                $session->set('params', $params);
             }
+            if (Yii::$app->request->post('closeStreet')) {
+                $params = $session->get('params');
+                $params['streetId']=null;
+                $session->remove('params');
+            }
+
         }
 
+
+        //debug($session->get('params')); die();
+        //debug($params); die();
 
         $whereCondition = $this->getFilter($seo, $params);
 //debug($whereCondition);
@@ -442,6 +472,10 @@ class PageController extends FrontendController
         $rates = ArrayHelper::getColumn(ArrayHelper::index($rates, 'id'), 'rate');
         $taxes = Taxes::find()->select(['id', 'value'])->where(['id' => 1])->orWhere(['id' => 4])->asArray()->all();
         $taxes = ArrayHelper::getColumn(ArrayHelper::index($taxes, 'id'), 'value');
+        if (!$session->has('center') && $result['center']) {
+            $center = $result['center'];
+        }
+
         return $this->render('items', [
             'seo' => $seo,
             'city' => $city,
@@ -461,7 +495,8 @@ class PageController extends FrontendController
             'countValM2' => $this->getPlacesForM2Chart($result['m2ForChart'], $seo->target),
             'rates' => $rates,
             'currency' => $currency,
-            'taxes' => $taxes
+            'taxes' => $taxes,
+            'streetName' =>$result['streetName']            
         ]);
     }
 
