@@ -446,7 +446,7 @@ class BcItemsSearch extends BcItems
 
     protected function getStreetName($id, $target, $field)
     {
-        $query = $target == 1 ? BcPlacesView::find() : BcPlacesView::find();
+        $query = $target == 1 ? BcPlacesView::find() : BcPlacesSellView::find();
         $street = $query->select($field)->where(['pid' => $id])->asArray()->one();
         return $street[$field];
     }

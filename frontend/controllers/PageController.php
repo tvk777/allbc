@@ -449,7 +449,7 @@ class PageController extends FrontendController
                 //debug($params);
                 $params = $session->get('params');
                 $params['streetId']=null;
-               // $session->remove('params');
+                $session->remove('params');
             }
 
         }
