@@ -56,6 +56,7 @@
     function pjax_street(id) {
         streetId = id;
         $.pjax({
+            url: window.location.href,
             type: 'POST',
             data: {streetId: streetId},
             container: '#cardsPjax',
@@ -68,6 +69,7 @@
     $(document).on({
         click: function () {
             $.pjax({
+                url: window.location.href,
                 type: 'POST',
                 data: {closeStreet: true},
                 container: '#cardsPjax',

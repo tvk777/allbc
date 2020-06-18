@@ -441,13 +441,15 @@ class PageController extends FrontendController
             }
 
             if (!empty(Yii::$app->request->post('streetId'))) {
+                //debug($params);
                 $params['streetId'] = Yii::$app->request->post('streetId');
                 $session->set('params', $params);
             }
             if (Yii::$app->request->post('closeStreet')) {
+                //debug($params);
                 $params = $session->get('params');
                 $params['streetId']=null;
-                $session->remove('params');
+               // $session->remove('params');
             }
 
         }
