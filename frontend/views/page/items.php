@@ -85,26 +85,38 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
         <? if (!empty($conditions['streetId'])) : ?>
             <div class="row">
                 <? if ($streetName) : ?>
-                    <div class="street-name"><?= $streetName ?>
+                    <div class="street-name">
+                        <?= $streetName ?>
                         <button type="button" class="close close_btn close_street"><i class="close_black"></i></button>
                     </div>
                 <? endif; ?>
-                <div class="w_half">
+                <div class="w_half full-high">
                     <div class="objects_cards">
-                        <?
-                        foreach ($items as $item) {
-                            echo $this->render('_partial/_card', [
-                                'item' => $item,
-                                'target' => $seo->target,
-                                'result' => $result,
-                                'currentLanguage' => $currentLanguage,
-                                'currency' => $currency,
-                                'rates' => $rates,
-                                'type' => $conditions['type'],
-                                'taxes' => $taxes
-                            ]);
-                        }
-                        ?>
+                        <? if (count($items) > 0) : ?>
+                            <? if (!empty($items[0]->place->bcitem)) : ?>
+                            <? //debug($items[0]->place->bcitem->address);
+                            $bc = $items[0]->place->bcitem;
+                            ?>
+                            <div class="bc-street" style="background-image: url(<?= $bc->slides[0]['big']?>)" >
+                                <p><?= $bc->address ?></p>
+                                <a href="<?= $bc->slug->slug ?>">подробнее</a>
+                            </div>
+                            <? endif; ?>
+                            <?
+                            foreach ($items as $item) {
+                                echo $this->render('_partial/_card', [
+                                    'item' => $item,
+                                    'target' => $seo->target,
+                                    'result' => $result,
+                                    'currentLanguage' => $currentLanguage,
+                                    'currency' => $currency,
+                                    'rates' => $rates,
+                                    'type' => $conditions['type'],
+                                    'taxes' => $taxes
+                                ]);
+                            }
+                            ?>
+                        <? endif; ?>
                     </div>
                 </div>
             </div>
@@ -200,7 +212,8 @@ JS;
     <div class="bottom_coord"></div>
 
 </section>
-<?= $this->render('_partial/_items-foot', [
+
+<? echo $this->render('_partial/_items-foot', [
     'seo' => $seo,
     'city' => $city
 ]); ?>

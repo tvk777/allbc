@@ -960,6 +960,10 @@ textarea:focus {
 .visible_1024 {
     display: none;
 }
+.visible_990, .item_wrapp.visible_990 {
+    display: none;
+}
+
 
 .resp_768 {
     display: block !important;
@@ -971,6 +975,10 @@ textarea:focus {
 
 .red {
     color: #D00202;
+}
+
+.more-stage1 {
+    display:inline-block;
 }
 
 /*-------------------------------------------*/
@@ -4788,9 +4796,14 @@ input.all-subways:checked + label.all-subways:before{
     right: 0;
 }
 
+.map_object_templ.map_show .w_half.full-high{
+    min-height: 100vh;
+}
+
 .map_object_templ.map_show .object_map {
     z-index: 1;
     right: 0;
+    min-height: 100vh;
 }
 
 .map_object_templ .object_map {
@@ -8933,6 +8946,17 @@ i.star_2.rem {
     border-bottom: 1px solid #cdcece;
     padding-bottom: 5px;
     font-weight: bold;
+    font-size:16px;
+}
+.filter_nav .street-name{
+    border:none;
+    display: none;
+}
+.filter_nav.fixed .street-name{
+   display:block;
+}
+.filter_nav.fixed .row{
+    display:block;
 }
 .popup_office_header .close_black {
     position: absolute;
@@ -9667,4 +9691,40 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 .order label{
     font-weight: 400;
     cursor:pointer;
+}
+
+.bc-street{
+    height: 56px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin:7px;
+}
+
+.bc-street p, .bc-street a{
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.bc-street p{
+    padding: 15px;
+}
+
+.bc-street a {
+    position:absolute;
+    top: 8px;
+    right: 8px;
+    padding: 7px;
+    background-color: #FF4E00;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    border: none;
 }

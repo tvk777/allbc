@@ -1,5 +1,5 @@
 (function ($) {
-    var visibles = [], lg, lt, ico, element, mapParams = [], searchChecked, showMap;
+    var visibles = [], lg, lt, ico, element, mapParams = [], searchChecked, showMap, streetId;
     $(window).on('load', function () {
         searchChecked = false;
         showMap = false;
@@ -61,20 +61,26 @@
             data: {streetId: streetId},
             container: '#cardsPjax',
             async: true,
-            //scrollTo: false
+            scrollTo: false
         });
         //console.log(streetId);
+    }
+
+    function pjax_close_street() {
+        streetId = undefined;
+        $.pjax({
+            url: window.location.href,
+            type: 'POST',
+            data: {closeStreet: true},
+            container: '#cardsPjax',
+            async: true,
+            scrollTo: false
+        });
     }
 //close_street
     $(document).on({
         click: function () {
-            $.pjax({
-                url: window.location.href,
-                type: 'POST',
-                data: {closeStreet: true},
-                container: '#cardsPjax',
-                async: true,
-            });
+            pjax_close_street();
         }
     }, '.close_street');
 
@@ -257,14 +263,25 @@
             map.on('click', 'points', function (e) {
                 var features = map.queryRenderedFeatures(e.point, {layers: ['points']});
                 var markerId = features[0].properties.id;
+                //console.log("click on marker", features.length);
                 if ($('#onMap').prop('checked') == true
                     && $('#searchonmap').prop('checked') == false
                     && geojson.result == 'offices'
                     && markerId !== 'undefined') {
-                    //console.log(markerId);
                     //marker_change_ico(markerId);
                     //console.log(markers);
                     pjax_street(markerId);
+                }
+            });
+
+            map.on('click', function (e) {
+                var features = map.queryRenderedFeatures(e.point, {layers: ['points']});
+                if ($('#onMap').prop('checked') == true
+                    && $('#searchonmap').prop('checked') == false
+                    && geojson.result == 'offices'
+                    && features.length === 0
+                && streetId!==undefined) {
+                    pjax_close_street();
                 }
             });
 

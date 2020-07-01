@@ -65,6 +65,7 @@ function getBarsChart() {
     }
 }
 
+
 function getMapParams() {
     if ($(".object_map").length > 0) {
         filtersCoord = $(".filter_nav").offset().top + $(".filter_nav").height();
@@ -95,14 +96,16 @@ function getfilterNavParams() {
     if ($("#filters").length > 0) {
         if ($(window).scrollTop() > $("#filters").offset().top) {
             $(".filter_nav").addClass("fixed");
-            $(".filter_resp").addClass("scroll");
+            $(".map_object_templ .street-name").addClass("hidden");
+            //$(".filter_resp").addClass("scroll");
             $("#filters").outerHeight($(".filter_nav").outerHeight());
             if ($(".item-invis").length > 0) {
                 $(".item-invis").show();
             }
         } else {
             $(".filter_nav").removeClass("fixed");
-            $(".filter_resp").removeClass("scroll");
+            $(".map_object_templ .street-name").removeClass("hidden");
+            //$(".filter_resp").removeClass("scroll");
             $("#filters").height(false);
             if ($(".item-invis").length > 0) {
                 $(".item-invis").hide();
@@ -387,6 +390,12 @@ $(document).on('pjax:start', '#cardsPjax', function (event) {
 $(document).on('pjax:complete', '#cardsPjax', function (event) {
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible");
+    console.log($(".map_object_templ.map_show .street-name"));
+    if($(".filter_nav .street-name").length>0) $(".filter_nav .street-name").remove();
+    if($(".map_object_templ .street-name").length>0){
+        var streetDiv = $('<div class="row">').append($(".map_object_templ.map_show .street-name").clone());
+        streetDiv.appendTo(".filter_nav");
+    }
 });
 
 $(document).on('pjax:complete', '#barsPjax', function (event) {

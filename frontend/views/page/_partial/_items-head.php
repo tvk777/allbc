@@ -176,9 +176,12 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
     <div class="filter_nav">
         <div class="row">
             <div class="items_sect clearfix">
-                <div class="left filters">
+                <div class="item_wrapp stage1 visible_767">
+                    <button type="button" class="more_filter"><span>Фильтры</span></button>
+                </div>
+                <div class="left filters novisible_767">
                     <!--аренда-продажа-->
-                    <div class="item_wrapp target novisible_767 target">
+                    <div class="item_wrapp target o_novisible_767 target">
                         <div class="switch">
                             <ul>
                                 <li class="front  active" data-value="<?= $targetValue ?>"><?= $targetText ?></li>
@@ -187,7 +190,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                         </div>
                     </div>
                     <!--площадь-->
-                    <div class="item_wrapp novisible_1024 square">
+                    <div class="item_wrapp o_novisible_1024 square">
                         <div class="dropdow_item_wrapp">
                             <div class="dropdown_item_title m2-filter <?= $activeM2 ?>">
                                 <div class="item_title_text"><?= $squText ?></div>
@@ -227,7 +230,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                         </div>
                     </div>
                     <!--цена-->
-                    <div class="item_wrapp novisible_1024 price">
+                    <div class="item_wrapp o_novisible_1024 price">
                         <div class="dropdow_item_wrapp">
                             <div class="dropdown_item_title dropdown_item_title_2  price-filter <?= $activePrice ?>">
                                 <div class="item_title_text">
@@ -294,171 +297,181 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                         </div>
                     </div>
 
-                    <? if (!empty($filters['district'])): ?>
-                        <div class="item_wrapp novisible_1024">
-                            <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title district-filter <?= $activeDistricts ?>">
-                                    <? $districtText = (!empty($params['districts']) && count($params['districts']) > 0)
-                                        ? ': ' . count($params['districts'])
-                                        : '';
-                                    ?>
-                                    <div class="item_title_text district">
-                                        <?= Yii::t('app', 'District') . '<span class="count">' . $districtText . '</span>' ?>
-                                    </div>
-                                    <!--<div class="chose_filter" data-filters-index="filters_2"></div>-->
-                                </div>
-                                <div class="dropdown_item_menu dropdown_item_menu_4 countable">
-                                    <? foreach ($filters['district'] as $district) : ?>
-                                        <? if (!empty($params['districts']) && in_array($district->id, $params['districts'])) {
-                                            $checked_district = 'checked';
-                                        } else {
-                                            $checked_district = '';
-                                        }
+                    <div class="item_wrapp stage1 visible_990 novisible_767">
+                        <button type="button" class="more_filter"><span class="novisible_767">Еще фильтры</span>
+                        </button>
+                    </div>
+                    <div class="more-stage1 novisible_990">
+                        <? if (!empty($filters['district'])): ?>
+                            <div class="item_wrapp o_novisible_1024">
+                                <div class="dropdow_item_wrapp">
+                                    <div class="dropdown_item_title district-filter <?= $activeDistricts ?>">
+                                        <? $districtText = (!empty($params['districts']) && count($params['districts']) > 0)
+                                            ? ': ' . count($params['districts'])
+                                            : '';
                                         ?>
-                                        <div class="checkbox_wrapp">
-                                            <div class="checkbox">
-                                                <input class="more-filters" type="checkbox" name="filter[districts][]"
-                                                       value="<?= $district->id ?>"
-                                                       id="ch_<?= $district->id ?>" <?= $checked_district ?> >
-                                                <label for="ch_<?= $district->id ?>"
-                                                       data-district="district"><?= $district->name ?></label>
-                                            </div>
+                                        <div class="item_title_text district">
+                                            <?= Yii::t('app', 'District') . '<span class="count">' . $districtText . '</span>' ?>
                                         </div>
-                                    <? endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <? endif; ?>
-                    <? if (!empty($filters['subways'])): ?>
-                        <div class="item_wrapp">
-                            <div class="dropdown_subway_wrap">
-                                <div class="dropdown_subway_title subway-filter <?= $activeSubway ?>">
-                                    <? $subwayText = (!empty($params['subways']) && count($params['subways']) > 0)
-                                        ? ': ' . count($params['subways'])
-                                        : '';
-                                    ?>
-                                    <div class="item_title_text subways">
-                                        <?= Yii::t('app', 'Subway') . '<span class="count">' . $subwayText . '</span>' ?>
+                                        <!--<div class="chose_filter" data-filters-index="filters_2"></div>-->
                                     </div>
-                                </div>
-                                <div class="dropdown_item_menu dropdown_item_menu_subways">
-                                    <div class="metro_box">
-                                        <input type="hidden" name="filter[walk_dist]" id="walk_dist"
-                                               value="<?= $metroValclear ?>"/>
-                                        <div class="metro_two_cols">
-                                            <div class="col">
-                                                <h4><?= Yii::t('app', 'To the subway') ?></h4>
-                                            </div>
-                                            <div class="col">
-                                                <div class="range_slider_wrapp range_slider_3_wrapp">
-                                                    <span class="sl_desc">m</span>
-                                                    <div id="range_slider_3"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="metro_checkboxies">
-                                        <? if (count($filters['subways']) > 1) {
-                                            $branchName[1] = Yii::t('app', 'Red line');
-                                            $branchName[2] = Yii::t('app', 'Blue line');
-                                            $branchName[3] = Yii::t('app', 'Green line');
-                                        } else {
-                                            $branchName[1] = Yii::t('app', 'All stations');
-                                        }
-                                        //debug($branchName);
-
-                                        ?>
-                                        <? foreach ($filters['subways'] as $k => $branch) : ?>
-                                            <div class="checkbox_wrapp <?= $colSubways ?> column<?= $k ?>">
+                                    <div class="dropdown_item_menu dropdown_item_menu_4 countable">
+                                        <? foreach ($filters['district'] as $district) : ?>
+                                            <? if (!empty($params['districts']) && in_array($district->id, $params['districts'])) {
+                                                $checked_district = 'checked';
+                                            } else {
+                                                $checked_district = '';
+                                            }
+                                            ?>
+                                            <div class="checkbox_wrapp">
                                                 <div class="checkbox">
-                                                    <input class="all-subways" type="checkbox" id="branch<?= $k ?>">
-                                                    <label class="all-subways"
-                                                           for="branch<?= $k ?>"><?= $branchName[$k] ?></label>
+                                                    <input class="more-filters" type="checkbox"
+                                                           name="filter[districts][]"
+                                                           value="<?= $district->id ?>"
+                                                           id="ch_<?= $district->id ?>" <?= $checked_district ?> >
+                                                    <label for="ch_<?= $district->id ?>"
+                                                           data-district="district"><?= $district->name ?></label>
                                                 </div>
-                                                <? foreach ($branch as $subway) : ?>
-                                                    <? if (!empty($params['subways']) && in_array($subway->id, $params['subways'])) {
-                                                        $checked_subway = 'checked';
-                                                    } else {
-                                                        $checked_subway = '';
-                                                    }
-                                                    ?>
-                                                    <div class="checkbox">
-                                                        <input class="more-filters" type="checkbox"
-                                                               name="filter[subways][]"
-                                                               value="<?= $subway->id ?>"
-                                                               id="sb_<?= $subway->id ?>" <?= $checked_subway ?> >
-                                                        <label for="sb_<?= $subway->id ?>"
-                                                               data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway, true); ?></label>
-                                                    </div>
-                                                <? endforeach; ?>
                                             </div>
                                         <? endforeach; ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    <? endif; ?>
-                    <? if (!empty($filters['classes'])): ?>
-                        <div class="item_wrapp novisible_1024">
-                            <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title  <?= $activeClasses ?>">
-                                    <div class="item_title_text"><?= Yii::t('app', 'Type/Class') ?></div>
-                                </div>
-                                <div class="dropdown_item_menu dropdown_item_menu_4">
-                                    <? foreach ($filters['classes'] as $class) : ?>
-                                        <? if (!empty($params['classes']) && in_array($class->id, $params['classes'])) {
-                                            $checked_classes = 'checked';
-                                        } else {
-                                            $checked_classes = '';
-                                        }
+                        <? endif; ?>
+                        <? if (!empty($filters['subways'])): ?>
+                            <div class="item_wrapp">
+                                <div class="dropdown_subway_wrap">
+                                    <div class="dropdown_subway_title subway-filter <?= $activeSubway ?>">
+                                        <? $subwayText = (!empty($params['subways']) && count($params['subways']) > 0)
+                                            ? ': ' . count($params['subways'])
+                                            : '';
                                         ?>
-
-                                        <div class="checkbox_wrapp">
-                                            <div class="checkbox">
-                                                <input class="more-filters" type="checkbox" name="filter[classes][]"
-                                                       value="<?= $class->id ?>"
-                                                       id="ch_3_<?= $class->id ?>" <?= $checked_classes ?>>
-                                                <label for="ch_3_<?= $class->id ?>"
-                                                       data-filter="filters_1">
-                                                    <?= getDefaultTranslate('name', $currentLanguage, $class, true); ?>
-                                                </label>
+                                        <div class="item_title_text subways">
+                                            <?= Yii::t('app', 'Subway') . '<span class="count">' . $subwayText . '</span>' ?>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown_item_menu dropdown_item_menu_subways">
+                                        <div class="metro_box">
+                                            <input type="hidden" name="filter[walk_dist]" id="walk_dist"
+                                                   value="<?= $metroValclear ?>"/>
+                                            <div class="metro_two_cols">
+                                                <div class="col">
+                                                    <h4><?= Yii::t('app', 'To the subway') ?></h4>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="range_slider_wrapp range_slider_3_wrapp">
+                                                        <span class="sl_desc">m</span>
+                                                        <div id="range_slider_3"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    <? endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <? endif; ?>
-                    <? if (!empty($filters['statuses'])): ?>
-                        <div class="item_wrapp novisible_1024">
-                            <div class="dropdow_item_wrapp">
-                                <div class="dropdown_item_title  <?= $activeStatuses ?>">
-                                    <div class="item_title_text"><?= Yii::t('app', 'Condition') ?></div>
-                                </div>
-                                <div class="dropdown_item_menu dropdown_item_menu_4">
-                                    <? foreach ($filters['statuses'] as $status) : ?>
-                                        <? if (!empty($params['statuses']) && in_array($status->id, $params['statuses'])) {
-                                            $checked_statuses = 'checked';
-                                        } else {
-                                            $checked_statuses = '';
-                                        }
-                                        ?>
-                                        <div class="checkbox_wrapp">
-                                            <div class="checkbox">
-                                                <input class="more-filters" type="checkbox" name="filter[statuses][]"
-                                                       value="<?= $status->id ?>"
-                                                       id="ch_15_<?= $status->id ?>" <?= $checked_statuses ?> >
-                                                <label for="ch_15_<?= $status->id ?>"
-                                                       data-filter="filters_6"><?= $status->name ?></label>
-                                            </div>
-                                        </div>
-                                    <? endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <? endif; ?>
+                                        <div class="metro_checkboxies">
+                                            <? if (count($filters['subways']) > 1) {
+                                                $branchName[1] = Yii::t('app', 'Red line');
+                                                $branchName[2] = Yii::t('app', 'Blue line');
+                                                $branchName[3] = Yii::t('app', 'Green line');
+                                            } else {
+                                                $branchName[1] = Yii::t('app', 'All stations');
+                                            }
+                                            //debug($branchName);
 
-                    <div class="item_wrapp novisible_1024">
+                                            ?>
+                                            <? foreach ($filters['subways'] as $k => $branch) : ?>
+                                                <div class="checkbox_wrapp <?= $colSubways ?> column<?= $k ?>">
+                                                    <div class="checkbox">
+                                                        <input class="all-subways" type="checkbox"
+                                                               id="branch<?= $k ?>">
+                                                        <label class="all-subways"
+                                                               for="branch<?= $k ?>"><?= $branchName[$k] ?></label>
+                                                    </div>
+                                                    <? foreach ($branch as $subway) : ?>
+                                                        <? if (!empty($params['subways']) && in_array($subway->id, $params['subways'])) {
+                                                            $checked_subway = 'checked';
+                                                        } else {
+                                                            $checked_subway = '';
+                                                        }
+                                                        ?>
+                                                        <div class="checkbox">
+                                                            <input class="more-filters" type="checkbox"
+                                                                   name="filter[subways][]"
+                                                                   value="<?= $subway->id ?>"
+                                                                   id="sb_<?= $subway->id ?>" <?= $checked_subway ?> >
+                                                            <label for="sb_<?= $subway->id ?>"
+                                                                   data-subway="subway"><?= getDefaultTranslate('name', $currentLanguage, $subway, true); ?></label>
+                                                        </div>
+                                                    <? endforeach; ?>
+                                                </div>
+                                            <? endforeach; ?>
+                                        </div>
+                                        <span style="clear:both"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <? endif; ?>
+                        <? if (!empty($filters['classes'])): ?>
+                            <div class="item_wrapp o_novisible_1024">
+                                <div class="dropdow_item_wrapp">
+                                    <div class="dropdown_item_title  <?= $activeClasses ?>">
+                                        <div class="item_title_text"><?= Yii::t('app', 'Type/Class') ?></div>
+                                    </div>
+                                    <div class="dropdown_item_menu dropdown_item_menu_4">
+                                        <? foreach ($filters['classes'] as $class) : ?>
+                                            <? if (!empty($params['classes']) && in_array($class->id, $params['classes'])) {
+                                                $checked_classes = 'checked';
+                                            } else {
+                                                $checked_classes = '';
+                                            }
+                                            ?>
+
+                                            <div class="checkbox_wrapp">
+                                                <div class="checkbox">
+                                                    <input class="more-filters" type="checkbox"
+                                                           name="filter[classes][]"
+                                                           value="<?= $class->id ?>"
+                                                           id="ch_3_<?= $class->id ?>" <?= $checked_classes ?>>
+                                                    <label for="ch_3_<?= $class->id ?>"
+                                                           data-filter="filters_1">
+                                                        <?= getDefaultTranslate('name', $currentLanguage, $class, true); ?>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <? endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <? endif; ?>
+                        <? if (!empty($filters['statuses'])): ?>
+                            <div class="item_wrapp o_novisible_1024">
+                                <div class="dropdow_item_wrapp">
+                                    <div class="dropdown_item_title  <?= $activeStatuses ?>">
+                                        <div class="item_title_text"><?= Yii::t('app', 'Condition') ?></div>
+                                    </div>
+                                    <div class="dropdown_item_menu dropdown_item_menu_4">
+                                        <? foreach ($filters['statuses'] as $status) : ?>
+                                            <? if (!empty($params['statuses']) && in_array($status->id, $params['statuses'])) {
+                                                $checked_statuses = 'checked';
+                                            } else {
+                                                $checked_statuses = '';
+                                            }
+                                            ?>
+                                            <div class="checkbox_wrapp">
+                                                <div class="checkbox">
+                                                    <input class="more-filters" type="checkbox"
+                                                           name="filter[statuses][]"
+                                                           value="<?= $status->id ?>"
+                                                           id="ch_15_<?= $status->id ?>" <?= $checked_statuses ?> >
+                                                    <label for="ch_15_<?= $status->id ?>"
+                                                           data-filter="filters_6"><?= $status->name ?></label>
+                                                </div>
+                                            </div>
+                                        <? endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <? endif; ?>
+                    </div>
+                    <div class="item_wrapp search-button o_novisible_1024">
                         <a href="#" class="button-filter-search"><?= Yii::t('app', 'Search') ?></a>
                     </div>
                 </div>
@@ -496,7 +509,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
                                id="offices_result" <?= $officesChecked ?>/>
                         <label for="offices_result"><?= Yii::t('app', 'Offices') ?></label>
                     </div>
-                    <div class="item_wrapp novisible_1024">
+                    <div class="inline o_novisible_1024">
                         <div class="resp_filter_inner comission">
                             <div class="checkbox">
                                 <? $comChecked = !empty($params['comission']) && $params['comission'] == 'on' ? 'checked' : '' ?>
@@ -511,7 +524,7 @@ $colSubways = count($filters['subways']) > 1 ? 'floatLeft' : '';
             </div>
             <div class="right align_right">
                 <!--подписаться на обновления-->
-                <div class="item_wrapp append-elem novisible_767" data-append-desktop-elem="8"
+                <div class="item_wrapp append-elem o_novisible_767" data-append-desktop-elem="8"
                      data-min-screen="767">
                     <?= Html::a(
                         Yii::t('app', 'Subscribe to updates'),
