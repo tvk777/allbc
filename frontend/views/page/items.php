@@ -96,8 +96,9 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                             <? if (!empty($items[0]->place->bcitem)) : ?>
                             <? //debug($items[0]->place->bcitem->address);
                             $bc = $items[0]->place->bcitem;
+                            $bgStyle = count($bc->slides)>0 ? 'style="background-image: url('.$bc->slides[0]['big'].')"' : '';
                             ?>
-                            <div class="bc-street" style="background-image: url(<?= $bc->slides[0]['big']?>)" >
+                            <div class="bc-street" <?= $bgStyle ?> >
                                 <p><?= $bc->address ?></p>
                                 <a href="<?= $bc->slug->slug ?>">подробнее</a>
                             </div>

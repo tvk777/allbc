@@ -390,7 +390,6 @@ $(document).on('pjax:start', '#cardsPjax', function (event) {
 $(document).on('pjax:complete', '#cardsPjax', function (event) {
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible");
-    console.log($(".map_object_templ.map_show .street-name"));
     if($(".filter_nav .street-name").length>0) $(".filter_nav .street-name").remove();
     if($(".map_object_templ .street-name").length>0){
         var streetDiv = $('<div class="row">').append($(".map_object_templ.map_show .street-name").clone());

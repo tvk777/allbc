@@ -5,9 +5,7 @@
         showMap = false;
         $("#searchonmap").prop("checked", searchChecked);
         $("#onMap").prop("checked", showMap);
-        map = initMap();
-        mapFeatures(map);
-        searchOnMap();
+        initMap();
         //console.log(geojson);
         if (geojson.result != 'offices') {
             $('.marker').removeClass('hover');
@@ -22,8 +20,7 @@
 
     $(document).on('pjax:complete', function (event) {
         initMap();
-        mapFeatures(map);
-        //console.log(geojson);
+        console.log(streetId);
 
         $(".map_object_templ").addClass("map_show");
         $("#onMap").prop("checked", showMap);
@@ -35,8 +32,13 @@
         if (geojson.result != 'offices') {
             $('.marker').removeClass('hover');
         }
-        searchOnMap();
-        marker_change_ico(0);
+
+        if(streetId){
+            marker_change_ico(streetId);
+        } else {
+            marker_change_ico(0);
+        }
+        
         getCardParams();
         cardSlider();
         expertsSlider();
@@ -85,8 +87,8 @@
     }, '.close_street');
 
 
-    /*$(document).on({
-     mouseenter: function () {
+    $(document).on({
+     click: function () {
      if ($(this).attr('data-id')) {
      if ($('#onMap').prop('checked') == true && $('#searchonmap').prop('checked') == false && markers[$(this).attr('data-id')]._lngLat !== 'undefined') {
      var mapCenter = map.getCenter(), mapLg, mapLt;
@@ -108,17 +110,17 @@
      }
      }
      }
-     }, ".objects_cards .object_card");*/
+     }, ".objects_cards .object_card");
 
     $(document).on({
         change: function () {
             if ($('#searchonmap').prop('checked') === true) {
                 searchChecked = true;
-                //mapParams = getVisibles();
-                //pjax_result(mapParams['visibles'], mapParams['center'], mapParams['zoom']);
+                mapParams = getVisibles();
+                pjax_result(mapParams['visibles'], mapParams['center'], mapParams['zoom']);
             } else {
                 searchChecked = false;
-                //pjax_result(0, 0, 0);
+                pjax_result(0, 0, 0);
             }
         }
     }, '#searchonmap');
@@ -137,54 +139,52 @@
         }
     }, '.map_checkbox');
 
+    $(document).on({
+        click: function () {
+            var markerId = $(this).attr('class').split(' ')[1];
+            $('.marker').removeClass('hover');
+            $(this).addClass('hover');
+            if ($('#onMap').prop('checked') == true
+                && $('#searchonmap').prop('checked') == false
+                && geojson.result == 'offices'
+                && markerId !== 'undefined') {
+                marker_change_ico(markerId);
+                pjax_street(markerId);
+            }
+        }
+    }, '.marker');
+
 
     function marker_change_ico(id) {
-        //console.log(id);
+        $('.marker').removeClass('hover');
         if (id === 0) return false;
         element = $(markers[id]._element);
-        $('.marker').removeClass('hover');
         element.addClass('hover');
     }
 
 
-    function getVisibles() {
+    function getVisibles(){
         var bounds, minLat, maxLat, minLng, maxLng, center, zoom;
         bounds = map.getBounds();
-        //console.log(bounds);
         minLat = bounds._sw.lat;
         maxLat = bounds._ne.lat;
         minLng = bounds._sw.lng;
         maxLng = bounds._ne.lng;
-        visibles = [];
+        visibles = {};
         for (var i = 0; i < geojson.features.length; i++) {
             if (
                 geojson.features[i].geometry.coordinates[0] >= minLng &&
                 geojson.features[i].geometry.coordinates[0] <= maxLng &&
                 geojson.features[i].geometry.coordinates[1] >= minLat &&
                 geojson.features[i].geometry.coordinates[1] <= maxLat
-            ) {
-                visibles.push(geojson.features[i].properties.id);
-                //console.log(geojson.features[i].geometry.coordinates, visibles);
-            }
+            )
+                visibles[i] = geojson.features[i].properties.id;
         }
         center = map.getCenter();
-        mapParams['center'] = [center.lng, center.lat];
+        mapParams['center'] = [center.lng, center.lat]
         mapParams['zoom'] = map.getZoom();
         mapParams['visibles'] = visibles;
-        //console.log(visibles);
-        return (mapParams);
-    }
-
-    function searchOnMap() {
-        map.on('dragend', function () {
-            if ($('#searchonmap').prop('checked') == true) {
-                mapParams = getVisibles();
-                pjax_result(mapParams['visibles'], mapParams['center'], mapParams['zoom']);
-            }
-        });
-    }
-
-    function createMarkers() {
+        return(mapParams);
     }
 
 
@@ -197,28 +197,23 @@
             zoom: zoom,
         });
 
-        var lang = geojson.lang !== 'ua' ? geojson.lang : 'mul';
+        var lang = geojson.lang !=='ua' ? geojson.lang : 'mul';
         map.addControl(new MapboxLanguage({
             defaultLanguage: lang
             //defaultLanguage: 'en'
             //defaultLanguage: 'ru'
         }));
-        return map;
-    }
 
-
-     function mapFeatures(map) {
-         //console.log(geojson.features.length);
         geojson.features.forEach(function (marker) {
             var el = document.createElement('div'), html = '', id = marker.properties.id;
 
             el.className = 'marker ' + id;
-            if (geojson.result != 'offices') {
+            if(geojson.result!='offices') {
                 html += '<div class="map-img">';
                 html += '<img src="' + marker.properties.img + '"/>';
                 html += '<div class="green_circle">' + marker.properties.class + '</div>';
                 html += '</div>';
-                html += '<h4>' + marker.properties.title + '</h4>';
+                html +='<h4>' + marker.properties.title + '</h4>';
                 html += '<p>' + marker.properties.address + '</p>';
 
                 mar = new mapboxgl.Marker(el)
@@ -233,123 +228,35 @@
             markers[id] = mar;
         });
 
-        map.on('load', function () {
-            map.addSource("bcAllbc", {
-                "type": "geojson",
-                "data": {
-                    "type": "FeatureCollection",
-                    "features": geojson.features
-                },
-                cluster: true,
-                clusterRadius: 40,
-                clusterMaxZoom: 8
-            });
+        map.on('dragend', function () {
+            if ($('#searchonmap').prop('checked') == true) {
+                mapParams = getVisibles();
+                pjax_result(mapParams['visibles'], mapParams['center'], mapParams['zoom']);
+            }
+        });
 
-            map.loadImage('./img/newmarker5.png', function (error, image) {
-                if (error) throw error;
-                map.addImage('pin', image);
-                map.addLayer({
-                    "id": "points",
-                    //filter: ["!", ["has", "point_count"]],
-                    "type": "symbol",
-                    "source": "bcAllbc",
-                    "layout": {
-                        "icon-image": "pin",
-                        "icon-anchor": "center"
-                    }
-                });
-            });
-
-            map.on('click', 'points', function (e) {
-                var features = map.queryRenderedFeatures(e.point, {layers: ['points']});
-                var markerId = features[0].properties.id;
-                //console.log("click on marker", features.length);
-                if ($('#onMap').prop('checked') == true
-                    && $('#searchonmap').prop('checked') == false
-                    && geojson.result == 'offices'
-                    && markerId !== 'undefined') {
-                    //marker_change_ico(markerId);
-                    //console.log(markers);
-                    pjax_street(markerId);
-                }
-            });
-
+        map.on('load', function() {
             map.on('click', function (e) {
-                var features = map.queryRenderedFeatures(e.point, {layers: ['points']});
+                var targetClassName = $(e.originalEvent.srcElement).attr('class');
+                console.log($(e.originalEvent.srcElement).attr('class'), streetId);
                 if ($('#onMap').prop('checked') == true
                     && $('#searchonmap').prop('checked') == false
                     && geojson.result == 'offices'
-                    && features.length === 0
-                && streetId!==undefined) {
+                    && targetClassName === 'mapboxgl-canvas'
+                    && streetId!==undefined) {
                     pjax_close_street();
                 }
             });
 
-
-            map.addLayer({
-                id: "cluster",
-                type: "circle",
-                source: "bcAllbc",
-                filter: [">=", "point_count", 1],
-                paint: {
-                    "circle-color": "#3eb060",
-                    "circle-radius": [
-                        "step",
-                        ["get", "point_count"],
-                        20,
-                        100,
-                        30,
-                        750,
-                        40
-                    ],
-                    "circle-opacity": 0.6,
-                }
-            });
-            map.addLayer({
-                id: "cluster-count",
-                type: "symbol",
-                source: "bcAllbc",
-                filter: ["has", "point_count"],
-                layout: {
-                    "text-field": "{point_count_abbreviated}",
-                    "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-                    "text-size": 14,
-                },
-                "paint": {
-                    "text-color": "white"
-                }
-            });
-
-            map.on('click', 'cluster', function (e) {
-                $('.marker').unbind('click');
-                var features = map.queryRenderedFeatures(e.point, {layers: ['cluster']});
-                var clusterId = features[0].properties.cluster_id;
-                map.getSource('bcAllbc').getClusterExpansionZoom(clusterId, function (err, zoom) {
-                    if (err)
-                        return;
-
-                    map.easeTo({
-                        center: features[0].geometry.coordinates,
-                        zoom: zoom
-                    });
-                });
-            });
-            map.on('mouseenter', 'cluster', function () {
-                map.getCanvas().style.cursor = 'pointer';
-            });
-            map.on('mouseleave', 'cluster', function () {
-                map.getCanvas().style.cursor = '';
-            });
-
         });
 
-        map.on('zoomstart', function () {
+        map.on('zoomstart', function() {
             $('.marker.hover').removeClass('hover');
         });
 
-        /*map.on('zoomend', function() {
+        map.on('zoomend', function() {
          console.log(map.getZoom());
-         });*/
+         });
 
     }
 })(jQuery);

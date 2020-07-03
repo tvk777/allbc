@@ -8708,12 +8708,12 @@ i.star_2.rem {
 }
 
 .marker {
-    /*background-image: url('../img/newmarker5.png');
-    background-size: cover;*/
-    width: 15px;
-    height: 15px;
+    background-image: url('../img/newmarker5.png');
+    background-size: cover;
+    width: 10px;
+    height: 10px;
     cursor: pointer;
-    z-index: 9;
+    /*z-index: 9;*/
 }
 
 .marker.hover {
@@ -9702,6 +9702,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    background-color: #cccccc;
     margin:7px;
 }
 
