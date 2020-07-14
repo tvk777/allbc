@@ -89,6 +89,8 @@ return [
     'Free Offices' => 'Вільні офіси',
     'No' => 'Немає',
     'Subscribe to updates' => 'Підписатися на оновлення',
+    'Subscribe' => 'Підписатися',
+    'to updates' => 'на оновлення',
     'Your email for subscription' => 'Ваш email для підписки',
     'Price' => 'Ціна',
     'Office area' => 'Площа офісу',

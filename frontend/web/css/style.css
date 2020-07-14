@@ -2842,11 +2842,11 @@ img.logo_black {
     min-width: 143px;
     min-height: 41px;
     cursor: pointer;
-    padding: 8px 20px;
+    padding: 8px 10px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    border: 1px solid #3eb060;
+    border: 2px solid #3eb060;
     background-color: #3eb060;
     font-size: 16px;
     font-weight: bold;
@@ -4348,10 +4348,6 @@ input.all-subways:checked + label.all-subways:before{
     max-width: unset;
 }
 
-.custom_select_wrapp_2 .select_input {
-    width: 159px;
-}
-
 .select_item {
     padding: 1px 10px;
     cursor: pointer;
@@ -4671,7 +4667,7 @@ input.all-subways:checked + label.all-subways:before{
 
 .green_pill_2 {
     margin: 0;
-    padding: 7px 14px 6px 14px;
+    padding: 7px 10px;
     background: #ffffff;
     color: #000000;
     border-width: 3px;
@@ -4817,14 +4813,15 @@ input.all-subways:checked + label.all-subways:before{
 }
 
 .map_object_header .left {
-    width: calc(100% - 430px);
+    width: calc(100% - 400px);
     padding-right: 5px;
     padding-top: 8px;
 }
 
 .map_object_header .right {
-    width: 430px;
+    width: 400px;
     padding-left: 5px;
+    padding-top:8px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -8710,8 +8707,11 @@ i.star_2.rem {
 .marker {
     background-image: url('../img/newmarker5.png');
     background-size: cover;
-    width: 10px;
-    height: 10px;
+    /*background-size: 10px 10px;*/
+    background-position:center;
+    background-repeat:no-repeat;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
     /*z-index: 9;*/
 }
@@ -9549,18 +9549,16 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 }
 
 .seo_catalog_urls .target {
-    width: 100%;
-}
-
-.seo_catalog_urls .target {
     max-width: 114px;
+    float:left;
 }
 
 .seo_catalog_urls .target .custom_select_title {
     max-width: 108px;
 }
 
-.button-filter-search {
+.button-filter-search,
+.button-filter-search-700{
     color: #FFF;
     font-size: 15px;
     font-weight: 700;
@@ -9582,12 +9580,16 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     display: flex;
 }
 
-.button-filter-search:hover {
+.button-filter-search:hover,
+.button-filter-search-700:hover{
     background: #ff7e00;
     color: white;
+    text-decoration: none;
 }
-.button-filter-search:focus, .button-filter-search:active {
+.button-filter-search:focus, .button-filter-search:active,
+.button-filter-search-700:focus, .button-filter-search-700:active{
     color: white;
+    text-decoration: none;
 }
 
 .item-type {
@@ -9728,4 +9730,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     border: none;
+}
+.visible_700, .visible_450{
+    display: none;
 }
