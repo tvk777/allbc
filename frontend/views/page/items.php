@@ -8,7 +8,7 @@ use yii\helpers\Url;
 //echo Yii::$app->settings->maxM2;
 //debug($pricesChart);
 
-//debug($items[0]['bc']);
+//debug($items[0]);
 //[type] => 3
 //debug($items[1]['bc']->minPrice);
 //debug($items[0]['places']);

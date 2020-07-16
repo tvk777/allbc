@@ -42,7 +42,6 @@ if ($result == 'bc') {
 } else {
     $cardItem = $item->place->bcitem; //bc
     $placeItem = $item->place; //place
-    //debug($placeItem);
     $id = $placeItem->id;
     $itemPlaces = null;
     $modelWishlist = $placeItem;
@@ -50,7 +49,7 @@ if ($result == 'bc') {
     $href = '/' . $placeItem->slug->slug . '?target=' . $paramTarget;
     $city = $cardItem->city->name;
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
-    $address = $cardItem->street;
+    $address = $placeItem->hide_bc==1 ? $cardItem->street : $cardItem->address;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
     $placePrices = getPlacePrices($item, $currency, $rates, $taxes, $target);
     $minPrice = $placePrices['forM2'];

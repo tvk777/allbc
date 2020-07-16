@@ -8706,8 +8706,8 @@ i.star_2.rem {
 
 .marker {
     background-image: url('../img/newmarker5.png');
-    background-size: cover;
-    /*background-size: 10px 10px;*/
+    /*background-size: cover;*/
+    background-size: 10px 10px;
     background-position:center;
     background-repeat:no-repeat;
     width: 50px;

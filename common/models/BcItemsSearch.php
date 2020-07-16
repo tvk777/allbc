@@ -281,7 +281,7 @@ class BcItemsSearch extends BcItems
                 $name = getDefaultTranslate('name', $params['lang'], $item, true);
             } else {
                 $id = $item->pid;
-                $coord = [$item->lng_str, $item->lat_str];
+                $coord = $item->hide_bc==1 ? [$item->lng_str, $item->lat_str] : [$item->lng, $item->lat];
                 $addres = '';
                 $img = '';
                 $class = '';
