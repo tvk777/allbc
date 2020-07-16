@@ -12,7 +12,13 @@ class RatesController extends Controller
         if ($pass == '2jpxcalld3fnmlsmt8hkwf4oty2u35bccfqadc1r') {
 
             $url = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json';
-            $content = file_get_contents($url);
+            $arrContextOptions=array(
+                "ssl"=>array(
+                    "verify_peer"=>false,
+                    "verify_peer_name"=>false,
+                ),
+            );
+            $content = file_get_contents($url, false, stream_context_create($arrContextOptions));
             $result = json_decode($content, TRUE);
 
             $rates = array_filter($result, function ($r) {
