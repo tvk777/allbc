@@ -5,6 +5,7 @@
 $this->registerJsFile('/js/stupidtable.min.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
 
 $currentLanguage = Yii::$app->language;
+$currency = 1;
 //debug($model->characteristics);
 /* @var $this yii\web\View */
 
@@ -25,7 +26,7 @@ $placesRentArhive = $model->archivePlaces;
 $placesSellArhive = $model->archivePlacesSell;
 
 $city_url = $target == 2 ? $mainSell : $mainRent;
-$city_url .='?filter[result]=bc';
+$city_url .= '?filter[result]=bc';
 $city_id = 0;
 $zoom = 13;
 //debug(count($model->district->items));
@@ -36,7 +37,7 @@ if (isset($model->city)) {
     $rentLable = Yii::t('app', 'Office rental in') . ' ' . getLangInflect($model->city, $currentLanguage);
     $sellLable = Yii::t('app', 'Office for sale in') . ' ' . getLangInflect($model->city, $currentLanguage);
     $city_url = $target == 2 ? $model->city->slug_sell : $model->city->slug;
-    $city_url .='?filter[result]=bc';
+    $city_url .= '?filter[result]=bc';
     $this->params['breadcrumbs'][] = [
         'label' => $target == 2 ? $sellLable : $rentLable,
         'url' => $city_url
@@ -55,7 +56,7 @@ if ($city_id !== 0) {
 if ($seoClass) {
     $this->params['breadcrumbs'][] = [
         'label' => $seoClass->name,
-        'url' => $seoClass->slug->slug.'?filter[result]=bc'
+        'url' => $seoClass->slug->slug . '?filter[result]=bc'
     ];
 }
 $district = '';
@@ -216,7 +217,8 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                     <? if (count($places) > 0) : ?>
                         <div class="inner">
                             <div class="free_office">
-                                <a href="#places" class="scroll_to green_pill tel_pill tel_hide_pill"><?= Yii::t('app', 'Free Offices').': '.count($places).' - '.$minPrice ?></a>
+                                <a href="#places"
+                                   class="scroll_to green_pill tel_pill tel_hide_pill"><?= Yii::t('app', 'Free Offices') . ': ' . count($places) . ' - ' . $minPrice ?></a>
                             </div>
                         </div>
                     <? else: ?>
@@ -245,34 +247,35 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                                         <a target="_blank"
                                            href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
 
-                                        <span class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
-                                        карте</a></span>
+                                        <span class="map_link"><i class="map"></i><a href="#"
+                                                                                     class="dashed_link showOnmap">на
+                                                карте</a></span>
 
                                     </h5>
                                 </div>
                                 <? if (count($model->subways) > 0) : ?>
-                                <div class="metros_wrapp">
-                                    <? foreach ($model->subways as $sub) : ?>
-                                        <? switch ($sub->subwayDetails->branch_id) {
-                                            case 1:
-                                                $subwayIco = '<i class="red_metro"></i>';
-                                                break;
-                                            case 2:
-                                                $subwayIco = '<i class="green_metro"></i>';
-                                                break;
-                                            case 3:
-                                                $subwayIco = '<i class="blue_metro"></i>';
-                                                break;
-                                            default:
-                                                $subwayIco = '<i class="metro"></i>';
-                                        }
+                                    <div class="metros_wrapp">
+                                        <? foreach ($model->subways as $sub) : ?>
+                                            <? switch ($sub->subwayDetails->branch_id) {
+                                                case 1:
+                                                    $subwayIco = '<i class="red_metro"></i>';
+                                                    break;
+                                                case 2:
+                                                    $subwayIco = '<i class="green_metro"></i>';
+                                                    break;
+                                                case 3:
+                                                    $subwayIco = '<i class="blue_metro"></i>';
+                                                    break;
+                                                default:
+                                                    $subwayIco = '<i class="metro"></i>';
+                                            }
 
-                                        $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subways][]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
-                                        <div class="metro_wrapp">
-                                            <p><?= $subway; ?></p>
-                                        </div>
-                                    <? endforeach ?>
-                                </div>
+                                            $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subways][]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
+                                            <div class="metro_wrapp">
+                                                <p><?= $subway; ?></p>
+                                            </div>
+                                        <? endforeach ?>
+                                    </div>
                                 <? endif; ?>
                             </div>
 
@@ -289,22 +292,22 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                         <? endforeach; ?>
                     <? endif; ?>
                     <?= $this->render('_partial/_user-info', [
-                                'user' => $broker,
-                                'city_url' => $city_url,
-                                'comission' => $comission,
-                                'role' => 'Брокер'
-                            ]); ?>
-                    <?/* if (count($model->brokers) > 0) : */?><!--
-                        <?/* foreach ($model->brokers as $user) : */?>
-                            <?/* debug($user) */?>
-                            <?/*= $this->render('_partial/_user-info', [
+                        'user' => $broker,
+                        'city_url' => $city_url,
+                        'comission' => $comission,
+                        'role' => 'Брокер'
+                    ]); ?>
+                    <? /* if (count($model->brokers) > 0) : */ ?><!--
+                        <? /* foreach ($model->brokers as $user) : */ ?>
+                            <? /* debug($user) */ ?>
+                            <? /*= $this->render('_partial/_user-info', [
                                 'user' => $user,
                                 'city_url' => $city_url,
                                 'comission' => $comission,
                                 'role' => 'Брокер'
-                            ]); */?>
-                        <?/* endforeach; */?>
-                    --><?/* endif; */?>
+                            ]); */ ?>
+                        <? /* endforeach; */ ?>
+                    --><? /* endif; */ ?>
                     <div class="inner">
                         <div class="pills_wrapp">
                             <div class="col">
@@ -393,7 +396,9 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
         'target' => $target,
         'places' => $placesRent,
         'blockTitle' => Yii::t('app', 'Office rental - offers'),
-        'userId' => $broker->id
+        'userId' => $broker->id,
+        'rates' => $rates,
+        'taxes' => $taxes
     ]);
 } ?>
 
@@ -479,34 +484,34 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
                     </div>
                 </div>
 
-                        <?
-                        //debug($broker);
-                        echo $this->render('_partial/_user-info', [
-                            'user' => $broker,
-                            'city_url' => $city_url,
-                            'comission' => $comission,
-                            'role' => 'Брокер'
-                        ]);
-                        ?>
+                <?
+                //debug($broker);
+                echo $this->render('_partial/_user-info', [
+                    'user' => $broker,
+                    'city_url' => $city_url,
+                    'comission' => $comission,
+                    'role' => 'Брокер'
+                ]);
+                ?>
 
 
                 <? //if (count($model->brokers) > 0) : ?>
-                    <? //foreach ($model->brokers as $user) : ?>
-                        <? /*echo $this->render('_partial/_user-contact', [
+                <? //foreach ($model->brokers as $user) : ?>
+                <? /*echo $this->render('_partial/_user-contact', [
                             'user' => $user,
                             'role' => 'Брокер'
                         ]);*/ ?>
-                    <? //endforeach; ?>
+                <? //endforeach; ?>
                 <? //endif; ?>
 
 
                 <? //if (count($model->owners) > 0) : ?>
-                    <? //foreach ($model->owners as $user) : ?>
-                        <? /*echo $this->render('_partial/_user-contact', [
+                <? //foreach ($model->owners as $user) : ?>
+                <? /*echo $this->render('_partial/_user-contact', [
                             'user' => $user,
                             'role' => 'Собственник'
                         ]); */ ?>
-                    <? //endforeach; ?>
+                <? //endforeach; ?>
                 <? //endif; ?>
 
                 <div class="contact_item">
@@ -538,7 +543,7 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
 
 <section class="sect_7_bc">
     <div class="row">
-        <? echo \common\widgets\AltOffersWidget::widget(['item' => $model, 'target' => $target]) ?>
+        <? //echo \common\widgets\AltOffersWidget::widget(['item' => $model, 'target' => $target, 'result' => 'bc']) ?>
         <?= common\widgets\ServicesWidget::widget(); ?>
     </div>
 </section>

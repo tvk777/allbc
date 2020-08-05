@@ -190,7 +190,72 @@ class BcPlacesSell extends ActiveRecord
         return $this->hasOne(BcPeriodsSell::className(), ['id'  => 'price_period']);
     }
 
-    public function getPricePeriod($prices){
+    //цена за кв.м.
+    protected function getMainPrice($rates)
+    {
+        if ($this->con_price === 1) {
+            return null;
+        }
+        $rate = $rates[$this->valute_id];
+        $price = $this->price;
+        switch ($this->price_period) {
+            case 1:
+                $price = round($price * $rate);
+                break;
+            case 2:
+                $price = round($price * $rate / $this->m2);
+                break;
+            default:
+                break;
+        }
+
+        return $price;
+    }
+
+    protected function calculatedPrice($price, $rates=null, $taxes)
+    {
+        return $this->tax == 1 || $this->tax == 4
+            ? $price + ($price * $taxes[$this->tax]) / 100
+            : $price;
+    }
+
+    protected function getPlaceKop() {
+        return $this->kop > 0 ? ($this->m2 + ($this->m2 * $this->kop) / 100) : $this->m2;
+    }
+
+
+    public function getPricePeriod($rates, $taxes)
+    {
+        if ($this->con_price === 1 || $this->price == 0) {
+            return null;
+        }
+        $price = $this->getMainPrice($rates);
+        $pricesPeriod = [];
+        $pricesPeriod['uah']['m2'] = $price;
+        $pricesPeriod['usd']['m2'] = round($price/$rates[2]);
+        $pricesPeriod['eur']['m2'] = round($price/$rates[3]);
+        $pricesPeriod['rub']['m2'] = round($price/$rates[4]);
+
+        $calculatedPrice = $this->calculatedPrice($price, $rates, $taxes);
+        $value = $calculatedPrice * $this->m2;
+        $full = $calculatedPrice*$this->getPlaceKop();
+
+        $pricesPeriod['uah']['value'] = $value;
+        $pricesPeriod['usd']['value'] = round($value/$rates[2]);
+        $pricesPeriod['eur']['value'] = round($value/$rates[3]);
+        $pricesPeriod['rub']['value'] = round($value/$rates[4]);
+
+        $pricesPeriod['uah']['full'] = $full;
+        $pricesPeriod['usd']['full'] = round($full/$rates[2]);
+        $pricesPeriod['eur']['full'] = round($full/$rates[3]);
+        $pricesPeriod['rub']['full'] = round($full/$rates[4]);
+
+        return $pricesPeriod;
+    }
+
+
+
+    public function _getPricePeriod($prices){
         $pricesPeriod = [];
         foreach($prices as $price){
             if($price->valute_id ==1){

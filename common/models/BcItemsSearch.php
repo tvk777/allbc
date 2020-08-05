@@ -258,6 +258,8 @@ class BcItemsSearch extends BcItems
                     $query->orderBy('updated_at DESC');
                     break;
             }
+        } else {
+            $query->orderBy('updated_at DESC');
         }
         return $query;
     }
@@ -281,7 +283,7 @@ class BcItemsSearch extends BcItems
                 $name = getDefaultTranslate('name', $params['lang'], $item, true);
             } else {
                 $id = $item->pid;
-                $coord = $item->hide_bc==1 ? [$item->lng_str, $item->lat_str] : [$item->lng, $item->lat];
+                $coord = $item->hide_bc == 1 ? [$item->lng_str, $item->lat_str] : [$item->lng, $item->lat];
                 $addres = '';
                 $img = '';
                 $class = '';
@@ -317,10 +319,16 @@ class BcItemsSearch extends BcItems
         //запрос всех строк по условиям фильтра
         if ($params['target'] == 1) {
             $fullQuery = BcPlacesView::find()
-                ->with('bcitem', 'bcitem.images', 'bcitem.class', 'place', 'place.images');
+                ->with('place', 'place.images');
+            if ($params['result'] == 'bc') {
+                $fullQuery = $fullQuery->with('bcitem', 'bcitem.images', 'bcitem.subways', 'bcitem.class', 'bcitem.subways.subwayDetails', 'bcitem.city', 'bcitem.slug');
+            }
         } else {
             $fullQuery = BcPlacesSellView::find()
-                ->with('bcitem', 'bcitem.images', 'bcitem.class', 'place', 'place.images');
+                ->with('place', 'place.images');
+            if ($params['result'] == 'bc') {
+                $fullQuery = $fullQuery->with('bcitem', 'bcitem.images', 'bcitem.subways', 'bcitem.class', 'bcitem.subways.subwayDetails', 'bcitem.city', 'bcitem.slug');
+            }
         }
 
         $filtredQuery = $this->filterConditions($fullQuery, $params);
@@ -410,8 +418,6 @@ class BcItemsSearch extends BcItems
         $m2 = ArrayHelper::getColumn($forChartsQuery, 'm2'); //m2 array
         $m2min = ArrayHelper::getColumn($forChartsQuery, 'm2min'); //m2min array
         $m2ForChart = array_filter(ArrayHelper::merge($m2, $m2min)); //all m2 array for chart
-
-
         $pricesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'uah_price'));
         $center = !empty($markers['features'][0]['geometry']['coordinates']) ? $markers['features'][0]['geometry']['coordinates'] : null;
 //debug($streetName); die();

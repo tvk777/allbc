@@ -2,7 +2,6 @@
 use kriptograf\wishlist\widgets\WishlistButton;
 use yii\helpers\Url;
 use yii\helpers\Html;
-
 ?>
 <section  class="grey_bg">
     <div class="row row_2">
@@ -12,13 +11,21 @@ use yii\helpers\Html;
             </div>
 
             <? foreach ($places as $index => $place) : ?>
-                <? //debug($place->slug) ?>
+                <?
+                //debug($place->opex_tax);
+                //debug($place->getMainPrice($rates));
+                //$pricesForM2 = $place->getMainPrices($rates);
+                //debug($place->getPricePeriod($rates, $taxes));
+               // if($uahPrice){debug(calculateRentPrice($place, $taxes, $rates, $uahPrice));}
+                ?>
 
                 <?
                 $plus = '';
                 $placePrices = $place->prices;
-                $prices = count($placePrices) > 0 ? $place->getPricePeriod($placePrices) : Yii::t('app', 'con.');
-                if (count($placePrices) > 0) {
+                //debug($placePrices);
+                $prices = $place->con_price === 0 ? $place->getPricePeriod($rates, $taxes) : Yii::t('app', 'con.');
+                //debug($prices);
+                if ($place->con_price === 0) {
                     $uah = $prices['uah']['m2'];
                     $month_uah = $prices['uah']['month'];
                     $year_uah = $prices['uah']['year'];
@@ -47,6 +54,7 @@ use yii\helpers\Html;
                     $m2_uah = $m2_usd = $m2_eur = $m2_rub = Yii::t('app', 'con.');
                 }
                 $sortValue = $place->m2min > 0 ? $place->m2min : $place->m2;
+                $kop = $place->kop > 0 ? '+'.$place->kop.'%' : '';
                 ?>
 
                 <div class="col-xs-12 place-card">
@@ -84,7 +92,7 @@ use yii\helpers\Html;
                         </div>
                         <div class="row">
                             <div class="col-xs-6 header-item__name"><p>Коефіцієнт загальних площ:</p></div>
-                            <div class="col-xs-6 header-item__value"><p>+15%</p></div>
+                            <div class="col-xs-6 header-item__value"><p><?= $kop ?></p></div>
                         </div>
                         <div class="row">
                             <div class="col-xs-6 header-item__name"><p>Поверх:</p></div>

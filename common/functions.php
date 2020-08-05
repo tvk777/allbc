@@ -266,13 +266,14 @@ function getPlacePrice($place, $currency, $rates, $taxes, $target)
     return $prices;
 }
 
-//price from bc_places_view
-function calculateRentPrice($place, $taxes, $rates)
+//price from bc_places_view стоимость аренды итого за всю площадь в месяц
+function calculateRentPrice($place, $taxes, $rates, $uahPrice = null)
 {
+    if($uahPrice===null) $uahPrice = $place->uah_price;
     $plusKop = $place->kop > 0 ? ($place->m2 + ($place->m2 * $place->kop) / 100) : $place->m2;
     $stavkaTax = $place->tax == 1 || $place->tax == 4
-        ? $place->uah_price + ($place->uah_price * $taxes[$place->tax]) / 100
-        : $place->uah_price;
+        ? $uahPrice + ($uahPrice * $taxes[$place->tax]) / 100
+        : $uahPrice;
     $opexValuteId = !empty($place->opex_valute_id) ? $place->opex_valute_id : 1;
     $opex_uah = $place->opex * $rates[$opexValuteId];
     $opex = $place->opex_tax == 1 || $place->opex_tax == 4

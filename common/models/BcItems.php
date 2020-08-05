@@ -194,7 +194,7 @@ class BcItems extends ActiveRecord
 
     public function getSubways()
     {
-        return $this->hasMany(BcItemsSubways::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()]);
+        return $this->hasMany(BcItemsSubways::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()])->orderBy('walk_distance');
     }
 
     public function getPlaces()
@@ -245,7 +245,6 @@ class BcItems extends ActiveRecord
         }
         return $slides;
     }
-
 
     public function getCity()
     {

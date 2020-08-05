@@ -380,8 +380,8 @@ $(document).scroll(function () {
 });
 
 /*$(".pagination a").on('click', function (e) {
-    $("#map_box .mask").addClass("visible");
-});*/
+ $("#map_box .mask").addClass("visible");
+ });*/
 
 $(document).on('pjax:start', '#cardsPjax', function (event) {
     $("#map_box .mask").addClass("visible");
@@ -390,8 +390,8 @@ $(document).on('pjax:start', '#cardsPjax', function (event) {
 $(document).on('pjax:complete', '#cardsPjax', function (event) {
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible");
-    if($(".filter_nav .street-name").length>0) $(".filter_nav .street-name").remove();
-    if($(".map_object_templ .street-name").length>0){
+    if ($(".filter_nav .street-name").length > 0) $(".filter_nav .street-name").remove();
+    if ($(".map_object_templ .street-name").length > 0) {
         var streetDiv = $('<div class="row">').append($(".map_object_templ.map_show .street-name").clone());
         streetDiv.appendTo(".filter_nav");
     }
@@ -529,6 +529,18 @@ $(document).ready(function () {
         $(this).addClass("active");
     });
 
+    $(".currency_switch .dropdown_menu li").on('click', function (e) {
+        e.preventDefault();
+        var priceSpans = $('.place-price span'),
+            dataId = $(this).data('id');
+        if (priceSpans.length > 0) {
+            priceSpans.removeClass('active');
+            priceSpans.each(function (index) {
+                if (dataId === $(this).data('id'))$(this).addClass('active');
+            });
+        }
+    });
+
     $(".choose-city a").on('click', function (e) {
         e.preventDefault();
         countNumber.html($(this).data('count'));
@@ -540,7 +552,7 @@ $(document).ready(function () {
     $(".sel-type").on('click', function (e) {
         e.preventDefault();
         main_type.val($(this).data('value'));
-        alert(main_type.val());
+        //alert(main_type.val());
         //$("#submit_main_form").click();
     });
 
@@ -898,7 +910,6 @@ $(document).ready(function () {
     });
 
 
-
     $(".dropdown_subway_title").on('click', function (e) {
         e.preventDefault();
         parentBlock = $(this).closest(".dropdown_subway_wrap");
@@ -937,8 +948,8 @@ $(document).ready(function () {
             checkedAll = $('.more-stage2 input:checkbox:checked').length;
             priceSelected = $('.more-stage2 .price-filter').hasClass('green_active');
             sqSelected = $('.more-stage2 .m2-filter').hasClass('green_active');
-            if($(this).hasClass('st1') && checkedStage1===0) $(this).removeClass("active");
-            if($(this).hasClass('st2') && checkedAll===0 && !priceSelected && !sqSelected) $(this).removeClass("active");
+            if ($(this).hasClass('st1') && checkedStage1 === 0) $(this).removeClass("active");
+            if ($(this).hasClass('st2') && checkedAll === 0 && !priceSelected && !sqSelected) $(this).removeClass("active");
             $(".filters_menu").removeClass("open");
         }
 
@@ -949,14 +960,16 @@ $(document).ready(function () {
         bc_input = $("#bc_result"),
         comission_input = $("#ch_1_2"),
         isComChecked;
-    function closeFilters(){
+
+    function closeFilters() {
         checkedAll = $('.more-stage2 input:checkbox:checked').length;
         priceSelected = $('.more-stage2 .price-filter').hasClass('green_active');
         sqSelected = $('.more-stage2 .m2-filter').hasClass('green_active');
-        if(checkedAll===0 && !priceSelected && !sqSelected) $('.more_filter').removeClass("active");
+        if (checkedAll === 0 && !priceSelected && !sqSelected) $('.more_filter').removeClass("active");
         $(".filters_menu").removeClass("open");
         $(".filter-form").submit();
     }
+
     $(".offices_result_700").on("click", function (e) {
         bc_input.prop('checked', false);
         off_input.prop('checked', true);
@@ -975,40 +988,38 @@ $(document).ready(function () {
     });
 
 
-
-
     var curTop;
 
     /*$(".more_filter").on('click', function (e) {
-        e.preventDefault();
-        if (!$("#filters_menu").hasClass("visible")) {
-            $("#filters_menu").addClass("visible");
-            $(this).addClass("active");
-            getBarsChart();
-            $("body").css({
-                "position": "fixed",
-                "top": -$(document).scrollTop() + "px",
-                "overflow": "hidden",
-                "right": 0,
-                "left": 0,
-                "bottom": 0
-            });
-            $("body").addClass("fixed_position");
-        } else {
-            $("#filters_menu").removeClass("visible");
-            $(this).removeClass("active");
-            curTop = $("body").css("top");
-            curTop = Math.abs(parseInt(curTop, 10));
-            $("body").attr("style", "")
-            if (curTop !== 0) {
-                $("html").scrollTop(curTop);
-            }
-            $("body").removeClass("fixed_position");
-        }
-        $(".dropdown_item_menu").slideUp(300);
-        $(".dropdow_item_wrapp").removeClass("active");
-        $("#map_box .mask").removeClass("visible");
-    });*/
+     e.preventDefault();
+     if (!$("#filters_menu").hasClass("visible")) {
+     $("#filters_menu").addClass("visible");
+     $(this).addClass("active");
+     getBarsChart();
+     $("body").css({
+     "position": "fixed",
+     "top": -$(document).scrollTop() + "px",
+     "overflow": "hidden",
+     "right": 0,
+     "left": 0,
+     "bottom": 0
+     });
+     $("body").addClass("fixed_position");
+     } else {
+     $("#filters_menu").removeClass("visible");
+     $(this).removeClass("active");
+     curTop = $("body").css("top");
+     curTop = Math.abs(parseInt(curTop, 10));
+     $("body").attr("style", "")
+     if (curTop !== 0) {
+     $("html").scrollTop(curTop);
+     }
+     $("body").removeClass("fixed_position");
+     }
+     $(".dropdown_item_menu").slideUp(300);
+     $(".dropdow_item_wrapp").removeClass("active");
+     $("#map_box .mask").removeClass("visible");
+     });*/
 
     $(".close_filter").on("click", function (e) {
         e.preventDefault();
@@ -1566,7 +1577,6 @@ $(document).ready(function () {
         $(".dropdown_item_title.price-filter").removeClass('green_active');
         $(".filter-form").submit();
     });
-
 
 
     if ($("#bgslider").length > 0) {

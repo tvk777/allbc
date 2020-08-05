@@ -15,10 +15,10 @@ if (Yii::$app->controller->id != 'site' && Yii::$app->controller->action->id != 
     </div>
     <div class="dropdown_menu">
         <ul>
-            <li class="active"><a href="#">₴</a></li>
-            <li><a href="#">$</a></li>
-            <li><a href="#">€</a></li>
-            <li><a href="#">₽</a></li>
+            <li data-id="1"><a href="#">₴</a></li>
+            <li data-id="2"><a href="#">$</a></li>
+            <li data-id="3"><a href="#">€</a></li>
+            <li data-id="4"><a href="#">₽</a></li>
         </ul>
     </div>
 </div>

@@ -18,11 +18,13 @@ class BcPlacesSellView extends \yii\db\ActiveRecord
 
     public function getBcitem()
     {
-        return $this->hasOne(BcItems::className(), ['id' => 'id']);
+        return $this->hasOne(BcItems::className(), ['id' => 'id'])->with('slug');
     }
+
     public function getPlace()
     {
-        return $this->hasOne(BcPlacesSell::className(), ['id' => 'pid']);
+        return $this->hasOne(BcPlacesSell::className(), ['id' => 'pid'])
+            ->with('bcitem', 'bcitem.images', 'bcitem.class', 'bcitem.subways', 'bcitem.subways.subwayDetails', 'bcitem.district', 'bcitem.city', 'slug');
     }
 
 }

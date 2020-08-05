@@ -18,7 +18,7 @@ use yii\web\JsExpression;
 AppAsset::register($this);
 $controller = Yii::$app->controller->id;
 $action = Yii::$app->controller->action->id;
-$changeCurrency = ($action=='bc_items' || $action=='bc_places') ? true : false;
+$changeCurrency = ($action=='bc_items' || $action=='bc_places' || $action=='bc_places_sell') ? true : false;
 //echo $controller.' - '.$action;
 //page - bc_items, page - bc_places
 if ($controller == 'site' && $action != 'index') {

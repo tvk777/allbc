@@ -12,7 +12,7 @@ $city_url = $target == 2 ? $mainSell . '?filter[result]=offices' : $mainRent . '
 $city_id = 0;
 $zoom = 13;
 
-//debug($item);
+//debug($model);
 
 if (isset($item->city)) {
     $zoom = $item->city->zoom;
@@ -79,20 +79,30 @@ $this->registerJsVar('marker', $marker, $this::POS_HEAD);
 
 
 $plus = '';
-$placePrices = $model->prices;
-$prices = count($placePrices) > 0 ? $model->getPricePeriod($placePrices) : Yii::t('app', 'con.');
-if (count($placePrices) > 0) {
-    $uah = $prices['uah']['m2'];
+$prices = $model->getPricePeriod($rates, $taxes);
+if (!empty($prices)) {
     if ($target == 1) {
-        $m2_uah = $prices['uah']['m2_2'];
-        if ($uah < $m2_uah) $plus = ' ++';
-        $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '&#8372;/m²/month') . $plus;
-    } else {
-        $value = $prices['uah']['value'];
-        $full = $prices['uah']['full'];
-        if ($value < $full) $plus = ' ++';
-        $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '&#8372;/m²') . $plus;
+        if ($prices['uah']['m2'] < $prices['uah']['m2_2']) $plus = ' ++';
+        $uahText = Yii::t('app', '&#8372;/m²/month');
+        $usdText = Yii::t('app', '$/m²/month');
+        $eurText = Yii::t('app', '€/m²/month');
+        $rubText = Yii::t('app', '₽/m²/month');
+    } else{
+        if ($prices['uah']['value'] < $prices['uah']['full']) $plus = ' ++';
+        $uahText = Yii::t('app', '&#8372;/m²');
+        $usdText = Yii::t('app', '$/m²');
+        $eurText = Yii::t('app', '€/m²');
+        $rubText = Yii::t('app', '₽/m²');
     }
+    $uah = $prices['uah']['m2'] . ' ' . $uahText . $plus;
+    $usd = $prices['usd']['m2'] . ' ' . $usdText . $plus;
+    $eur = $prices['eur']['m2'] . ' ' . $eurText . $plus;
+    $rub = $prices['rub']['m2'] . ' ' . $rubText . $plus;
+    $price  = '<span data-id="1" class="active">'.$uah. '</span>';
+    $price .= '<span data-id="2">'.$usd. '</span>';
+    $price .= '<span data-id="3">'.$eur. '</span>';
+    $price .= '<span data-id="4">'.$rub. '</span>';
+
 } else {
     $price = Yii::t('app', 'con.');
 }
@@ -228,7 +238,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                     <div class="inner">
                         <div class="office_info">
                             <span><b><?= Yii::t('app', 'Office area') . ': ' . $model->m2range ?> м²</b></span>
-                            <span><b><?= $price ?></b></span>
+                            <span class="place-price"><?= Yii::t('app', 'Price').': '.$price ?></span>
                             <?= $itemHtml ?>
                         </div>
                     </div>
@@ -247,34 +257,35 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
                                     <h5 class="region-map-link">
                                         <a target="_blank"
                                            href="<?= $district_filter_href ?>"><?= $cityName . $district ?></a>
-                                        <span class="map_link"><i class="map"></i><a href="#" class="dashed_link showOnmap">на
-                                        карте</a></span>
+                                        <span class="map_link"><i class="map"></i><a href="#"
+                                                                                     class="dashed_link showOnmap">на
+                                                карте</a></span>
                                     </h5>
 
                                 </div>
                                 <? if (count($item->subways) > 0) : ?>
-                                <div class="metros_wrapp">
-                                    <? foreach ($item->subways as $sub) : ?>
-                                        <? switch ($sub->subwayDetails->branch_id) {
-                                            case 1:
-                                                $subwayIco = '<i class="red_metro"></i>';
-                                                break;
-                                            case 2:
-                                                $subwayIco = '<i class="green_metro"></i>';
-                                                break;
-                                            case 3:
-                                                $subwayIco = '<i class="blue_metro"></i>';
-                                                break;
-                                            default:
-                                                $subwayIco = '<i class="metro"></i>';
-                                        }
+                                    <div class="metros_wrapp">
+                                        <? foreach ($item->subways as $sub) : ?>
+                                            <? switch ($sub->subwayDetails->branch_id) {
+                                                case 1:
+                                                    $subwayIco = '<i class="red_metro"></i>';
+                                                    break;
+                                                case 2:
+                                                    $subwayIco = '<i class="green_metro"></i>';
+                                                    break;
+                                                case 3:
+                                                    $subwayIco = '<i class="blue_metro"></i>';
+                                                    break;
+                                                default:
+                                                    $subwayIco = '<i class="metro"></i>';
+                                            }
 
-                                        $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subways][]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
-                                        <div class="metro_wrapp">
-                                            <p><?= $subway; ?></p>
-                                        </div>
-                                    <? endforeach ?>
-                                </div>
+                                            $subway = $subwayIco . '<a target="_blank" href="' . $city_url . '&filter[subways][]=' . $sub->subway_id . '">' . $sub->subwayDetails->name . '</a> <span class="about">~</span> ' . $sub->walk_distance . ' м'; ?>
+                                            <div class="metro_wrapp">
+                                                <p><?= $subway; ?></p>
+                                            </div>
+                                        <? endforeach ?>
+                                    </div>
                                 <? endif; ?>
                             </div>
 
@@ -363,7 +374,7 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
 
 <section class="sect_7_bc">
     <div class="row">
-        <?= \common\widgets\AltOffersWidget::widget(['item' => $item, 'target' => $target]) ?>
+        <? //echo \common\widgets\AltOffersWidget::widget(['item' => $item, 'target' => $target, 'result' => 'offices']) ?>
         <?= common\widgets\ServicesWidget::widget(); ?>
     </div>
 </section>

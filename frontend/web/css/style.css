@@ -6760,6 +6760,17 @@ p.desc_p {
     padding: 10px 0;
 }
 
+.office_info .place-price{
+  font-weight: bold;
+}
+.office_info .place-price span{
+    display: none;
+}
+.office_info .place-price span.active{
+    display: inline-block;
+}
+
+
 p.desc_p_2 {
     color: #000;
     font-size: 14px;
@@ -8957,6 +8968,9 @@ i.star_2.rem {
 }
 .filter_nav.fixed .row{
     display:block;
+}
+.item-invis .filter_nav.fixed .row{
+    display:flex;
 }
 .popup_office_header .close_black {
     position: absolute;

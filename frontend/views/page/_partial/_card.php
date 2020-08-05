@@ -32,7 +32,7 @@ if ($result == 'bc') {
     $countItemPlaces = count($itemPlaces);
     if ($countItemPlaces > 1) {
         $priceInfo = Yii::t('app', 'from') . ' ' . $minPrice;
-        $squareInfo = count($itemPlaces) . ' - '. $cardItem->minM2 . '-'. $cardItem->maxM2. 'м²';
+        $squareInfo = $countItemPlaces . ' - '. $cardItem->minM2 . '-'. $cardItem->maxM2. 'м²';
     } elseif ($countItemPlaces==1) {
         $priceInfo = $minPrice;
         $itemPlace = $itemPlaces[0];

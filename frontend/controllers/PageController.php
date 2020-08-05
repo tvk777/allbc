@@ -56,13 +56,14 @@ class PageController extends FrontendController
         }
 
         $model = $query->where(['slug' => $slug])->one();
-        //debug($model); die();
-        $item = $model->no_bc === 1 ? $model->office : $model->bcitem; //bc or office for this place
+        //debug($model->bcitem); die();
+        //$item = $model->no_bc === 1 ? $model->office : $model->bcitem; //bc or office for this place
+        //debug($item); die();
 
         $seo = SeoCatalogUrls::find()->where(['id' => 88])->multilingual()->one();
         $mainRent = trim($seo->main_rent_link_href, '/');
         $mainSell = trim($seo->main_sell_link_href, '/');
-
+        $item = $model->bcitem;
         if ($item->class) {
             $class = $item->class->id;
             $city = $item->city->id;
@@ -98,6 +99,9 @@ class PageController extends FrontendController
     public function actionBc_places($slug)
     {
         $data = $this->officeData($slug, 'rent');
+        $priceDatas = $this->getPriceDatas();
+        $rates = $priceDatas[0];
+        $taxes = $priceDatas[1];
         $this->result = 'offices';
         return $this->render('place', [
             'model' => $data['model'],
@@ -107,12 +111,17 @@ class PageController extends FrontendController
             'mainSell' => $data['mainSell'],
             'item' => $data['item'],
             'broker' => $data['broker'],
+            'rates' => $rates,
+            'taxes' => $taxes
         ]);
     }
 
     public function actionBc_places_sell($slug)
     {
         $data = $this->officeData($slug, 'sell');
+        $priceDatas = $this->getPriceDatas();
+        $rates = $priceDatas[0];
+        $taxes = $priceDatas[1];
 
         $this->result = 'offices';
         return $this->render('place', [
@@ -123,6 +132,8 @@ class PageController extends FrontendController
             'mainSell' => $data['mainSell'],
             'item' => $data['item'],
             'broker' => $data['broker'],
+            'rates' => $rates,
+            'taxes' => $taxes
         ]);
     }
 
@@ -168,7 +179,11 @@ class PageController extends FrontendController
         $broker = $model->brokers ? $model->brokers[0]->userInfo : User::findOne(8);
         $order->toEmail = $broker->email;
         $order->subject = 'subject';
-//debug($broker); die();
+
+        $priceDatas = $this->getPriceDatas();
+        $rates = $priceDatas[0];
+        $taxes = $priceDatas[1];
+
         return $this->render('item', [
             'model' => $model,
             'target' => $targetId,
@@ -176,8 +191,19 @@ class PageController extends FrontendController
             'mainRent' => $mainRent,
             'mainSell' => $mainSell,
             'order' => $order,
-            'broker' => $broker
+            'broker' => $broker,
+            'rates' => $rates,
+            'taxes' => $taxes
         ]);
+    }
+
+    protected function getPriceDatas()
+    {
+        $rates = BcValutes::find()->select(['id', 'rate'])->asArray()->all();
+        $rates = ArrayHelper::getColumn(ArrayHelper::index($rates, 'id'), 'rate');
+        $taxes = Taxes::find()->select(['id', 'value'])->where(['id' => 1])->orWhere(['id' => 4])->asArray()->all();
+        $taxes = ArrayHelper::getColumn(ArrayHelper::index($taxes, 'id'), 'value');
+        return [$rates, $taxes];
     }
 
     public function actionFavorite()
@@ -448,7 +474,7 @@ class PageController extends FrontendController
             if (Yii::$app->request->post('closeStreet')) {
                 //debug($params);
                 $params = $session->get('params');
-                $params['streetId']=null;
+                $params['streetId'] = null;
                 $session->remove('params');
             }
 
@@ -469,11 +495,12 @@ class PageController extends FrontendController
         $mainRent = trim($targetLinks->main_rent_link_href, '/');
         $mainSell = trim($targetLinks->main_sell_link_href, '/');
         $currency = $whereCondition['currency'];
-        //$rate = BcValutes::getRate($currency);
-        $rates = BcValutes::find()->select(['id', 'rate'])->asArray()->all();
-        $rates = ArrayHelper::getColumn(ArrayHelper::index($rates, 'id'), 'rate');
-        $taxes = Taxes::find()->select(['id', 'value'])->where(['id' => 1])->orWhere(['id' => 4])->asArray()->all();
-        $taxes = ArrayHelper::getColumn(ArrayHelper::index($taxes, 'id'), 'value');
+
+        $priceDatas = $this->getPriceDatas();
+        $rates = $priceDatas[0];
+        $taxes = $priceDatas[1];
+
+
         if (!$session->has('center') && $result['center']) {
             $center = $result['center'];
         }
@@ -498,7 +525,7 @@ class PageController extends FrontendController
             'rates' => $rates,
             'currency' => $currency,
             'taxes' => $taxes,
-            'streetName' =>$result['streetName']            
+            'streetName' => $result['streetName']
         ]);
     }
 
@@ -589,27 +616,6 @@ class PageController extends FrontendController
         return $countVal;
     }
 
-    protected function _getPlacesForM2Chart($places)
-    {
-        $countVal = [];
-        $countVal['count'] = [];
-        $countVal['max'] = 0;
-        $countVal['min'] = 0;
-        if (count($places) > 0) {
-            $m2s = ArrayHelper::getColumn($places, 'm2');
-            $max = max($m2s);
-            $min = min($m2s);
-            $delta = round($max / 30);
-
-            $countVal['count'] = $this->getRanges($m2s, $delta);
-            $countVal['max'] = $max;
-            $countVal['min'] = $min;
-        }
-        //debug($countVal); die();
-
-        return $countVal;
-    }
-
     protected function getPlacesForPriceChart($prices, $target)
     {
         $parts = Yii::$app->settings->partsPrice;
@@ -637,67 +643,6 @@ class PageController extends FrontendController
     }
 
 
-    protected function _getPlacesForPriceChart($places, $target = 1)
-    {
-        $countVal['type1']['count'] = [];
-        $countVal['type1']['max'] = 0;
-        $countVal['type1']['min'] = 0;
-        $countVal['type3']['count'] = [];
-        $countVal['type3']['max'] = 0;
-        $countVal['type3']['min'] = 0;
-
-        if (count($places) > 0) {
-            $placesIds = ArrayHelper::getColumn($places, 'id');
-            if ($target == 1) {
-                $query = BcPlacesPrice::find();
-            } else {
-                $query = BcPlacesSellPrice::find();
-            }
-            $query->select(['price', 'period_id'])->where(['valute_id' => 1]);
-            $query->andWhere(['or', ['period_id' => 1], ['period_id' => 3]]);
-            $query->andWhere(['in', 'place_id', $placesIds]);
-            $query->orderBy('price');
-            $prices = $query->asArray()->all();
-
-            $type1 = []; //$/м²/mec 'period_id' => 1
-            $type3 = []; //$/mec 'period_id' => 3
-            if (count($prices) > 0) {
-                foreach ($prices as $price) {
-                    if ($price['period_id'] == 1) {
-                        $type1[] = $price;
-                    } else {
-                        $type3[] = $price;
-                    }
-                }
-
-
-                $pr1 = ArrayHelper::getColumn($type1, 'price');
-                debug($pr1);
-                if (count($pr1) > 0) {
-                    $minType1 = min($pr1);
-                    $maxType1 = max($pr1);
-                    $delta = round($maxType1 / 30);
-                    $countVal['type1']['count'] = $this->getRanges($pr1, $delta);
-                    $countVal['type1']['max'] = $maxType1;
-                    $countVal['type1']['min'] = $minType1;
-                }
-
-                $pr2 = ArrayHelper::getColumn($type3, 'price');
-                if (count($pr2) > 0) {
-                    $minType3 = min($pr2);
-                    $maxType3 = max($pr2);
-                    $delta3 = round($maxType3 / 30);
-                    $countVal['type3']['count'] = $this->getRanges($pr2, $delta3);
-                    $countVal['type3']['max'] = $maxType3;
-                    $countVal['type3']['min'] = $minType3;
-                }
-
-            }
-        }
-
-        return $countVal;
-    }
-
     protected function getRanges($arr, $delta, $parts)
     {
         $countVal = array_fill(0, $parts + 1, 0);
@@ -719,68 +664,4 @@ $time = microtime(true) - $start;
 echo count($type1).'time='.$time;
 echo 'min1='.$min1.' min2='.$min2. ' max1='.$max1.' maxn2='.$max2.' time='.$time;
 */
-
-/* вариант с неравномерным распределением по диапазонам
-protected function getPlacesCountForCharts($places)
-{
-    $countVal = [];
-    $countVal['count'] = [];
-    $countVal['range'] = [];
-    $countVal['max'] = 0;
-    //debug($places); die();
-    if (count($places) > 0) {
-        $m2s = ArrayHelper::getColumn($places, 'm2');
-        $max = max($m2s);
-        //echo $max; die();
-        $range = ceil($max / 1000);
-
-        $countVal2 = [];
-        $countVal3 = [];
-        $countVal4 = [];
-        $countRange2 = [];
-        $countRange3 = [];
-        $countRange4 = [];
-
-        $countVal1 = array_fill(0, 5, 0);
-        $countRange1 = array_fill(0, 5, '0-99');
-        if ($max >= 100) {
-            $countVal2 = array_fill(1, 4, 0);
-            $countRange2 = array_fill(1, 4, '100-499');
-        }
-        if ($max >= 500) {
-            $countVal3 = array_fill(1, 1, 0);
-            $countRange3 = array_fill(1, 1, '500-999');
-        }
-        if ($max >= 1000) {
-            $countVal4 = array_fill(1, $range, 0);
-            $countRange4 = array_fill(1, $range, '1000-' . $max);
-        }
-
-        //debug($countVal2); die();
-
-        foreach ($m2s as $k => $val) {
-            if ($val < 100) {
-                $index = floor($val / 20);
-                $countVal1[$index] += 1;
-            } elseif ($val >= 100 && $val < 500) {
-                $index = floor($val / 100);
-                $countVal2[$index] += 1;
-            } elseif ($val >= 500 && $val < 1000) {
-                $index = floor($val / 500);
-                $countVal3[$index] += 1;
-            } elseif ($val >= 1000 && $val <= $max) {
-                $index = floor($val / 1000);
-                $countVal4[$index] += 1;
-            }
-        }
-
-        $countVal['count'] = array_merge($countVal1, $countVal2, $countVal3, $countVal4);
-        $countVal['range'] = array_merge($countRange1, $countRange2, $countRange3, $countRange4);
-        $countVal['max'] = $max;
-    }
-    //debug($countRange3); die();
-
-    return $countVal;
-}*/
-
 

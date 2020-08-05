@@ -7,24 +7,18 @@ use yii\helpers\ArrayHelper;
 use common\models\BcPlaces;
 use common\models\BcPlacesSell;
 use common\models\BcItems;
+use common\models\BcValutes;
 
 
 
 class AltOffersWidget extends Widget{
     public $item;
     public $target;
+    public $result = 'bc';
 
 
     public function run() {
-        //debug($this->item->className()); die();
         $m2 = [];
-        /*if($this->item->className()=='common\models\Offices'){
-            $lat = $this->target==1 ? $this->item->lat : $this->item->lat;
-            $lng = $this->target==1 ? $this->item->lng : $this->item->lng;
-        } else {
-            $lat = $this->item->lat;
-            $lng = $this->item->lng;
-        }*/
         $lat = $this->item->lat;
         $lng = $this->item->lng;
 
@@ -44,6 +38,9 @@ class AltOffersWidget extends Widget{
         $query->andWhere(['active' => 1]);
         $query->andWhere(['approved' => 1]);
         $query->andWhere(['in', 'id', $placesIds]);
+        if($this->result === 'bc'){
+            $query->andWhere(['single_office' => 0]);
+        }
         $query->orderBy('distance ASC')->limit(12);
         $items = $query->all();
 
@@ -52,12 +49,17 @@ class AltOffersWidget extends Widget{
         foreach ($places as $key => $place) {
             if (!ArrayHelper::isIn($place['item_id'], $itemsIds)) unset($places[$key]);
         }
+        $rates = BcValutes::find()->select(['id', 'rate'])->asArray()->all();
+        $rates = ArrayHelper::getColumn(ArrayHelper::index($rates, 'id'), 'rate');
+
 //debug($places);
         return $this->render('alt-offers',[
             'items' => $items,
             'm2' => $m2,
             'target' => $this->target,
-            'places' => $places
+            'result' => $this->result,
+            'places' => $places,
+            'rates' => $rates
         ]);
     }
 

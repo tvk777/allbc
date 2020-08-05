@@ -182,12 +182,12 @@ class BcPlaces extends ActiveRecord
     }
 
     //цена в грн. за кв.м.
-    public function getPriceSqm()
+    /*public function _getPriceSqm()
     {
         return $this->hasOne(BcPlacesPrice::className(), ['place_id' => 'id'])
             ->andWhere((['bc_places_price.valute_id' => 1]))
             ->andWhere((['bc_places_price.period_id' => 1]));
-    }
+    }*/
 
 
     public function getPeriod()
@@ -195,11 +195,103 @@ class BcPlaces extends ActiveRecord
         return $this->hasOne(BcPeriods::className(), ['id' => 'price_period']);
     }
 
-    public function getPricePeriod($prices){
+    public function getAllPrices($rates)
+    {
+        if ($this->con_price === 1) {
+            return null;
+        }
+
+        $rate = $rates[$this->valute_id];
+
+        return $rate;
+    }
+
+    //цены за кв.м. в месяц
+    protected function getMainPrice($rates)
+    {
+        if ($this->con_price === 1) {
+            return null;
+        }
+        $rate = $rates[$this->valute_id];
+        $price = $this->price;
+        switch ($this->price_period) {
+            case 1:
+                $price = round($price * $rate);
+                break;
+            case 2:
+                $price = round($price * $rate / 12);
+                break;
+            case 3:
+                $price = round($price * $rate / $this->m2);
+                break;
+            default:
+                break;
+        }
+
+        return $price;
+    }
+
+    protected function calculatedPrice($price, $rates, $taxes)
+    {
+        $stavkaTax = $this->tax == 1 || $this->tax == 4
+            ? $price + ($price * $taxes[$this->tax]) / 100
+            : $price;
+        $opexValuteId = !empty($this->opex_valute_id) ? $this->opex_valute_id : 1;
+        $opex_uah = $this->opex * $rates[$opexValuteId];
+        $opex = ($this->opex_tax == 1 || $this->opex_tax == 4)
+            ? ($opex_uah + ($opex_uah * $taxes[$this->opex_tax]) / 100)
+            : $opex_uah;
+        $stavka = round($stavkaTax + $opex);
+
+        return $stavka;
+    }
+    
+    protected function getPlaceKop() {
+      return $this->kop > 0 ? ($this->m2 + ($this->m2 * $this->kop) / 100) : $this->m2;  
+    }
+
+    public function getPricePeriod($rates, $taxes)
+    {
+        if ($this->con_price === 1 || $this->price == 0) {
+            return null;
+        }
+        $price = $this->getMainPrice($rates);
         $pricesPeriod = [];
-        foreach($prices as $price){
-            if($price->valute_id ==1){
-                switch ($price->period_id){
+        $pricesPeriod['uah']['m2'] = $price;
+        $pricesPeriod['usd']['m2'] = round($price/$rates[2]);
+        $pricesPeriod['eur']['m2'] = round($price/$rates[3]);
+        $pricesPeriod['rub']['m2'] = round($price/$rates[4]);
+
+        $calculatedPrice = $this->calculatedPrice($price, $rates, $taxes);
+        $pricesPeriod['uah']['m2_2'] = $calculatedPrice;
+        $pricesPeriod['usd']['m2_2'] = round($calculatedPrice/$rates[2]);
+        $pricesPeriod['eur']['m2_2'] = round($calculatedPrice/$rates[3]);
+        $pricesPeriod['rub']['m2_2'] = round($calculatedPrice/$rates[4]);
+
+        $forMonth = $calculatedPrice * $this->getPlaceKop();
+        $forYear = $forMonth*12;
+
+        $pricesPeriod['uah']['month'] = $forMonth;
+        $pricesPeriod['usd']['month'] = round($forMonth/$rates[2]);
+        $pricesPeriod['eur']['month'] = round($forMonth/$rates[3]);
+        $pricesPeriod['rub']['month'] = round($forMonth/$rates[4]);
+
+        $pricesPeriod['uah']['year'] = $forYear;
+        $pricesPeriod['usd']['year'] = round($forYear/$rates[2]);
+        $pricesPeriod['eur']['year'] = round($forYear/$rates[3]);
+        $pricesPeriod['rub']['year'] = round($forYear/$rates[4]);
+
+        return $pricesPeriod;
+    }
+
+
+
+    public function _getPricePeriod($prices)
+    {
+        $pricesPeriod = [];
+        foreach ($prices as $price) {
+            if ($price->valute_id == 1) {
+                switch ($price->period_id) {
                     case 1:
                         $pricesPeriod['uah']['m2'] = $price->price;
                         break;
@@ -213,9 +305,8 @@ class BcPlaces extends ActiveRecord
                         $pricesPeriod['uah']['m2_2'] = $price->price;
                         break;
                 }
-            }
-            elseif ($price->valute_id ==2){
-                switch ($price->period_id){
+            } elseif ($price->valute_id == 2) {
+                switch ($price->period_id) {
                     case 1:
                         $pricesPeriod['usd']['m2'] = $price->price;
                         break;
@@ -229,9 +320,8 @@ class BcPlaces extends ActiveRecord
                         $pricesPeriod['usd']['m2_2'] = $price->price;
                         break;
                 }
-            }
-            elseif ($price->valute_id ==3){
-                switch ($price->period_id){
+            } elseif ($price->valute_id == 3) {
+                switch ($price->period_id) {
                     case 1:
                         $pricesPeriod['eur']['m2'] = $price->price;
                         break;
@@ -245,9 +335,8 @@ class BcPlaces extends ActiveRecord
                         $pricesPeriod['eur']['m2_2'] = $price->price;
                         break;
                 }
-            }
-            elseif ($price->valute_id ==4){
-                switch ($price->period_id){
+            } elseif ($price->valute_id == 4) {
+                switch ($price->period_id) {
                     case 1:
                         $pricesPeriod['rub']['m2'] = $price->price;
                         break;
@@ -312,7 +401,7 @@ class BcPlaces extends ActiveRecord
     {
         if (!$this->isNewRecord) {
             if (empty($this->alias)) {
-                $item = $this->no_bc===1 ? $this->office : $this->bcitem;
+                $item = $this->no_bc === 1 ? $this->office : $this->bcitem;
                 $slug = 'arenda-ofica-' . $this->m2 . '-m2-' . $item->city->name . '-id' . $this->id;
                 $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
             }
@@ -361,8 +450,8 @@ class BcPlaces extends ActiveRecord
         $this->calcPrice();
 
         if ($insert) {
-            if(empty($this->alias)) {
-                $item = $this->no_bc===1 ? $this->office : $this->bcitem;
+            if (empty($this->alias)) {
+                $item = $this->no_bc === 1 ? $this->office : $this->bcitem;
                 $slug = 'arenda-ofica-' . $this->m2 . '-m2-' . $item->city->name . '-id' . $this->id;
                 $this->alias = Slugs::generateSlug($this->tableName(), $this->id, $slug);
             }
@@ -433,7 +522,7 @@ class BcPlaces extends ActiveRecord
             $sqm_text_ua = ' площею ' . $sqm . ' ' . $sqm_model->word;
             $sqm_text_en = ' area of ' . $sqm . ' ' . $sqm_model->word_en;
         }
-        $city = $this->no_bc===1 ? $this->office->city : $this->bcitem->city;
+        $city = $this->no_bc === 1 ? $this->office->city : $this->bcitem->city;
         $city_ru = $city->name;
         $city_ua = $city->name_ua;
         $city_en = $city->name_en;
@@ -452,7 +541,7 @@ class BcPlaces extends ActiveRecord
 
     public function calcPrice()
     {
-        $item = $this->no_bc===1 ? $this->office : $this->bcitem; //debug($this->offfice);
+        $item = $this->no_bc === 1 ? $this->office : $this->bcitem; //debug($this->offfice);
         BcPlacesPrice::deleteAll(['place_id' => $this->id]);
         if ($this->con_price == 1 || $this->price < 1) return (0);
 
@@ -467,7 +556,7 @@ class BcPlaces extends ActiveRecord
             $price_m2 = $this->price / $this->m2;
 
         $price_m2_uah = $price_m2 * $valutes[$this->valute_id]; //цена в грн.
-       // echo $price_m2; die();
+        // echo $price_m2; die();
         $opex = floatval($this->opex) * $valutes[$this->valute_id]; //0
         $tax = floatval($this->tax); //0
         $kop = floatval($this->kop); //0
@@ -542,19 +631,19 @@ class BcPlaces extends ActiveRecord
     {
         return $this->hasOne(ViewsCounter::className(), ['item_id' => 'id'])->andWhere(['model' => self::tableName()]);
     }
-    
-    public function getAllPrices() {
+
+    public function TempgetAllPrices()
+    {
         $valutes = BcValutes::find()->asArray()->all();
         $valutes = ArrayHelper::map($valutes, 'id', 'rate');
         $prices = [];
         foreach ($valutes as $k => $v) {
             $prices[$k] = [
-                'stavka' => ['forM2month' => 100, 'forM2year' => 1200, 'forAllMonth' => 100*$this->m2]
+                'stavka' => ['forM2month' => 100, 'forM2year' => 1200, 'forAllMonth' => 100 * $this->m2]
             ];
         }
         return $prices;
     }
-
 
 
 }
