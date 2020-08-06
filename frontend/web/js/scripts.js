@@ -532,11 +532,17 @@ $(document).ready(function () {
     $(".currency_switch .dropdown_menu li").on('click', function (e) {
         e.preventDefault();
         var priceSpans = $('.place-price span'),
-            dataId = $(this).data('id');
+            dataId = $(this).data('id'),
+            changeCurrencySpans = $('.change-currency-single .select_item span');
         if (priceSpans.length > 0) {
             priceSpans.removeClass('active');
             priceSpans.each(function (index) {
                 if (dataId === $(this).data('id'))$(this).addClass('active');
+            });
+        }
+        if (changeCurrencySpans.length > 0){
+            changeCurrencySpans.each(function (index) {
+                if (dataId === $(this).data('id'))$(this).click();
             });
         }
     });

@@ -6,38 +6,10 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-use omgdef\multilingual\MultilingualTrait;
-use omgdef\multilingual\MultilingualQuery;
-use omgdef\multilingual\MultilingualBehavior;
 use common\models\Geo;
 use yii\helpers\ArrayHelper;
 
 
-/**
- * This is the model class for table "bc_items".
- *
- * @property int $id
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
- * @property int $city_id
- * @property int $country_id
- * @property int $district_id
- * @property string $address
- * @property string $lat
- * @property string $lng
- * @property int $sort_order
- * @property int $class_id
- * @property int $percent_commission
- * @property int $active
- * @property string $contacts_admin
- * @property int $hide
- * @property string $redirect
- * @property int $hide_contacts
- * @property string $email
- * @property string $email_name
- * @property int $approved
- */
 class BcItems extends ActiveRecord
 {
     public $alias;
@@ -54,10 +26,6 @@ class BcItems extends ActiveRecord
     public $maxprice;
     public $formCharacteristics;
 
-
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'bc_items';
@@ -77,10 +45,6 @@ class BcItems extends ActiveRecord
         ];
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -108,9 +72,6 @@ class BcItems extends ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -146,11 +107,6 @@ class BcItems extends ActiveRecord
             'total_m2' => Yii::t('app', 'Общая площадь здания, кв.м.'),
         ];
     }
-
-    /*public static function find()
-    {
-        return new MultilingualQuery(get_called_class());
-    }*/
 
     public function getSlug()
     {
@@ -191,7 +147,6 @@ class BcItems extends ActiveRecord
         return $this->hasMany(BcItemsCharacteristics::className(), ['item_id' => 'id'])->orderBy('sort_order');
     }
 
-
     public function getSubways()
     {
         return $this->hasMany(BcItemsSubways::className(), ['item_id' => 'id'])->andWhere(['model' => $this->tableName()])->orderBy('walk_distance');
@@ -216,7 +171,6 @@ class BcItems extends ActiveRecord
     {
         return $this->hasMany(BcPlacesSell::className(), ['item_id' => 'id'])->andWhere(['archive' => 1])->andWhere(['hide' => 0])->with('status');
     }
-
 
     public function getImages()
     {
@@ -444,17 +398,27 @@ class BcItems extends ActiveRecord
         return $MinMaxM2;
     }
 
-    public function getMinPrice($places)
+    public function getMinPrice($target)
     {
+        if($target===1){
+            $places = $this->places;
+            $resultQuery = BcPlacesView::find();
+        } else {
+            $places = $this->placesSell;
+            $resultQuery = BcPlacesSellView::find();
+        }
         $in = ArrayHelper::getColumn($places, 'id');
-        $result = (new \yii\db\Query())
+        $result = $resultQuery->where(['in', 'pid', $in])->andWhere(['con_price' => 0])->min('uah_price');
+
+        /*$result = (new \yii\db\Query())
             ->select(['price'])
             ->from('bc_places_price')
             ->where(['in', 'place_id', $in])
             ->andWhere(['period_id' => 1])
             ->andWhere(['valute_id' => 1])
             ->orderBy('price')
-            ->one();
+            ->one();*/
+        //debug($result); die();
         if ($result) {
             return $result;
         } else {

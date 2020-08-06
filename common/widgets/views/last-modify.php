@@ -21,7 +21,7 @@ $currentLanguage = Yii::$app->language;
         //debug($one);
         $minmax = $one->getMinMaxM2($one->places);
         $minmax = is_array($minmax) ? $minmax['min'] . ' m² ...' . $minmax['max'] . ' m²' : $minmax . ' m²';
-        $minPrice = $one->getMinPrice($one->places)['price'];
+        $minPrice = $one->getMinPrice(1);
         $minPrice = $minPrice ? $minPrice . ' ₴/m<sup>2</sup>' : Yii::t('app', 'price con.');
         $src = !empty($one->images) ? $one->images[0]->thumb300x200Src : '';
         $href = Url::to(['page/bc_item', 'slug' => $one->slug->slug, 'target' => 'rent']);

@@ -1,7 +1,5 @@
 <?php
 use kriptograf\wishlist\widgets\WishlistButton;
-use yii\helpers\Url;
-use yii\helpers\Html;
 ?>
 <section  class="grey_bg">
     <div class="row row_2">
@@ -11,13 +9,6 @@ use yii\helpers\Html;
             </div>
 
             <? foreach ($places as $index => $place) : ?>
-                <?
-                //debug($place->opex_tax);
-                //debug($place->getMainPrice($rates));
-                //$pricesForM2 = $place->getMainPrices($rates);
-                //debug($place->getPricePeriod($rates, $taxes));
-               // if($uahPrice){debug(calculateRentPrice($place, $taxes, $rates, $uahPrice));}
-                ?>
 
                 <?
                 $plus = '';
@@ -126,16 +117,16 @@ use yii\helpers\Html;
                                     </div>
                                     <div class="dropdown_select change-currency-single">
                                         <div class="select_item">
-                                            <span data-currid="uah">₴/m²/мес</span>
+                                            <span data-id="1" data-currid="uah">₴/m²/мес</span>
                                         </div>
                                         <div class="select_item">
-                                            <span data-currid="usd">$/m²/мес</span>
+                                            <span data-id="2" data-currid="usd">$/m²/мес</span>
                                         </div>
                                         <div class="select_item">
-                                            <span data-currid="eur">€/m²/мес</span>
+                                            <span data-id="3" data-currid="eur">€/m²/мес</span>
                                         </div>
                                         <div class="select_item">
-                                            <span data-currid="rub">₽/m²/мес</span>
+                                            <span data-id="4" data-currid="rub">₽/m²/мес</span>
                                         </div>
                                     </div>
                                 </div>

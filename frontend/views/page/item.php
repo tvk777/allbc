@@ -6,7 +6,7 @@ $this->registerJsFile('/js/stupidtable.min.js', ['depends' => [\yii\web\JqueryAs
 
 $currentLanguage = Yii::$app->language;
 $currency = 1;
-//debug($model->characteristics);
+//debug($rates);
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
@@ -101,7 +101,38 @@ if(city!=0) {
 JS;
 $this->registerJs($script, $this::POS_READY, 'city-handler');
 
-$minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' . $model->getMinPrice($places)['price'] . ' ₴/m<sup>2</sup>/мес' : Yii::t('app', 'price con.');
+//$minPrice = $model->getMinPrice($target)!==0 ? Yii::t('app', 'from') . ' ' . $model->getMinPrice($target) . ' ₴/m<sup>2</sup>/мес' : Yii::t('app', 'price con.');
+
+$uah = $model->getMinPrice($target);
+$usd = round($uah/$rates[2]);
+$eur = round($uah/$rates[3]);
+$rub = round($uah/$rates[4]);
+if ($uah!==0) {
+    if ($target == 1) {
+        $uahText = Yii::t('app', '&#8372;/m²/month');
+        $usdText = Yii::t('app', '$/m²/month');
+        $eurText = Yii::t('app', '€/m²/month');
+        $rubText = Yii::t('app', '₽/m²/month');
+    } else{
+        $uahText = Yii::t('app', '&#8372;/m²');
+        $usdText = Yii::t('app', '$/m²');
+        $eurText = Yii::t('app', '€/m²');
+        $rubText = Yii::t('app', '₽/m²');
+    }
+    $uah .= ' ' . $uahText;
+    $usd .= ' ' . $usdText;
+    $eur .= ' ' . $eurText;
+    $rub .= ' ' . $rubText;
+    $minPrice  = Yii::t('app', 'from') . ' <span class="place-price">';
+    $minPrice .= '<span data-id="1" class="active">'.$uah. '</span>';
+    $minPrice .= '<span data-id="2">'.$usd. '</span>';
+    $minPrice .= '<span data-id="3">'.$eur. '</span>';
+    $minPrice .= '<span data-id="4">'.$rub. '</span>';
+    $minPrice .= '</span>';
+} else {
+    $minPrice = Yii::t('app', 'Price').' '.Yii::t('app', 'con.');
+}
+
 ?>
 <section class="grey_bg">
 
@@ -216,9 +247,11 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
 
                     <? if (count($places) > 0) : ?>
                         <div class="inner">
-                            <div class="free_office">
+                            <div class="free_office office_info">
                                 <a href="#places"
-                                   class="scroll_to green_pill tel_pill tel_hide_pill"><?= Yii::t('app', 'Free Offices') . ': ' . count($places) . ' - ' . $minPrice ?></a>
+                                   class="scroll_to green_pill tel_pill tel_hide_pill">
+                                    <?= Yii::t('app', 'Free Offices') . ': ' . count($places) . ' - '. $minPrice ?>
+                                </a>
                             </div>
                         </div>
                     <? else: ?>
@@ -426,7 +459,8 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
 
 
 
-<? if (count($placesSell) > 0) {
+<?
+/*if (count($placesSell) > 0) {
     echo $this->render('_item-partial/_places-sell', [
         'target' => $target,
         'places' => $placesSell,
@@ -434,7 +468,8 @@ $minPrice = !empty($model->getMinPrice($places)) ? Yii::t('app', 'from') . ' ' .
         'galleryId' => 'galleries_3',
         'blockTitle' => Yii::t('app', 'Office sale - offers')
     ]);
-} ?>
+} */
+?>
 
 <? /*if (count($placesSell) > 0) {
     echo $this->render('_item-partial/_places-owner-sell', [

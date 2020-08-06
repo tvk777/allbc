@@ -17,8 +17,8 @@ $itemPlaces = $item->getFilteredPlaces($places, $target);
 
 $minmax = $item->getMinMaxM2($itemPlaces);
 $minmax = is_array($minmax) && count($minmax)===2 ? $minmax['min'] . '-' . $minmax['max'] . 'м²' : $minmax . 'м²';
-debug($minmax);
-$minPrice = $item->getMinPrice($itemPlaces)['price'].getCurrencyText($currency);
+//debug($minmax);
+$minPrice = $item->getMinPrice($target).getCurrencyText($currency);
 $minPrice = $minPrice ? $minPrice : Yii::t('app', 'price con.');
 
 $countItemPlaces = count($itemPlaces);
