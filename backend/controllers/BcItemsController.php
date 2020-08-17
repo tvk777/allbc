@@ -15,6 +15,7 @@ use yii\base\ErrorException;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 use common\models\SystemFiles;
+use yii\helpers\ArrayHelper;
 
 /**
  * BcItemsController implements the CRUD actions for BcItems model.
@@ -30,7 +31,6 @@ class BcItemsController extends AdminController
         $searchModel = new BcItemsSearch();
         $params = Yii::$app->request->queryParams;
         $params['BcItemsSearch']['single_office'] = 0; //фильтр только БЦ (без отдельных офисов)
-        //debug($params); die();
         $dataProvider = $searchModel->search($params);
 
         return $this->render('index', [
@@ -51,6 +51,8 @@ class BcItemsController extends AdminController
             'model' => $this->findModel($id),
         ]);
     }
+
+
 
 
     public function getAllCharacteristics($id = null)
@@ -210,6 +212,17 @@ class BcItemsController extends AdminController
         return $this->redirect(['index']);
     }
 
+    public function actionDeleteSelected()
+    {
+        if(Yii::$app->request->post('selection')){
+            $ids = Yii::$app->request->post('selection');
+            foreach ($ids as $id) {
+                $this->findModel($id)->delete();
+            }
+        }
+        return $this->redirect(['index']);
+    }
+
 
     public function actionGetSubway()
     {
@@ -258,9 +271,10 @@ class BcItemsController extends AdminController
      */
     protected function findModel($id)
     {
-        if (($model = BcItems::find()->where(['id' => $id])->multilingual()->one()) !== null) {
+        if (($model = BcItems::findOne($id)) !== null) {
             return $model;
         }
+
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 

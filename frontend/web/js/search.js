@@ -3,7 +3,6 @@
         var target = $("#main_type").val(),
             city = $(".choose-city .dropdown_menu .active").data('id'),
             result = $(this).data('result');
-
         if(this.value.length >= 3){
             $.ajax({
                 url: '/site/search',

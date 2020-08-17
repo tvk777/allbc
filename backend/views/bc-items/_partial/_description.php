@@ -11,7 +11,7 @@ use common\models\BcClasses;
     ) ?>
 
     <?= $form->field($model, 'percent_commission')->textInput() ?>
-    <?= $form->field($model, 'total_m2')->textInput() ?>
+    <?= $form->field($model, 'single_office')->checkbox(['0', '1',]) ?>
     <?= $form->field($model, 'active')->checkbox(['0', '1',]) ?>
     <?= $form->field($model, 'hide')->checkbox(['0', '1',]) ?>
     <?= $form->field($model, 'hide_contacts')->checkbox(['0', '1',]) ?>

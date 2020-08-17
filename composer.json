@@ -33,7 +33,8 @@
         "yiimaker/yii2-social-share": "^2.3",
         "kartik-v/yii2-mpdf": "dev-master",
         "kriptograf/yii2-wishlist": "dev-master",
-        "kartik-v/yii2-widget-typeahead": "dev-master"
+        "kartik-v/yii2-widget-typeahead": "dev-master",
+        "kartik-v/yii2-widget-touchspin": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

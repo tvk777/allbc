@@ -32,7 +32,7 @@
         <div class="col-xs-11">
             <? foreach ($bcitems as $bcitem) : ?>
                 <a class="res_item" href="/<?= $bcitem->slug->slug ?>?target=<?= $target ?>">
-                    <p><?= $bcitem->name_ru ?></p>
+                    <p><?= $bcitem->name ?></p>
                 </a>
             <? endforeach; ?>
         </div>

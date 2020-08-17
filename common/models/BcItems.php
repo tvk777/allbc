@@ -65,7 +65,7 @@ class BcItems extends ActiveRecord
             [['created_at', 'updated_at', 'deleted_at', 'uploaded', 'deleted'], 'safe'],
             [['sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved'], 'integer'],
             [['city_id', 'country_id', 'address', 'lat', 'lng', 'sort_order', 'class_id', 'active', 'hide', 'single_office'], 'required'],
-            [['lat', 'lng', 'lat_str', 'lng_str',  'total_m2', 'single_office'], 'number'],
+            [['lat', 'lng', 'lat_str', 'lng_str', 'total_m2', 'single_office'], 'number'],
             [['contacts_admin'], 'string'],
             [['address', 'redirect', 'email', 'email_name', 'street', 'street_ua', 'street_en'], 'string', 'max' => 255],
             [['minm2', 'maxm2', 'minprice', 'maxprice'], 'safe'],
@@ -79,15 +79,15 @@ class BcItems extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'deleted_at' => Yii::t('app', 'Deleted At'),
-            'city_id' => Yii::t('app', 'City ID'),
+            'city_id' => Yii::t('app', 'Город'),
             'country_id' => Yii::t('app', 'Country ID'),
             'district_id' => Yii::t('app', 'District ID'),
             'address' => Yii::t('app', 'Address'),
             'lat' => Yii::t('app', 'Lat'),
             'lng' => Yii::t('app', 'Lng'),
-            'sort_order' => Yii::t('app', 'Sort Order'),
-            'class_id' => Yii::t('app', 'Class'),
-            'percent_commission' => Yii::t('app', 'Percent Commission'),
+            'sort_order' => Yii::t('app', 'Сортировка'),
+            'class_id' => Yii::t('app', 'Класс'),
+            'percent_commission' => Yii::t('app', '% комиссии'),
             'active' => Yii::t('app', 'Published'),
             'contacts_admin' => Yii::t('app', 'Contacts Admin'),
             'hide' => Yii::t('app', 'Hide'),
@@ -111,6 +111,11 @@ class BcItems extends ActiveRecord
     public function getSlug()
     {
         return $this->hasOne(Slugs::className(), ['model_id' => 'id'])->andWhere(['model' => self::tableName()]);
+    }
+
+    public function getLink()
+    {
+        return $this->slug->slug;
     }
 
     public function getClass()
@@ -253,14 +258,14 @@ class BcItems extends ActiveRecord
 
     public function saveCharacteristics($bcitem)
     {
-        $flag=false;
+        $flag = false;
         $id = $bcitem->id;
         $characteristics = $bcitem->formCharacteristics;
-        BcItemsCharacteristics::deleteAll(['and', ['item_id' => $id],['not in', 'characteristic_id', array_keys($characteristics)]]);
+        BcItemsCharacteristics::deleteAll(['and', ['item_id' => $id], ['not in', 'characteristic_id', array_keys($characteristics)]]);
 
         foreach ($characteristics as $key => $char) {
             $model = BcItemsCharacteristics::find()->where(['item_id' => $id])->andWhere(['characteristic_id' => $key])->one();
-            if(!$model){
+            if (!$model) {
                 $model = new BcItemsCharacteristics();
                 $model->item_id = $id;
                 $model->characteristic_id = $key;
@@ -268,8 +273,8 @@ class BcItems extends ActiveRecord
             $model->value = '';
             $model->value_ua = '';
             $model->value_en = '';
-            foreach($char as $lng => $val){
-                switch ($lng){
+            foreach ($char as $lng => $val) {
+                switch ($lng) {
                     case 'ua':
                         $model->value_ua = $val;
                         break;
@@ -293,8 +298,8 @@ class BcItems extends ActiveRecord
         parent::afterSave($insert, $changedAttributes);
 
         //debug($this->formCharacteristics); die();
-        if(!empty($this->formCharacteristics)){
-            if(!$this->saveCharacteristics($this)) echo 'error';
+        if (!empty($this->formCharacteristics)) {
+            if (!$this->saveCharacteristics($this)) echo 'error';
         }
 
         if ($insert) {
@@ -349,8 +354,7 @@ class BcItems extends ActiveRecord
     public function beforeDelete()
     {
         if (parent::beforeDelete()) {
-            Slugs::deleteAll(['model_id' => $this->id]);
-            BcItemsCharacteristics::deleteAll(['item_id' => $this->id]);
+
             $flag = true;
             if ($this->images) {
                 foreach ($this->images as $img) {
@@ -363,6 +367,25 @@ class BcItems extends ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public function afterDelete()
+    {
+        BcItemsUsers::deleteAll(['item_id' => $this->id]);
+        BcItemsCharacteristics::deleteAll(['item_id' => $this->id]);
+        Slugs::deleteAll(['model_id' => $this->id, 'model' => $this->tableName()]);
+        BcItemsSubways::deleteAll(['item_id' => $this->id]);
+        BcSlider::deleteAll(['item_id' => $this->id]);
+        $places = BcPlaces::find()->where(['item_id' => $this->id])->all();
+        $placesSell = BcPlacesSell::find()->where(['item_id' => $this->id])->all();
+        foreach ($places as $place) {
+            $place->delete();
+        }
+        foreach ($placesSell as $place) {
+            $place->delete();
+        }
+
+        parent::afterDelete();
     }
 
     public function getFilteredPlaces($places, $target)
@@ -400,7 +423,7 @@ class BcItems extends ActiveRecord
 
     public function getMinPrice($target)
     {
-        if($target===1){
+        if ($target === 1) {
             $places = $this->places;
             $resultQuery = BcPlacesView::find();
         } else {
@@ -475,7 +498,8 @@ class BcItems extends ActiveRecord
         return $this->hasOne(ViewsCounter::className(), ['item_id' => 'id'])->andWhere(['model' => self::tableName()]);
     }
 
-    static function searchItems($str, $city){
+    static function searchItems($str, $city)
+    {
         $idsQuery = (new \yii\db\Query())
             ->select(['item_id'])
             ->from('bc_itemsLang')
@@ -490,7 +514,7 @@ class BcItems extends ActiveRecord
             ->andWhere(['or', ['like', 'address', $str], ['in', 'id', $itemIds]])
             ->limit(10)
             ->orderBy('updated_at DESC')
-            ->multilingual()->all();
+            ->all();
 
         return $bcitems;
     }

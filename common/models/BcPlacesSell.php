@@ -397,6 +397,7 @@ class BcPlacesSell extends ActiveRecord
     public function beforeDelete()
     {
         if (parent::beforeDelete()) {
+            Slugs::deleteAll(['model_id' => $this->id, 'model' => $this->tableName()]);
             $flag = true;
             if ($this->images) {
                 foreach ($this->images as $img) {

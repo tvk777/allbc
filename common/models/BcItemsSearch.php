@@ -18,6 +18,9 @@ class BcItemsSearch extends BcItems
 {
     public $m2;
     public $city;
+    public $link;
+    public $searchString;
+
 
     /**
      * {@inheritdoc}
@@ -28,7 +31,8 @@ class BcItemsSearch extends BcItems
             [['id', 'sort_order', 'class_id', 'percent_commission', 'active', 'hide', 'hide_contacts', 'approved', 'single_office'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at', 'address', 'slug', 'contacts_admin', 'redirect', 'email', 'email_name'], 'safe'],
             [['lat', 'lng'], 'number'],
-            [['city_id', 'country_id', 'district_id', 'm2', 'city'], 'safe'],
+            [['name', 'content', 'title', 'keywords', 'description', 'annons', 'mgr_content', 'shuttle', 'contacts'], 'string'],
+            [['city_id', 'country_id', 'district_id', 'm2', 'city', 'link', 'searchString'], 'safe'],
         ];
     }
 
@@ -50,47 +54,35 @@ class BcItemsSearch extends BcItems
      */
     public function search($params)
     {
-
         $query = BcItems::find();
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $query->joinWith(['slug', 'city', 'class']);
+        $dataProvider->sort->attributes['link'] = [
+            'asc' => ['slugs.slug' => SORT_ASC],
+            'desc' => ['slugs.slug' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['city_id'] = [
+            'asc' => ['geo_cities.name' => SORT_ASC],
+            'desc' => ['geo_cities.name' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['class_id'] = [
+            'asc' => ['bc_classes.mid_name' => SORT_ASC],
+            'desc' => ['bc_classes.mid_name' => SORT_DESC],
+        ];
+
+
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
-            'city_id' => $this->city_id,
-            'country_id' => $this->country_id,
-            'district_id' => $this->district_id,
-            'lat' => $this->lat,
-            'lng' => $this->lng,
-            //'sort_order' => $this->sort_order,
-            'class_id' => $this->class_id,
-            'percent_commission' => $this->percent_commission,
-            'active' => $this->active,
-            'hide' => $this->hide,
-            'hide_contacts' => $this->hide_contacts,
-            'approved' => $this->approved,
-            'single_office' => $this->single_office
-        ]);
-
-        $query->andFilterWhere(['like', 'address', $this->address])
-            ->andFilterWhere(['like', 'contacts_admin', $this->contacts_admin])
-            ->andFilterWhere(['like', 'redirect', $this->redirect])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'email_name', $this->email_name]);
+        $query->orFilterWhere(['like', 'bc_items.name', $this->searchString])
+            ->orFilterWhere(['like', 'bc_items.title', $this->searchString])
+            ->orFilterWhere(['like', 'bc_items.keywords', $this->searchString])
+            ->orFilterWhere(['like', 'bc_items.description', $this->searchString])
+            ->orFilterWhere(['like', 'geo_cities.name', $this->searchString])
+            ->orFilterWhere(['like', 'slugs.slug', $this->searchString]);
 
         return $dataProvider;
     }
@@ -442,12 +434,9 @@ class BcItemsSearch extends BcItems
 
     protected function getItemsByUser($id)
     {
-        $userItems = BcItemsOwners::find()->where(['user_id' => $id])->asArray()->all();
+        $userItems = BcItemsUsers::find()->where(['user_id' => $id])->asArray()->all();
         $userItemsIds = ArrayHelper::getColumn($userItems, 'item_id');
-        $brokerItems = BcItemsBrokers::find()->where(['user_id' => $id])->asArray()->all();
-        $brokerItemsIds = ArrayHelper::getColumn($brokerItems, 'item_id');
-        $ids = ArrayHelper::merge($userItemsIds, $brokerItemsIds);
-        return $ids;
+        return $userItemsIds;
     }
 
     protected function getStreetName($id, $target, $field)

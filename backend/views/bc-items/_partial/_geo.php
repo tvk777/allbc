@@ -24,7 +24,7 @@ if(count($model->subways)>0) {
 </div>
 
 <div class="col-sm-6">
-    <? echo urlencode('Гринченко') ?>
+    <? //echo urlencode('Гринченко') ?>
     <label class="control-label" for="place">Поиск (адрес)</label>
     <input type="text" value="" class="form-control" id="address_autocomplate_name">
     <input type="hidden" id="address_autocomplate_value" name="address_location">

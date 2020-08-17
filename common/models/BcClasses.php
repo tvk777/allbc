@@ -36,7 +36,7 @@ class BcClasses extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name', 'name_ua', 'name_en', 'short_name', 'short_name_ua', 'short_name_en'], 'string', 'max' => 255],
+            [['name', 'name_ua', 'name_en', 'short_name', 'short_name_ua', 'short_name_en', 'mid_name'], 'string', 'max' => 255],
             [['slug'], 'string', 'max' => 15],
         ];
     }
@@ -56,6 +56,7 @@ class BcClasses extends \yii\db\ActiveRecord
             'short_name' => Yii::t('app', 'Short Name'),
             'short_name_ua' => Yii::t('app', 'Short Name Ua'),
             'short_name_en' => Yii::t('app', 'Short Name En'),
+            'mid_name' => Yii::t('app', 'Name for backend'),
             'slug' => Yii::t('app', 'Slug'),
         ];
     }

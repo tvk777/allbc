@@ -24,11 +24,6 @@
         }, 1000);
     });
 
-    /*$(document).on('submit', '#globalSearch', function () {
-        alert(1);
-        $('#globalSearch .global-search').focus();
-    });*/
-
     $(document).on('pjax:complete', function (event) {
         $('#globalSearch .global-search').focus();
         //alert('foc');
@@ -42,5 +37,31 @@
         console.log(keys);
     });
 
+    $(".linkable td").on("click", function () {
+        if (!$(this).hasClass('action-column')) {
+            var link = $(this).closest('.linkable').data('link');
+            location.href = link;
+        }
+    });
+
+    $('.remove-selection').on("click", function (e) {
+        var selection = $('.action-column input:checkbox:checked').length;
+        if(selection >0){
+            if(!confirm('Вы уверены в том, что хотите удалить выделенные элементы?')) e.preventDefault();
+        } else {
+            e.preventDefault();
+            return;
+        }
+    });
+
+    /*$('#bcitemssearch-searchstring').on('change', function () {
+        if($(this).val().length>3) {
+            console.log($(this).val());
+            $('#searchString').submit();
+            /!*setTimeout(function () {
+            $('#searchString').submit();
+        }, 1000);*!/
+        }
+    });*/
 
 })(jQuery);

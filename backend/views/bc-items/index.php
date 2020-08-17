@@ -1,9 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-/*use yii\grid\GridView;*/
-use kartik\grid\GridView;
-use kartik\editable\Editable;
+use yii\grid\GridView;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
+
+//use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\BcItemsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -14,39 +16,64 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="bc-items-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php Pjax::begin() ?>
 
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <?= Html::beginForm(['delete-selected'], 'post', ['class' => 'batch-action']); ?>
     <p>
         <?= Html::a(Yii::t('app', 'Create Bc Items'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Удалить выбранное', ['class' => 'btn btn-primary remove-selection']); ?>
     </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?= GridView::widget([
+        'tableOptions' => [
+            'class' => 'table table-striped table-bordered table-hover table-condensed'
+        ],
+        'rowOptions' => function ($model) {
+            return [
+                'class' => 'linkable',
+                'data-link' => Url::to(['/bc-items/update', 'id' => $model->id])
+            ];
+        },
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        //'options' => [ 'style' => 'table-layout:fixed' ],
+        //'filterModel' => $searchModel,
+        'options' => ['style' => 'table-layout:fixed'],
         'columns' => [
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\CheckboxColumn',
+                'checkboxOptions' => function ($model) {
+                    return ['value' => $model->id];
+                },
+                'contentOptions' => ['class' => 'action-column'],
+            ],
+            ['class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['class' => 'action-column'],
+            ],
             'id',
-            'name',
             [
                 'attribute' => 'name',
-                //'headerOptions' => ['style' => 'width:50px'],
+                'headerOptions' => ['style' => 'max-width:50px'],
             ],
             [
-                'attribute' => 'slug.slug',
+                'label' => 'link',
+                'attribute' => 'link',
                 'value' => function ($data) {
-                    return $data->slug->slug;
+                    return $data->link;
                 }
             ],
             [
                 'attribute' => 'class_id',
                 'value' => function ($data) {
-                    return $data->class->name;
+                    return $data->class->mid_name;
+                }
+            ],
+            [
+                'attribute' => 'city_id',
+                'value' => function ($data) {
+                    return $data->city->name;
                 }
             ],
 
-            'city_id',
             [
                 'attribute' => 'approved',
                 'label' => 'Проверенный',
@@ -56,26 +83,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'sort_order',
-            /*[
-                'class'=>'kartik\grid\EditableColumn',
-                'attribute'=>'sort_order',
-                'editableOptions'=>[
-                    'header'=>'Buy Amount',
-                    //'inputType'=>\kartik\editable\Editable::INPUT_SPIN,
-                    'options'=>['pluginOptions'=>['min'=>0, 'max'=>5000]]
-                ],
-                'hAlign'=>'right',
-                'vAlign'=>'middle',
-                'width'=>'100px',
-                'format'=>['decimal', 2],
-                'pageSummary'=>true
-            ],*/
             'percent_commission',
             'title',
             'keywords',
             'description',
         ],
     ]); ?>
-
-
+    <?= Html::endForm(); ?>
+    <?php Pjax::end() ?>
 </div>
