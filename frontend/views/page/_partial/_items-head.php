@@ -658,7 +658,7 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                 </div>
                 <div class="flex_pills">
                     <button type="button" class="orange_pill button-filter-search">Пошук</button>
-                    <a href="#" class="white_pill">Очистить</a>
+                    <a href="#" class="white_pill clear-filters">Очистить</a>
                 </div>
                 <div class="visible_1240">
                     <?= Html::a(
