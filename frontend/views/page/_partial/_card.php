@@ -32,13 +32,11 @@ if ($result == 'bc') {
     $countItemPlaces = count($itemPlaces);
     if ($countItemPlaces > 1) {
         $priceInfo = Yii::t('app', 'from') . ' ' . $minPrice;
-        $squareInfo .= Yii::t('app', 'Offices') . ': ';
-        $squareInfo .= $countItemPlaces . ' - ' . $cardItem->minM2 . '-' . $cardItem->maxM2 . 'м²';
+        $squareInfo .= 'от '.$cardItem->minM2 . ' до ' . $cardItem->maxM2 . ' м²';
     } elseif ($countItemPlaces == 1) {
         $priceInfo = $minPrice;
         $itemPlace = $itemPlaces[0];
-        $squareInfo .= Yii::t('app', 'Office') . ': ';
-        $squareInfo .= $itemPlace->m2min ? $itemPlace->m2min . '-' . $itemPlace->m2 . 'м²' : $itemPlace->m2 . 'м²';
+        $squareInfo .= $itemPlace->m2min ? 'от '.$itemPlace->m2min . ' до ' . $itemPlace->m2 . ' м²' : $itemPlace->m2 . ' м²';
     }
 } else {
     $cardItem = $item->place->bcitem; //bc
@@ -70,20 +68,20 @@ if ($result == 'bc') {
     $itemComission = $cardItem->percent_commission;
     $building = 'office';
 }
-
+$date =Yii::$app->formatter->asDate($cardItem->updated_at, 'php:d mm');
 if (!empty($itemSubway)) {
     switch ($itemSubway->subwayDetails->branch_id) {
         case 1:
-            $subwayIco = '<i class="red_metro"></i>';
+            $subwayIco = '<i class="card red_metro"></i>';
             break;
         case 2:
-            $subwayIco = '<i class="green_metro"></i>';
+            $subwayIco = '<i class="card green_metro"></i>';
             break;
         case 3:
-            $subwayIco = '<i class="blue_metro"></i>';
+            $subwayIco = '<i class="card blue_metro"></i>';
             break;
         default:
-            $subwayIco = '<i class="metro"></i>';
+            $subwayIco = '<i class="card metro"></i>';
     }
 
     $subway = $subwayIco . $itemSubway->subwayDetails->name . ' <span class="about">~</span> ' . $itemSubway->walk_distance . ' м';
@@ -99,10 +97,8 @@ if (!empty($itemSubway)) {
             <div class="object_slider_wrapp">
                 <div class="object_slider_header">
                     <? if (!Yii::$app->user->isGuest) : ?>
-                        <div class="inline p_info blue_p">
-                            <span
-                                class="blue_span"><?= Yii::t('app', 'Commission') . ': </span><span class="red_span">' . $itemComission ?>
-                                %</span>
+                        <div class="p_info red_p">
+                            <p><?= Yii::t('app', 'Commission') . ': ' . $itemComission ?>%</p>
                         </div>
                     <? endif; ?>
                     <div class="inline">
@@ -122,29 +118,47 @@ if (!empty($itemSubway)) {
                     <? if (!empty($slides)) : ?>
                         <? foreach ($slides as $slide): ?>
                             <div class="slide">
-                                <a href="#" class="img_box"
-                                   data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></a>
+                                <div class="img_box" data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></div>
                             </div>
                         <? endforeach; ?>
+
                     <? endif; ?>
                 </div>
+                <p class="object_card_date"><?= $date ?></p>
             </div>
             <div class="object_thumb_descript">
-                <?= Html::a($itemName, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
-
-                <div class="cl_pill_class">
-                    <span class="item-type">
-                        <span class="item-class"><?= $itemClass ?></span>
-                    </span>
-                    <span class="item-id">ID: <?= $id ?></span>
+                <div class="object_card_title_wrapp">
+                    <?= Html::a($itemName, [$href], ['class' => 'object_card_title', 'target' => '_blank']) ?>
                 </div>
-                <div class="card-address">
-                    <div class="adres">
-                        <p><?= $address ?></p>
-                        <h5><?= $district ?>, г. <?= $city ?></h5>
+                <div class="card_descript_inner">
+                    <div class="id_row">
+                        <p><?= $itemClass ?> <span class="sl"></span> ID: <?= $id ?></p>
                     </div>
-                    <div class="metro_wrapp">
-                        <p><?= $subway ?></p>
+                    <div class="two_cols_2">
+                        <div class="two_cols_2_col">
+                            <div class="adres">
+                                <h4><?= $address ?></h4>
+                                <p><?= $city ?>, <?= $district ?></p>
+                            </div>
+                            <div class="metro_wrapp">
+                                <p><?= $subway ?></p>
+                            </div>
+                        </div>
+                        <? if ($result == 'bc') : ?>
+                        <div class="two_cols_2_col">
+                            <div class="office_cont_wrapp">
+                                <div class="office_cont">
+                                    <div class="col">
+                                        <i class="room_2"></i>
+                                    </div>
+                                    <div class="col">
+                                        <h5><?= $countItemPlaces ?></h5>
+                                    </div>
+                                </div>
+                                <p>офисов</p>
+                            </div>
+                        </div>
+                        <? endif; ?>
                     </div>
                 </div>
 
@@ -158,14 +172,9 @@ if (!empty($itemSubway)) {
                         </div>
                     <? endif; ?>
                     <? if ($result == 'bc') : ?>
-                        <div class="thumb_5_footer_col">
-                            <p><?= Yii::t('app', 'Price') ?>:
-                                <?= $priceInfo ?>
-                            </p>
-                        </div>
-                        <div class="thumb_5_footer_col">
-                            <p><?= $squareInfo ?></p>
-                        </div>
+                            <div class="thumb_5_footer_inner">
+                                <p><?= Yii::t('app', 'Square') ?>: <?= $squareInfo ?></p>
+                            </div>
                     <? endif; ?>
                 </div>
 

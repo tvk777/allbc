@@ -4612,6 +4612,12 @@ input.all-subways:checked + label.all-subways:before{
     background-position: 0 0;
 }
 
+.card.red_metro, .card.green_metro, .card.blue_metro{
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+}
+
 .green_marker {
     display: inline-block;
     vertical-align: top;
@@ -5235,6 +5241,12 @@ input.all-subways:checked + label.all-subways:before{
     z-index: 2;
 }
 
+.object_slider_header .red_p {
+    position: absolute;
+    top: 16px;
+    left: 15px;
+}
+
 .object_slider_header .inline {
     display: inline-block;
     vertical-align: middle;
@@ -5288,9 +5300,13 @@ input.all-subways:checked + label.all-subways:before{
 
 .object_slider .img_box {
     display: block;
-    height: 242px;
-    overflow: hidden;
+    height: 180px;
     position: relative;
+    width: 100%;
+    z-index: 2;
+}
+.adres h4 {
+    margin:0;
 }
 
 .place-card .object_slider .slick-arrow {
@@ -5319,6 +5335,18 @@ input.all-subways:checked + label.all-subways:before{
 .object_slider .img_box.place img {
     position: relative;
     width: 100%;
+}
+
+.object_slider_wrapp .object_card_date {
+    width: 100%;
+    text-align: right;
+    padding-right: 15px;
+    font-size: 15px;
+    line-height: 15px;
+    color: #fff;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
 }
 
 .white_left_arrow {
@@ -5395,7 +5423,7 @@ input.all-subways:checked + label.all-subways:before{
     min-height: 210px;
     border: 1px solid #cdcece;
     border-top: none;
-    padding: 5px 15px 2px 15px;
+    padding: 15px 15px 2px 15px;
     position: relative;
     z-index: 2;
     background-color: #ffffff;
@@ -5404,6 +5432,40 @@ input.all-subways:checked + label.all-subways:before{
 .object_card:hover .object_thumb_descript {
     border-color: transparent;
 }
+.object_card_title_wrapp {
+    min-height: 55px;
+}
+
+.card_descript_inner {
+    min-height: 100px;
+    border-top: 1px solid #cdcece;
+}
+.id_row {
+    padding: 5px 0;
+}
+
+.id_row p {
+    color: #272727;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.sl {
+    display: inline-block;
+    vertical-align: top;
+    height: 14px;
+    width: 1px;
+    background: #cdcece;
+}
+
+.id_row p .sl {
+    margin: 0 2px;
+    position: relative;
+    top: 3px;
+    left: 0;
+}
+
+
 .blue_p {
     display: inline-block;
     vertical-align: top;
@@ -5479,9 +5541,9 @@ a.object_card_title:focus {
 .adres p,
 .adres p a {
     padding: 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: #272727;
+    font-size: 12px;
+    font-weight: normal;
+    color: #6e6e6e;
     max-height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5521,11 +5583,7 @@ a.object_card_title:focus {
 }
 
 .object_card .two_cols_2 {
-    margin-top: 12px;
-}
-
-.object_card .adres {
-    /*min-height: 60px;*/
+    margin-top: 0;
 }
 
 .object_card .two_cols_2_col:nth-child(2) {
@@ -5560,7 +5618,6 @@ a.object_card_title:focus {
 }
 
 .object_card .thumb_5_footer {
-    margin-top: 7px;
     padding-top: 3px;
 }
 
