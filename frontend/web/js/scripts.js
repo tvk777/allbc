@@ -1596,12 +1596,9 @@ $(document).ready(function () {
         $(".close_filter").click();
     });
 
-    /*$("input.submit_filter").on("change", function (e) {
-        $(".more_filter").toggleClass('active');
-        //alert($(".more_filter").attr("class"));
-        $(".filter-form").submit();
-        $(".close_filter").click();
-    });*/
+    $("input.submit_filter").on("change", function (e) {
+        if($(this).closest('.resp_filter_inner').length===0) $(".filter-form").submit();
+    });
 
     $(".filter-form .m2-filter .remove").on("click", function () {
         $("#maxm2").val('');
