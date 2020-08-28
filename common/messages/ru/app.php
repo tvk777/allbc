@@ -97,6 +97,7 @@ return [
     'Your email for subscription' => 'Ваш email для подписки',
     'Price' => 'Цена',
     'Office area' => 'Площадь офиса',
+    'Office area, m²' => 'Площадь офиса, м²',
     'Favorite' => 'Избранное',
     'Mail to support' => 'Написать в поддержку',
     'Subject' => 'Тема письма',
@@ -114,4 +115,7 @@ return [
     'Blue line' => 'Синяя линия',
     'Green line' => 'Зеленая линия',
     'All stations' => 'Все станции',
+    'no matter' => 'не важно',
+    'Show' => 'Выводить',
+    'Menu' => 'Меню',
 ];

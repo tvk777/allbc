@@ -14,6 +14,8 @@ use yii\helpers\Url;
 //debug($items[0]['places']);
 //debug($items[0]->place);
 //$currency = $conditions['currency'];
+$pageSize = Yii::$app->settings->page_size;
+$halfPage = $pageSize/2;
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
@@ -127,7 +129,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 <div class="w_half">
                     <div class="objects_cards">
                         <?
-                        for ($i = 0; $i <= 7; $i++) {
+                        for ($i = 0; $i <= $halfPage-1; $i++) {
                             if (isset($items[$i])) {
                                 echo $this->render('_partial/_card', [
                                     'item' => $items[$i],
@@ -158,7 +160,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                 <div class="w_half">
                     <div class="objects_catalog objects_cards">
                         <?
-                        for ($i = 8; $i <= 16; $i++) {
+                        for ($i = $halfPage; $i <= $pageSize; $i++) {
                             if (isset($items[$i])) {
                                 echo $this->render('_partial/_card', [
                                     'item' => $items[$i],
@@ -174,14 +176,15 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                         }
                         ?>
                     </div>
+                    <?
+                    echo LinkPager::widget([
+                        'pagination' => $pages,
+                        'linkOptions' => ['data-pjax' => 0]
+                    ]); ?>
                 </div>
             </div>
             <div class="row">
-                <?
-                echo LinkPager::widget([
-                    'pagination' => $pages,
-                    'linkOptions' => ['data-pjax' => 0]
-                ]); ?>
+
             </div>
         <? endif; ?>
 

@@ -32,12 +32,13 @@ if ($result == 'bc') {
     $countItemPlaces = count($itemPlaces);
     if ($countItemPlaces > 1) {
         $priceInfo = Yii::t('app', 'from') . ' ' . $minPrice;
-        $squareInfo = $countItemPlaces . ' - '. $cardItem->minM2 . '-'. $cardItem->maxM2. 'м²';
-    } elseif ($countItemPlaces==1) {
+        $squareInfo .= Yii::t('app', 'Offices') . ': ';
+        $squareInfo .= $countItemPlaces . ' - ' . $cardItem->minM2 . '-' . $cardItem->maxM2 . 'м²';
+    } elseif ($countItemPlaces == 1) {
         $priceInfo = $minPrice;
         $itemPlace = $itemPlaces[0];
-        $squareInfo = $itemPlace->m2min ? $itemPlace->m2min.'-'.$itemPlace->m2. 'м²' : $itemPlace->m2. 'м²';
-        //$squareInfo = $cardItem->minM2 . 'м²';
+        $squareInfo .= Yii::t('app', 'Office') . ': ';
+        $squareInfo .= $itemPlace->m2min ? $itemPlace->m2min . '-' . $itemPlace->m2 . 'м²' : $itemPlace->m2 . 'м²';
     }
 } else {
     $cardItem = $item->place->bcitem; //bc
@@ -49,7 +50,7 @@ if ($result == 'bc') {
     $href = '/' . $placeItem->slug->slug . '?target=' . $paramTarget;
     $city = $cardItem->city->name;
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
-    $address = $placeItem->hide_bc==1 ? $cardItem->street : $cardItem->address;
+    $address = $placeItem->hide_bc == 1 ? $cardItem->street : $cardItem->address;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
     $placePrices = getPlacePrices($item, $currency, $rates, $taxes, $target);
     $minPrice = $placePrices['forM2'];
@@ -121,8 +122,7 @@ if (!empty($itemSubway)) {
                     <? if (!empty($slides)) : ?>
                         <? foreach ($slides as $slide): ?>
                             <div class="slide">
-                                <a href="<?= $slide['big'] ?>" class="img_box"
-                                   data-fancybox="card_1<?= $cardItem->id ?>"
+                                <a href="#" class="img_box"
                                    data-imageurl="<?= $slide['thumb'] ?>"><img src="#" alt=""/></a>
                             </div>
                         <? endforeach; ?>
@@ -147,27 +147,28 @@ if (!empty($itemSubway)) {
                         <p><?= $subway ?></p>
                     </div>
                 </div>
-                <div class="thumb_5_footer">
 
+                <div class="thumb_5_footer">
+                    <? if ($result == 'offices') : ?>
+                        <div class="thumb_5_footer_col">
+                            <p><?= Yii::t('app', 'Square') ?>: <?= $minmax ?></p>
+                        </div>
+                        <div class="thumb_5_footer_col">
+                            <p><?= Yii::t('app', 'Price') ?>: <?= $minPrice ?></p>
+                        </div>
+                    <? endif; ?>
                     <? if ($result == 'bc') : ?>
-                        <div class="offices-info">
-                            <p><span><?= $target == 1 ? Yii::t('app', 'Rent') : Yii::t('app', 'Cost') ?>:</span>
+                        <div class="thumb_5_footer_col">
+                            <p><?= Yii::t('app', 'Price') ?>:
                                 <?= $priceInfo ?>
                             </p>
-                            <p><span><?= Yii::t('app', 'Offices') ?>
-                                    :</span> <?= $squareInfo ?>
-                            </p>
+                        </div>
+                        <div class="thumb_5_footer_col">
+                            <p><?= $squareInfo ?></p>
                         </div>
                     <? endif; ?>
-                    <? if ($result == 'offices') : ?>
-                        <div class="offices-info">
-                            <p><span><?= $target == 1 ? Yii::t('app', 'Rent') : Yii::t('app', 'Cost') ?>:</span>
-                                <?= $minPrice ?></p>
-                            <p><span><?= Yii::t('app', 'Square') ?>:</span> <?= $minmax ?></p>
-                        </div>
-                    <? endif; ?>
-
                 </div>
+
             </div>
         </div>
         <? if ($result == 'bc') : ?>
@@ -193,7 +194,7 @@ if (!empty($itemSubway)) {
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">
-                                    <? $squ = $place->m2min ? $place->m2min.'-'.$place->m2 : $place->m2 ?>
+                                    <? $squ = $place->m2min ? $place->m2min . '-' . $place->m2 : $place->m2 ?>
                                     <p><?= $squ ?></p>
                                 </div>
                                 <div class="table_cell">

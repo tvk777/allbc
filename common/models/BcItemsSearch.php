@@ -142,7 +142,8 @@ class BcItemsSearch extends BcItems
         $query->andFilterWhere(['in', 'district_id', $params['districts']]);
         $query->andFilterWhere(['in', 'status_id', $params['statuses']]);
         $query->andFilterWhere(['in', 'subway_id', $params['subways']]);
-        $query->andFilterWhere(['<', 'walk_distance', $params['walk_dist']]);
+        //$query->andFilterWhere(['<=', 'walk_distance', $params['walk_dist']]);
+        $query->andFilterWhere(['or', ['is', 'walk_distance', NULL], ['<=', 'walk_distance', $params['walk_dist']]]);
 
         if (!$exclude) {
             if (!empty($params['m2min']) && !empty($params['m2max'])) {

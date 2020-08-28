@@ -18,7 +18,7 @@ use yii\web\JsExpression;
 AppAsset::register($this);
 $controller = Yii::$app->controller->id;
 $action = Yii::$app->controller->action->id;
-$changeCurrency = ($action=='bc_items' || $action=='bc_places' || $action=='bc_places_sell') ? true : false;
+$changeCurrency = ($action == 'bc_items' || $action == 'bc_places' || $action == 'bc_places_sell') ? true : false;
 //echo $controller.' - '.$action;
 //page - bc_items, page - bc_places
 if ($controller == 'site' && $action != 'index') {
@@ -26,7 +26,7 @@ if ($controller == 'site' && $action != 'index') {
 } else {
     $bodyClass = 'class="' . $controller . ' ' . $action . '"';
 }
-$headerClass = '';
+$headerClass = 'header_site ';
 $logoClass = '';
 //$logoText = '<span class="logo-text">'.Yii::t('app', 'All business centers here').'</span>';
 $logoImg = Html::img('@web/img/logo.svg', ['alt' => 'Логотип']);
@@ -35,9 +35,12 @@ $dropdowmClass = '';
 $dropdowmClass2 = '';
 $contentClass = '';
 $blackClass = '';
-
-if ($action != 'index') {
-    $headerClass = 'header_site_inner header_1';
+$mainNavClass ='';
+if ($action == 'index'){
+    $headerClass .= 'header_main';
+    $mainNavClass = 'main_nav_wrapp_main';
+} else {
+    $headerClass .= 'header_site_inner header_1';
     $logoClass = 'logo_wrapp_2';
     $logoImg = Html::a(Html::img('@web/img/logo_2.svg', ['alt' => 'Логотип', 'class' => 'logo_black']), [Url::home()]);
     $dropdowmClass = 'dropdowm_wrapp_2';
@@ -73,29 +76,51 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
 <?php $this->beginBody(); ?>
 <div class="wrapper">
     <header>
-        <div class="header_site <?= $headerClass ?>">
+        <div class="<?= $headerClass ?>">
             <div class="row clearfix">
                 <div class="left">
-                    <button class="respmenubtn">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                    <button class="respmenubtn respmenubtn_2 menu_btn_2">
+						<span class="sp_1">
+							<span></span>
+							<span></span>
+							<span></span>
+						</span>
+						<span class="sp_2">
+							<span><?= Yii::t('app', 'Menu') ?></span>
+						</span>
                     </button>
                 </div>
                 <div class="center">
-                    <div class="logo_wrapp <?= $logoClass ?>">
-                        <?= $logoImg ?>
+                    <div class="logo_city">
+                        <div class="logo_wrapp <?= $logoClass ?>">
+                            <?= $logoImg ?>
+                        </div>
+                        <?= common\widgets\CountOfficeWidget::widget() ?>
                     </div>
-                    <?= common\widgets\CountOfficeWidget::widget() ?>
-
                 </div>
                 <div class="right">
-                    <div class="search_sect inline append-elem" data-append-desktop-elem="2" data-min-screen="600">
+                    <div class="search_sect inline append-elem" data-append-desktop-elem="2" data-min-screen="900">
                         <a href="#" class="search_open">
                             <i class="<?= $searchIconClass ?>"></i>
                         </a>
                     </div>
-                    <div class="inline append-elem" data-append-desktop-elem="3" data-min-screen="600">
+                    <div class="top_menu novisible_1380">
+                        <div class="dropdowm_wrapp dropdowm_wrapp_2 dropdowm_wrapp_2_2">
+                            <div class="dropdown_title">
+                                <p class="p_width">Добавить объявление</p>
+                                <input type="text" name="#" placeholder="Добавить объявление" readonly />
+                            </div>
+                            <div class="dropdown_menu">
+                                <ul>
+                                    <li><a href="#" title="" class="active">Объявление 1</a></li>
+                                    <li><a href="#" title="">Объявление 2</a></li>
+                                    <li><a href="#" title="">Объявление 3</a></li>
+                                    <li><a href="#" title="">Объявление 4</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline append-elem" data-append-desktop-elem="3" data-min-screen="900">
                         <div class="favorite_box">
                             <a href="/favorite" class="icon_link">
                                 <i class="star_icon<?= $blackClass ?>"></i>
@@ -103,7 +128,7 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                             </a>
                         </div>
                     </div>
-                    <div class="top_menu append-elem" data-append-desktop-elem="4" data-min-screen="600">
+                    <div class="inline user-block append-elem" data-append-desktop-elem="4" data-min-screen="900">
                         <div class="dropdowm_wrapp">
                             <div class="dropdown_title user_wrapp">
                                 <a href="login" class="icon_link">
@@ -133,10 +158,10 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                             </div>
                         </div>
                     </div>
-                    <div class="top_menu append-elem" data-append-desktop-elem="5" data-min-screen="450">
+                    <div class="top_menu append-elem" data-append-desktop-elem="5" data-min-screen="470">
                         <?php echo common\widgets\LangWidget::widget() ?>
                         <?php
-                        if($changeCurrency) echo common\widgets\CurrencyWidget::widget();
+                        if ($changeCurrency) echo common\widgets\CurrencyWidget::widget();
                         ?>
                     </div>
                 </div>
@@ -144,14 +169,14 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
             <?= $this->render('_partial/_search', [
                 'result' => Yii::$app->controller->result
             ]); ?>
-            <div class="main_nav_wrapp" id="resp_nav">
+            <div class="main_nav_wrapp <?= $mainNavClass ?>" id="resp_nav">
                 <div class="inline_blocks">
                     <div class="append-elem" data-append-elem="2"></div>
                     <div class="append-elem" data-append-elem="3"></div>
                     <div class="append-elem" data-append-elem="4"></div>
                     <div class="append-elem" data-append-elem="5"></div>
                 </div>
-                <div class="main_nav">
+                <div class="menu_2">
                     <?php echo common\widgets\TopMenuWidget::widget() ?>
                     <div class="add-advert">
                         <div class="dropdowm_wrapp <?= $dropdowmClass2 ?>">
@@ -161,7 +186,7 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                             </div>
                             <div class="dropdown_menu">
                                 <ul>
-                                    <li><a href="#" title="" class="active"/>Объявление 1</a></li>
+                                    <li><a href="#" title="" />Объявление 1</a></li>
                                     <li><a href="#" title=""/>Объявление 2</a></li>
                                     <li><a href="#" title=""/>Объявление 3</a></li>
                                     <li><a href="#" title=""/>Объявление 4</a></li>
