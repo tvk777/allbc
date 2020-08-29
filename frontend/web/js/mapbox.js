@@ -131,6 +131,7 @@
                 showMap = true;
                 $(".map_object_templ").addClass("map_show");
                 $(".object_map").addClass("visible");
+                $("html").scrollTop($("#map_box").offset().top - 20);
             } else {
                 showMap = false;
                 $(".map_object_templ").removeClass("map_show");

@@ -4395,8 +4395,8 @@ input.all-subways:checked + label.all-subways:before{
     position: relative;
     z-index: 9;
 }
-.col.msg .custom_select_wrapp {
-    max-width: 70px;
+.price .custom_select_wrapp {
+  max-width: 100%;
 }
 
 .custom_select_wrapp .custom_select {
@@ -4665,7 +4665,8 @@ input.all-subways:checked + label.all-subways:before{
     padding-right:10px;
 }
 .metro_two_cols .col.msg{
-    width: auto;
+    width: 100%;
+    text-align: right;
 }
 
 
@@ -5596,6 +5597,7 @@ a.object_card_title:focus {
 }
 
 .metro_wrapp {
+    height:22px;
 }
 
 .metro_wrapp p i {
@@ -10257,4 +10259,148 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
 
 .menu_btn_2.active .sp_1 span:last-child {
     display: none;
+}
+/*-- /Section 4 - Info Side Page --*/
+
+/*-- Info side Promo Section --*/
+
+.info_side_promo {
+    padding-top: 70px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+}
+
+.info_side_promo:before {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .4);
+    z-index: 2;
+}
+
+.promo_slider {
+    width: 100%;
+    height: 100%;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+}
+
+.promo_slider .slide {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.info_side_promo > .row {
+    position: relative;
+    z-index: 2;
+}
+
+.promo_text {
+    padding: 90px 0 90px 0;
+    text-align: center;
+}
+
+.promo_footer {
+    padding: 20px 0 20px 0;
+    text-align: center;
+}
+
+.promo_text h1 {
+    padding: 15px 0;
+    font-size: 50px;
+    line-height: 56px;
+    font-weight: 800;
+    color: #fff;
+    margin:0;
+}
+
+.promo_text h2 {
+    padding: 15px 0;
+    font-size: 25px;
+    line-height: 28px;
+    font-weight: bold;
+    color: #fff;
+    margin:0;
+}
+
+.promo_footer p {
+    font-size: 25px;
+    line-height: 28px;
+    font-weight: normal;
+    color: #fff;
+}
+
+.promo_footer p a {
+    font-size: 25px;
+    line-height: 28px;
+    font-weight: normal;
+    color: #fff;
+    border-bottom: 1px solid transparent;
+    -webkit-transition-property: border;
+    -webkit-transition-duration: .3s;
+    -webkit-transition-timing-function: ease;
+
+    -moz-transition-property: border;
+    -moz-transition-duration: .3s;
+    -moz-transition-timing-function: ease;
+
+    -ms-transition-property: border;
+    -ms-transition-duration: .3s;
+    -ms-transition-timing-function: ease;
+
+    -o-transition-property: border;
+    -o-transition-duration: .3s;
+    -o-transition-timing-function: ease;
+
+    transition-property: border;
+    transition-duration: .3s;
+    transition-timing-function: ease;
+}
+
+.promo_footer p a {
+    border-bottom: 1px solid transparent;
+}
+
+.promo_footer p a.active,
+.promo_footer p a:active {
+    border-bottom: 1px solid #fff;
+}
+
+.promo_footer p a:hover {
+    border-bottom: 1px solid #fff;
+}
+
+.promo_slider_arrows {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.promo_slider_arrows .slick-prev {
+    position: absolute;
+    top: -38px;
+    left: 20px;
+}
+
+.promo_slider_arrows .slick-next {
+    position: absolute;
+    top: -38px;
+    right: 20px;
+}
+
+/*-- /Info side Promo Section --*/
+.m2text{
+    position:absolute;
+    right: 10px;
+    top:7px;
 }

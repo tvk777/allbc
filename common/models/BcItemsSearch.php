@@ -407,13 +407,14 @@ class BcItemsSearch extends BcItems
             ]
         )->all();
         //$forChartsQuery = $this->filterConditions($forChartsQuery, $params, true)->all(); //условия фильтра для графиков, если они нужны
-
+//debug(count($forChartsQuery)); die();
         $m2 = ArrayHelper::getColumn($forChartsQuery, 'm2'); //m2 array
         $m2min = ArrayHelper::getColumn($forChartsQuery, 'm2min'); //m2min array
         $m2ForChart = array_filter(ArrayHelper::merge($m2, $m2min)); //all m2 array for chart
         $pricesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'uah_price'));
+        $distancesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'walk_distance'));
         $center = !empty($markers['features'][0]['geometry']['coordinates']) ? $markers['features'][0]['geometry']['coordinates'] : null;
-//debug($streetName); die();
+//debug($streetName); die(); walk_distance
         $result = [];
         $result['streetName'] = $streetName;
         $result['params'] = $params;
@@ -421,6 +422,7 @@ class BcItemsSearch extends BcItems
         $result['count_ofices'] = $count_ofices; //количество найденных офисов
         $result['m2ForChart'] = $m2ForChart; //массив кв.м. для графика
         $result['pricesForChart'] = $pricesForChart; //массив цен для графика [0] => 425(uah_price) [1] => 45(m2)
+        $result['distancesForChart'] = $distancesForChart; //массив м. для графика расстояние от метро
         $result['markers'] = json_encode($markers);
         $result['pages'] = $pages;
         /*массив данных для страницы
@@ -428,7 +430,7 @@ class BcItemsSearch extends BcItems
         выдача офисов BcPlacesView Object [place] => common\models\BcPlaces Object
         */
         $result['allForPage'] = $allForPage; //
-
+//debug($result['distancesForChart']); die();
         return $result;
     }
 

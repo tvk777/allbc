@@ -17,12 +17,13 @@ class SliderWidget extends Widget{
 
     public function run() {
 
-        $model = BcSlider::find()->where(['or', 'slider_id=1', 'slider_id=3'])->with('bcitem.images')->all(); //для слайдера на главной
+        $model = BcSlider::find()->where(['or', 'slider_id=1', 'slider_id=3'])->with('bcitem.images')->all();
         $images = [];
         foreach($model as $index => $one){
             $bc = $one->bcitem;
             $img = $bc->images[0];
             $images[$index]['url'] = $img->imgSrc;
+            $images[$index]['title'] = $bc->name;
         }
 
         $imgs='';

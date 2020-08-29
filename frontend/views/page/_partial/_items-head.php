@@ -203,7 +203,6 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                             </div>
                             <div class="dropdown_item_menu price_w">
                                 <div class="append-elem" data-append-desktop-elem="6" data-min-screen="900">
-                                    <p><?= Yii::t('app', 'Office area, m²') ?></p>
                                     <div class="bars_range_wrapp">
                                         <div class="bars">
                                             <? if (!empty($countValM2['count'])) : ?>
@@ -223,11 +222,13 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                             <div class="input_wrapp inline square_input">
                                                 <?= Html::input('number', null, null, ['id' => 'input-number_5']) ?>
                                                 <?= Html::input('hidden', 'filter[m2min]', $minM2, ['id' => 'minm2']) ?>
+                                                <span class="m2text">м²</span>
                                             </div>
                                             <div class="slash inline square_input"></div>
                                             <div class="input_wrapp inline">
                                                 <?= Html::input('number', null, null, ['id' => 'input-number_6']) ?>
                                                 <?= Html::input('hidden', 'filter[m2max]', $maxM2, ['id' => 'maxm2']) ?>
+                                                <span class="m2text">м²</span>
                                             </div>
                                         </div>
                                     </div>
@@ -247,10 +248,6 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                             <div class="dropdown_item_menu price_w">
                                 <div class="append-elem" data-append-desktop-elem="7" data-min-screen="900">
                                     <div class="metro_two_cols metro_two_cols_2">
-                                        <div class="col price">
-                                            <p><?= $targetValue == 1 ? Yii::t('app', 'Rents') : Yii::t('app', 'Cost') ?>
-                                                ,</p>
-                                        </div>
                                         <div class="col msg">
                                             <div class="custom_select_wrapp">
                                                 <div class="custom_select">
@@ -315,7 +312,6 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                     <div class="item_title_text district">
                                         <?= Yii::t('app', 'District') . '<span class="count">' . $districtText . '</span>' ?>
                                     </div>
-                                    <!--<div class="chose_filter" data-filters-index="filters_2"></div>-->
                                 </div>
                                 <div class="dropdown_item_menu w_4 countable">
                                     <div class="append-elem" data-append-desktop-elem="10" data-min-screen="1124">

@@ -2181,5 +2181,32 @@ $(document).ready(function () {
     // ------------
 
 
+    //BC slider
+    if( $(".promo_slider").length > 0 ) {
+
+        $(".promo_slider").on('init', function(){
+            $(".promo_slider .slide").css({
+                "height" : $(".promo_slider").height() + "px"
+            });
+        });
+
+        $(".promo_slider").not(".slick-initialized").slick({
+            dots: false,
+            arrows: true,
+            autoplay: false,
+            autoplaySpeed: 4000,
+            speed: 1200,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            fade: true,
+            appendArrows: $(".promo_slider_arrows"),
+            prevArrow: '<button class="slick-prev white_left_arrow" aria-label="Previous" type="button"></button>',
+            nextArrow: '<button class="slick-next white_right_arrow" aria-label="Next" type="button"></button>'
+        });
+    }
+
+
+
+
 
 });

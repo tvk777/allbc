@@ -47,9 +47,7 @@ $h1 = getDefaultTranslate('name', $currentLanguage, $seo);
 $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
 ?>
 
-<section class="items-top-banner">
-    <?= common\widgets\SliderWidget::widget(['text' => [$h1, $h2]]); ?>
-</section>
+<?= common\widgets\SliderWidget::widget(['text' => [$h1, $h2]]); ?>
 <section class="object_map_sect">
     <form action="" id="main_form">
         <input name="city_link" type="hidden" id="city_link" value="<?= $rentHref ?>"
