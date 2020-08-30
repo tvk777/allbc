@@ -1497,8 +1497,38 @@ $(document).ready(function () {
         }
     });
 
-
+    /*
     $("[data-filter]").on("click", function () {
+        var id = $(this).attr('for'),
+            input = $("#" + id),
+            titleDiv = $(this).closest(".dropdow_item_wrapp").find(".dropdown_item_title"),
+            count = $(this).closest(".dropdown_item_menu").find('input:checked').length;
+        if (input.is(':checked')) {
+            count--;
+        } else {
+            count++;
+        }
+        if (count > 0) {
+            titleDiv.addClass('green_active');
+        } else {
+            titleDiv.removeClass('green_active');
+        }
+    });*/
+
+    $("[data-filter]").on("click", function() {
+        if(!$(this).hasClass("checked_filter")) {
+            $(this).addClass("checked_filter");
+            filtersIndex = $(this).attr("data-filter");
+        } else {
+            $(this).removeClass("checked_filter");
+        }
+        filtersArray = [];
+        $("[data-filter = '"+ filtersIndex +"']").each(function() {
+            if($(this).hasClass("checked_filter") ) {
+                filtersArray.push($(this).text());
+            }
+        });
+        $("[data-filters-index = '"+filtersIndex+"']").text(filtersArray);
         var id = $(this).attr('for'),
             input = $("#" + id),
             titleDiv = $(this).closest(".dropdow_item_wrapp").find(".dropdown_item_title"),
@@ -1515,11 +1545,45 @@ $(document).ready(function () {
         }
     });
 
+
     $("[data-radio-filter]").on("click", function () {
         filtersIndex = $(this).attr("data-radio-filter");
         filtersArray = "";
         $("[data-filters-index = '" + filtersIndex + "']").text($(this).html());
     });
+
+    /*var chIndex, countCh;
+
+    $("[data-ch]").on("change", function() {
+        chIndex = $(this).attr("data-ch");
+        countCh = 0;
+        $("[data-ch ='"+chIndex+"']").each(function() {
+            if($(this).is(":checked")) {
+                countCh++;
+            }
+        });
+        if(countCh == 0) {
+            $("[data-count-ch ='"+chIndex+"']").text("");
+        } else {
+            $("[data-count-ch ='"+chIndex+"']").text(": "+countCh);
+        }
+    });
+
+    $("[data-main-ch]").on("change", function() {
+        chIndex = $(this).attr("data-main-ch");
+        countCh = 0;
+        $("[data-ch ='"+chIndex+"']").each(function() {
+            if($(this).is(":checked")) {
+                countCh++;
+            }
+        });
+        if(countCh == 0) {
+            $("[data-count-ch ='"+chIndex+"']").text("");
+        } else {
+            $("[data-count-ch ='"+chIndex+"']").text(": "+countCh);
+        }
+    });*/
+
 
     var metroText = $('.item_title_text.subways').text(),
         removeButton = $('#metro_name').find('i.remove');

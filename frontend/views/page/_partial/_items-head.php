@@ -310,7 +310,7 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                         : '';
                                     ?>
                                     <div class="item_title_text district">
-                                        <?= Yii::t('app', 'District') . '<span class="count">' . $districtText . '</span>' ?>
+                                        <?= Yii::t('app', 'District') . '<span class="count"  data-count-ch = "ch_1">' . $districtText . '</span>' ?>
                                     </div>
                                 </div>
                                 <div class="dropdown_item_menu w_4 countable">
@@ -327,9 +327,13 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                                     <input class="more-filters" type="checkbox"
                                                            name="filter[districts][]"
                                                            value="<?= $district->id ?>"
-                                                           id="ch_<?= $district->id ?>" <?= $checked_district ?> >
+                                                           id="ch_<?= $district->id ?>"
+                                                           data-ch = "ch_1"
+                                                        <?= $checked_district ?> >
                                                     <label for="ch_<?= $district->id ?>"
-                                                           data-district="district"><?= $district->name ?></label>
+                                                           data-district="district"
+                                                           data-filter="filters_10"
+                                                    ><?= $district->name ?></label>
                                                 </div>
                                             </div>
                                         <? endforeach; ?>
@@ -490,7 +494,8 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                                     <input class="more-filters" type="checkbox"
                                                            name="filter[classes][]"
                                                            value="<?= $class->id ?>"
-                                                           id="ch_3_<?= $class->id ?>" <?= $checked_classes ?>>
+                                                           id="ch_3_<?= $class->id ?>" <?= $checked_classes ?>
+                                                    >
                                                     <label for="ch_3_<?= $class->id ?>"
                                                            data-filter="filters_1">
                                                         <?= getDefaultTranslate('name', $currentLanguage, $class, true); ?>

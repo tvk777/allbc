@@ -68,7 +68,8 @@ if ($result == 'bc') {
     $itemComission = $cardItem->percent_commission;
     $building = 'office';
 }
-$date =Yii::$app->formatter->asDate($cardItem->updated_at, 'php:d mm');
+$date =Yii::$app->formatter->asDate($cardItem->updated_at, 'php:d.m');
+//$date = date('d.m', strtotime ($cardItem->updated_at));
 if (!empty($itemSubway)) {
     switch ($itemSubway->subwayDetails->branch_id) {
         case 1:

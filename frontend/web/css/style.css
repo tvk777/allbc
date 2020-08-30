@@ -6131,6 +6131,7 @@ a.object_card_title:focus {
     min-height: 20px;
     font-size: 15px;
     line-height: 20px;
+    word-wrap: break-word;
 }
 
 .radio_metro_wrapp_2 {
