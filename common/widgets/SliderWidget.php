@@ -24,6 +24,7 @@ class SliderWidget extends Widget{
             $img = $bc->images[0];
             $images[$index]['url'] = $img->imgSrc;
             $images[$index]['title'] = $bc->name;
+            $images[$index]['bcurl'] = $bc->slug->slug;
         }
 
         $imgs='';

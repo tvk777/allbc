@@ -325,16 +325,16 @@ function priceSlider() { //price slider ₴/м²/mec
 }
 
 function isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange) {
-   var moreFilters = $('.more_filter'),
-       filtersContainer = $('.filter_resp_inner'),
-       checkedInputs,
-       bcInput = $('#bc_result');
+    var moreFilters = $('.more_filter'),
+        filtersContainer = $('.filter_resp_inner'),
+        checkedInputs,
+        bcInput = $('#bc_result');
     checkedInputs = filtersContainer.find('input:checkbox:checked').length;
     isPriceSelected = parseInt(filtersContainer.find('#minpricem2').val()) > minRange || parseInt(filtersContainer.find('#maxpricem2').val()) < maxPriceRange;
     isSqSelected = parseInt(filtersContainer.find('#minm2').val()) > minSqRange || parseInt(filtersContainer.find('#maxm2').val()) < maxSqRange;
-    isCheckboxesSelected = checkedInputs>0;
+    isCheckboxesSelected = checkedInputs > 0;
     isBcInputSelected = bcInput.is(':checked');
-    if(isPriceSelected || isSqSelected || isCheckboxesSelected || isBcInputSelected){
+    if (isPriceSelected || isSqSelected || isCheckboxesSelected || isBcInputSelected) {
         moreFilters.addClass('active');
     } else {
         moreFilters.removeClass('active');
@@ -440,8 +440,6 @@ $(document).ready(function () {
     cardSlider();
 
     isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
-
-
 
 
     /*if($("#searchonmap") && $("#searchonmap").length>0) {
@@ -568,7 +566,7 @@ $(document).ready(function () {
                 if (dataId === $(this).data('id'))$(this).addClass('active');
             });
         }
-        if (changeCurrencySpans.length > 0){
+        if (changeCurrencySpans.length > 0) {
             changeCurrencySpans.each(function (index) {
                 if (dataId === $(this).data('id'))$(this).click();
             });
@@ -972,73 +970,73 @@ $(document).ready(function () {
 
 
     /*var checkedStage1, checkedAll, priceSelected, sqSelected;
-    $(".more_filter").on('click', function (e) {
-        e.preventDefault();
-        if (!$(".filters_menu").hasClass("open")) {
-            $(".filters_menu").addClass("open");
-            $(this).addClass("active");
-        } else {
-            checkedStage1 = $('.more-stage1 input:checkbox:checked').length;
-            checkedAll = $('.more-stage2 input:checkbox:checked').length;
-            priceSelected = $('.more-stage2 .price-filter').hasClass('green_active');
-            sqSelected = $('.more-stage2 .m2-filter').hasClass('green_active');
-            if ($(this).hasClass('st1') && checkedStage1 === 0) $(this).removeClass("active");
-            if ($(this).hasClass('st2') && checkedAll === 0 && !priceSelected && !sqSelected) $(this).removeClass("active");
-            $(".filters_menu").removeClass("open");
-        }
+     $(".more_filter").on('click', function (e) {
+     e.preventDefault();
+     if (!$(".filters_menu").hasClass("open")) {
+     $(".filters_menu").addClass("open");
+     $(this).addClass("active");
+     } else {
+     checkedStage1 = $('.more-stage1 input:checkbox:checked').length;
+     checkedAll = $('.more-stage2 input:checkbox:checked').length;
+     priceSelected = $('.more-stage2 .price-filter').hasClass('green_active');
+     sqSelected = $('.more-stage2 .m2-filter').hasClass('green_active');
+     if ($(this).hasClass('st1') && checkedStage1 === 0) $(this).removeClass("active");
+     if ($(this).hasClass('st2') && checkedAll === 0 && !priceSelected && !sqSelected) $(this).removeClass("active");
+     $(".filters_menu").removeClass("open");
+     }
 
-    });
+     });
 
-    //Click responsive form fields
-    var off_input = $("#offices_result"),
-        bc_input = $("#bc_result"),
-        comission_input = $("#ch_1_2"),
-        isComChecked;
+     //Click responsive form fields
+     var off_input = $("#offices_result"),
+     bc_input = $("#bc_result"),
+     comission_input = $("#ch_1_2"),
+     isComChecked;
 
-    function closeFilters() {
-        checkedAll = $('.more-stage2 input:checkbox:checked').length;
-        priceSelected = $('.more-stage2 .price-filter').hasClass('green_active');
-        sqSelected = $('.more-stage2 .m2-filter').hasClass('green_active');
-        if (checkedAll === 0 && !priceSelected && !sqSelected) $('.more_filter').removeClass("active");
-        $(".filters_menu").removeClass("open");
-        $(".filter-form").submit();
-    }
+     function closeFilters() {
+     checkedAll = $('.more-stage2 input:checkbox:checked').length;
+     priceSelected = $('.more-stage2 .price-filter').hasClass('green_active');
+     sqSelected = $('.more-stage2 .m2-filter').hasClass('green_active');
+     if (checkedAll === 0 && !priceSelected && !sqSelected) $('.more_filter').removeClass("active");
+     $(".filters_menu").removeClass("open");
+     $(".filter-form").submit();
+     }
 
-    $(".offices_result_700").on("click", function (e) {
-        bc_input.prop('checked', false);
-        off_input.prop('checked', true);
-    });
-    $(".bc_result_700").on("click", function (e) {
-        bc_input.prop('checked', true);
-        off_input.prop('checked', false);
-    });
-    $(".ch_1_2_700").on("click", function (e) {
-        isComChecked = comission_input.prop('checked');
-        comission_input.prop('checked', !isComChecked);
-    });
-    $(".button-filter-search-700").on("click", function (e) {
-        e.preventDefault();
-        closeFilters()
-    });
+     $(".offices_result_700").on("click", function (e) {
+     bc_input.prop('checked', false);
+     off_input.prop('checked', true);
+     });
+     $(".bc_result_700").on("click", function (e) {
+     bc_input.prop('checked', true);
+     off_input.prop('checked', false);
+     });
+     $(".ch_1_2_700").on("click", function (e) {
+     isComChecked = comission_input.prop('checked');
+     comission_input.prop('checked', !isComChecked);
+     });
+     $(".button-filter-search-700").on("click", function (e) {
+     e.preventDefault();
+     closeFilters()
+     });
 
 
-    var curTop;*/
+     var curTop;*/
 
     var curTop;
 
-    $(".more_filter").on('click', function(e) {
+    $(".more_filter").on('click', function (e) {
         e.preventDefault();
-        if( !$("#filters_menu").hasClass("visible") ) {
+        if (!$("#filters_menu").hasClass("visible")) {
             $("#filters_menu").addClass("visible");
             //$(this).addClass("active");
             getBarsChart();
             $("body").css({
-                "position" : "fixed",
-                "top" :  -$(document).scrollTop() + "px",
-                "overflow" : "hidden",
-                "right" : 0,
-                "left" : 0,
-                "bottom" : 0
+                "position": "fixed",
+                "top": -$(document).scrollTop() + "px",
+                "overflow": "hidden",
+                "right": 0,
+                "left": 0,
+                "bottom": 0
             });
             $("body").addClass("fixed_position");
         } else {
@@ -1057,7 +1055,7 @@ $(document).ready(function () {
         $("#map_box .mask").not('.start').removeClass("visible");
     });
 
-    $(".close_filter").on("click", function(e) {
+    $(".close_filter").on("click", function (e) {
         e.preventDefault();
         $("#filters_menu").removeClass("visible");
         $("body").removeClass("fixed_position");
@@ -1073,7 +1071,7 @@ $(document).ready(function () {
         $("#map_box .mask").not('.start').removeClass("visible");
     });
 
-    $(".mask_2").on("click", function() {
+    $(".mask_2").on("click", function () {
         $("#filters_menu").removeClass("visible");
         $(".more_filter").removeClass("active");
         $("body").removeClass("fixed_position");
@@ -1085,7 +1083,7 @@ $(document).ready(function () {
         }
     });
 
-    $(this).keydown(function(eventObject){
+    $(this).keydown(function (eventObject) {
         if (eventObject.which == 27) {
             $("#filters_menu").removeClass("visible");
             $(".more_filter").removeClass("active");
@@ -1097,21 +1095,21 @@ $(document).ready(function () {
             if (curTop !== 0) {
                 $("html").scrollTop(curTop);
             }
-            setTimeout(function() {
+            setTimeout(function () {
                 $(".dropdow_item_wrapp").removeClass("active");
                 $("#map_box .mask").removeClass("visible");
             }, 400);
         }
     });
 
-    $(document).mouseup(function(e) {
+    $(document).mouseup(function (e) {
         hide_element = $(".dropdown_item_menu");
         if (!hide_element.is(e.target)
             && hide_element.has(e.target).length === 0) {
             hide_element.slideUp(300);
-            setTimeout(function() {
-                $(".dropdown_item_menu").each(function() {
-                    if($(this).is(":hidden")) {
+            setTimeout(function () {
+                $(".dropdown_item_menu").each(function () {
+                    if ($(this).is(":hidden")) {
                         $(this).closest(".dropdow_item_wrapp").removeClass("active");
                     }
                 });
@@ -1119,7 +1117,6 @@ $(document).ready(function () {
             $("#map_box .mask").removeClass("visible");
         }
     });
-
 
 
     $(this).keydown(function (eventObject) {
@@ -1196,13 +1193,13 @@ $(document).ready(function () {
         priceSlider();
     }
 
-    if( document.getElementById("range_slider_3") ) {
+    if (document.getElementById("range_slider_3")) {
         priceSlider3 = document.getElementById("range_slider_3");
         noUiSlider.create(priceSlider3, {
-            start: [ 1000 ],
+            start: [1000],
             range: {
-                'min': [ 0 ],
-                'max': [ 5000 ]
+                'min': [0],
+                'max': [5000]
             },
             connect: [true, false],
             tooltips: true,
@@ -1210,11 +1207,11 @@ $(document).ready(function () {
                 decimals: 0
             }),
         });
-        priceSlider3.noUiSlider.on('update', function( values, handle ) {
-            minVal = parseInt( values[0] );
+        priceSlider3.noUiSlider.on('update', function (values, handle) {
+            minVal = parseInt(values[0]);
             $("#metro_val").text(minVal);
             $("#metro_name").html($("#metro_name_val a").html());
-            if( parseInt( $("#range_slider_3 .noUi-tooltip").text() ) <= 0) {
+            if (parseInt($("#range_slider_3 .noUi-tooltip").text()) <= 0) {
                 $("#range_slider_3 .noUi-tooltip").text(noMatter);
             }
         });
@@ -1498,37 +1495,37 @@ $(document).ready(function () {
     });
 
     /*
-    $("[data-filter]").on("click", function () {
-        var id = $(this).attr('for'),
-            input = $("#" + id),
-            titleDiv = $(this).closest(".dropdow_item_wrapp").find(".dropdown_item_title"),
-            count = $(this).closest(".dropdown_item_menu").find('input:checked').length;
-        if (input.is(':checked')) {
-            count--;
-        } else {
-            count++;
-        }
-        if (count > 0) {
-            titleDiv.addClass('green_active');
-        } else {
-            titleDiv.removeClass('green_active');
-        }
-    });*/
+     $("[data-filter]").on("click", function () {
+     var id = $(this).attr('for'),
+     input = $("#" + id),
+     titleDiv = $(this).closest(".dropdow_item_wrapp").find(".dropdown_item_title"),
+     count = $(this).closest(".dropdown_item_menu").find('input:checked').length;
+     if (input.is(':checked')) {
+     count--;
+     } else {
+     count++;
+     }
+     if (count > 0) {
+     titleDiv.addClass('green_active');
+     } else {
+     titleDiv.removeClass('green_active');
+     }
+     });*/
 
-    $("[data-filter]").on("click", function() {
-        if(!$(this).hasClass("checked_filter")) {
+    $("[data-filter]").on("click", function () {
+        if (!$(this).hasClass("checked_filter")) {
             $(this).addClass("checked_filter");
             filtersIndex = $(this).attr("data-filter");
         } else {
             $(this).removeClass("checked_filter");
         }
         filtersArray = [];
-        $("[data-filter = '"+ filtersIndex +"']").each(function() {
-            if($(this).hasClass("checked_filter") ) {
+        $("[data-filter = '" + filtersIndex + "']").each(function () {
+            if ($(this).hasClass("checked_filter")) {
                 filtersArray.push($(this).text());
             }
         });
-        $("[data-filters-index = '"+filtersIndex+"']").text(filtersArray);
+        $("[data-filters-index = '" + filtersIndex + "']").text(filtersArray);
         var id = $(this).attr('for'),
             input = $("#" + id),
             titleDiv = $(this).closest(".dropdow_item_wrapp").find(".dropdown_item_title"),
@@ -1554,35 +1551,35 @@ $(document).ready(function () {
 
     /*var chIndex, countCh;
 
-    $("[data-ch]").on("change", function() {
-        chIndex = $(this).attr("data-ch");
-        countCh = 0;
-        $("[data-ch ='"+chIndex+"']").each(function() {
-            if($(this).is(":checked")) {
-                countCh++;
-            }
-        });
-        if(countCh == 0) {
-            $("[data-count-ch ='"+chIndex+"']").text("");
-        } else {
-            $("[data-count-ch ='"+chIndex+"']").text(": "+countCh);
-        }
-    });
+     $("[data-ch]").on("change", function() {
+     chIndex = $(this).attr("data-ch");
+     countCh = 0;
+     $("[data-ch ='"+chIndex+"']").each(function() {
+     if($(this).is(":checked")) {
+     countCh++;
+     }
+     });
+     if(countCh == 0) {
+     $("[data-count-ch ='"+chIndex+"']").text("");
+     } else {
+     $("[data-count-ch ='"+chIndex+"']").text(": "+countCh);
+     }
+     });
 
-    $("[data-main-ch]").on("change", function() {
-        chIndex = $(this).attr("data-main-ch");
-        countCh = 0;
-        $("[data-ch ='"+chIndex+"']").each(function() {
-            if($(this).is(":checked")) {
-                countCh++;
-            }
-        });
-        if(countCh == 0) {
-            $("[data-count-ch ='"+chIndex+"']").text("");
-        } else {
-            $("[data-count-ch ='"+chIndex+"']").text(": "+countCh);
-        }
-    });*/
+     $("[data-main-ch]").on("change", function() {
+     chIndex = $(this).attr("data-main-ch");
+     countCh = 0;
+     $("[data-ch ='"+chIndex+"']").each(function() {
+     if($(this).is(":checked")) {
+     countCh++;
+     }
+     });
+     if(countCh == 0) {
+     $("[data-count-ch ='"+chIndex+"']").text("");
+     } else {
+     $("[data-count-ch ='"+chIndex+"']").text(": "+countCh);
+     }
+     });*/
 
 
     var metroText = $('.item_title_text.subways').text(),
@@ -1661,7 +1658,7 @@ $(document).ready(function () {
     });
 
     $("input.submit_filter").on("change", function (e) {
-        if($(this).closest('.resp_filter_inner').length===0) $(".filter-form").submit();
+        if ($(this).closest('.resp_filter_inner').length === 0) $(".filter-form").submit();
     });
 
     $(".filter-form .m2-filter .remove").on("click", function () {
@@ -2192,9 +2189,9 @@ $(document).ready(function () {
     });
 
 
-    $(".rotate_btn").on("click", function(e) {
+    $(".rotate_btn").on("click", function (e) {
         e.preventDefault();
-        main_type.val()==1 ? main_type.val(2) : main_type.val(1);
+        main_type.val() == 1 ? main_type.val(2) : main_type.val(1);
         $(this).toggleClass("rotate");
         setTimeout($("#submit_main_form").click(), 2000);
     });
@@ -2203,22 +2200,22 @@ $(document).ready(function () {
 
     var chChildrens;
 
-    $(".main_checkbox input").on("change", function() {
+    $(".main_checkbox input").on("change", function () {
         parentBlock = $(this).closest(".checkboxes_array");
         chChildrens = parentBlock.find(".ch_childrens input");
-        if($(this).is(":checked")) {
+        if ($(this).is(":checked")) {
             chChildrens.prop("checked", true);
         } else {
             chChildrens.prop("checked", false);
         }
     });
 
-    $(".ch_childrens input").on("change", function() {
+    $(".ch_childrens input").on("change", function () {
         parentBlock = $(this).closest(".checkboxes_array");
         chChildrens = parentBlock.find(".ch_childrens input");
         mainCheckbox = parentBlock.find(".main_checkbox input");
-        chChildrens.each(function() {
-            if(!$(this).is(":checked")) {
+        chChildrens.each(function () {
+            if (!$(this).is(":checked")) {
                 mainCheckbox.prop("checked", false);
                 return false;
             } else {
@@ -2229,11 +2226,11 @@ $(document).ready(function () {
 
     // -----------
 
-    $(".main_checkbox_wrapp .dropdown_btn").on("click", function(e) {
+    $(".main_checkbox_wrapp .dropdown_btn").on("click", function (e) {
         e.preventDefault();
         parentBlock = $(this).closest(".checkboxes_array");
         dropdowmMenu = parentBlock.find(".ch_childrens");
-        if(dropdowmMenu.is(":hidden")) {
+        if (dropdowmMenu.is(":hidden")) {
             dropdowmMenu.slideDown(300);
             $(this).addClass("active");
         } else {
@@ -2246,11 +2243,12 @@ $(document).ready(function () {
 
 
     //BC slider
-    if( $(".promo_slider").length > 0 ) {
+    if ($(".promo_slider").length > 0) {
 
-        $(".promo_slider").on('init', function(){
+        $(".promo_slider").on('init', function () {
+            $(".promo_footer [data-slide = 0]").show();
             $(".promo_slider .slide").css({
-                "height" : $(".promo_slider").height() + "px"
+                "height": $(".promo_slider").height() + "px"
             });
         });
 
@@ -2267,10 +2265,13 @@ $(document).ready(function () {
             prevArrow: '<button class="slick-prev white_left_arrow" aria-label="Previous" type="button"></button>',
             nextArrow: '<button class="slick-next white_right_arrow" aria-label="Next" type="button"></button>'
         });
+
+        $(".promo_slider").on('afterChange', function (event, slick, currentSlide, nextSlide) {
+            //alert(currentSlide);
+            $(".promo_footer [data-slide]").hide();
+            $(".promo_footer [data-slide ='" + currentSlide + "']").show();
+        });
     }
-
-
-
 
 
 });

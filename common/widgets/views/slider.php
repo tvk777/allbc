@@ -5,7 +5,8 @@
     <div class="promo_slider">
         <? foreach ($images as $img) : ?>
         <div>
-            <div class="slide" style="background-image: url(<?= $img['url'] ?>);"></div>
+            <div class="slide" style="background-image: url(<?= $img['url'] ?>);">
+            </div>
         </div>
         <? endforeach; ?>
     </div>
@@ -15,7 +16,9 @@
             <h2><?= $text[1] ?></h2>
         </div>
         <div class="promo_footer">
-            <p>Фото: <a href="#">regus silver breeze</a></p>
+            <? foreach ($images as $i => $bc) : ?>
+            <p data-slide="<?= $i ?>">Фото: <a href="<?= $bc['bcurl'] ?>"><?= $bc['title'] ?></a></p>
+            <? endforeach; ?>
         </div>
     </div>
     <div class="promo_slider_arrows"></div>

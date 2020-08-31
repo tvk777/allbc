@@ -10405,3 +10405,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     right: 10px;
     top:7px;
 }
+
+.promo_footer p {
+    display: none;
+}
+
