@@ -13,7 +13,6 @@ if (!empty($bars)) {
         $minmax = [$minPrice, $maxPrice];
     }
 }
-$emptyPriceText = Yii::t('app', 'Price');
 switch ($currency) {
     case 1:
         $currencySymbol = '&#8372;';
@@ -31,6 +30,7 @@ switch ($currency) {
         $currencySymbol = '&#8372;';
         break;
 }
+$emptyPriceText = $currencySymbol . ', '.Yii::t('app', 'Price');
 
 $js = <<< JS
 var currency = $currency,

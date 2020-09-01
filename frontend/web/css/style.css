@@ -3371,6 +3371,7 @@ img.logo_black {
     font-size: 16px;
     line-height: 17px;
     font-weight: bold;
+    margin:0;
 }
 
 .office_cont p {
@@ -4395,9 +4396,11 @@ input.all-subways:checked + label.all-subways:before{
     position: relative;
     z-index: 3;
 }
-.price .custom_select_wrapp {
-  max-width: 100%;
+.align_right .custom_select_wrapp {
+    display: inline-block;
+    vertical-align: top;
 }
+
 
 .custom_select_wrapp .custom_select {
     left: -5px;
@@ -4494,6 +4497,7 @@ input.all-subways:checked + label.all-subways:before{
     background-color: #ffffff;
     z-index: 9;
 }
+
 
 .custom_select_wrapp_2 {
     display: inline-block;
@@ -5877,6 +5881,7 @@ a.object_card_title:focus {
     border-radius: 50%;
     background-color: #3eb060;
     color: #ffffff;
+    z-index:1;
 }
 
 .disable a {
@@ -8495,7 +8500,11 @@ th.table_cell.thm2 .arrow .green {
     top: -2px;
     left: -40px;
 }
-
+.place-image{
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+}
 .star_checkbox,
 .star_place {
     display: inline-block;

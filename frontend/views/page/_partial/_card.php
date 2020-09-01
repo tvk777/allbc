@@ -215,8 +215,8 @@ if (!empty($itemSubway)) {
                                 </div>
                                 <div class="table_cell">
                                     <? //debug($place->place->images) ?>
+                                    <div class="place-image">
                                     <? if (isset($place->place->images) && count($place->place->images) > 0) : ?>
-
                                         <a href="#" class="icon_link_2" data-photogallerylink="<?= $place->pid ?>">
                                             <i class="photo"></i>
                                         </a>
@@ -226,6 +226,7 @@ if (!empty($itemSubway)) {
                                             <? endforeach; ?>
                                         </div>
                                     <? endif; ?>
+                                    </div>
                                     <div class="star_place">
                                         <?= WishlistButton::widget([
                                             'model' => $place->place,

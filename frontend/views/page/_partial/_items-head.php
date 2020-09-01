@@ -32,8 +32,8 @@ $this->registerJsVar('metroVal', $metroVal, $this::POS_HEAD);
 $this->registerJsVar('defaultDist', $defaultDist, $this::POS_HEAD);
 $this->registerJsVar('defaultName', $defaultName, $this::POS_HEAD);
 $activeM2 = '';
-$squText = Yii::t('app', 'Square');
-$emptySquText = Yii::t('app', 'Square');
+$squText = Yii::t('app', 'Square m²');
+$emptySquText = Yii::t('app', 'Square m²');
 $minM2 = !empty($params['m2min']) ? $params['m2min'] : $countValM2['min'];
 $maxM2 = !empty($params['m2max']) ? $params['m2max'] : $countValM2['maxVal'];
 $maxDist = !empty($params['walk_dist']) ? $params['walk_dist'] : 0;
@@ -66,7 +66,7 @@ $activePrice = '';
 
 switch ($currency) {
     case 1:
-        $selectText = $targetValue == 1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²');
+        $selectText = $targetValue == 1 ? Yii::t('app', '₴/m²/month') : Yii::t('app', '₴/m²');
         $currencySymbol = '&#8372;';
         break;
     case 2:
@@ -82,7 +82,7 @@ switch ($currency) {
         $currencySymbol = '₽';
         break;
     default:
-        $selectText = $targetValue == 1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²');
+        $selectText = $targetValue == 1 ? Yii::t('app', '₴/m²/month') : Yii::t('app', '₴/m²');
         $currencySymbol = '&#8372;';
         break;
 }
@@ -94,11 +94,10 @@ $minRange = round($minpricesChart / $rates[$currency]);
 $maxRange = round($maxpricesChart / $rates[$currency]);
 $minPrice = !empty($params['pricemin']) ? $params['pricemin'] : $minRange;
 $maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : $maxRange;
-$min_max = $currencySymbol . ' ' . $minPrice . '-' . $maxPrice;
-//echo '$maxRange='.$maxRange;
+$min_max = $currencySymbol . ', ' . $minPrice . '-' . $maxPrice;
 
-$priceText = Yii::t('app', 'Price');
-//var_dump($params['pricemin']==$minPrice && $params['pricemax']==$maxPrice);
+$priceText = $currencySymbol . ', '.Yii::t('app', 'Price');
+
 $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
 $this->registerJsVar('maxPriceRange', $maxRange, $this::POS_HEAD);
@@ -115,7 +114,6 @@ if ((!empty($params['pricemin']) && $params['pricemin'] > round($minpricesChart 
 }
 $activeSubway = '';
 $removeCss = '';
-//$activeSubway = (!empty($params['walk_dist']) || !empty($params['subway'])) ? 'green_active' : '';
 if (!empty($params['walk_dist']) || !empty($params['subways'])) {
     $activeSubway = 'green_active';
     $removeCss = 'style="display:block;"';
@@ -244,7 +242,6 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                             <div class="dropdown_item_menu price_w">
                                 <div class="append-elem" data-append-desktop-elem="7" data-min-screen="900">
                                     <div class="align_right">
-
                                             <div class="custom_select_wrapp">
                                                 <div class="custom_select">
                                                     <div>
@@ -269,7 +266,6 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                                     </div>
                                                 </div>
                                             </div>
-                                        
                                     </div>
 
                                     <? Pjax::begin([
