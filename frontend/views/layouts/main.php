@@ -104,21 +104,8 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                             <i class="<?= $searchIconClass ?>"></i>
                         </a>
                     </div>
-                    <div class="top_menu novisible_1380">
-                        <div class="dropdowm_wrapp dropdowm_wrapp_2 dropdowm_wrapp_2_2">
-                            <div class="dropdown_title">
-                                <p class="p_width">Добавить объявление</p>
-                                <input type="text" name="#" placeholder="Добавить объявление" readonly />
-                            </div>
-                            <div class="dropdown_menu">
-                                <ul>
-                                    <li><a href="#" title="" class="active">Объявление 1</a></li>
-                                    <li><a href="#" title="">Объявление 2</a></li>
-                                    <li><a href="#" title="">Объявление 3</a></li>
-                                    <li><a href="#" title="">Объявление 4</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="top_menu novisible_1380 add-advert-head">
+                                <a href="/" class="p_width">Добавить объявление</a>
                     </div>
                     <div class="inline append-elem" data-append-desktop-elem="3" data-min-screen="900">
                         <div class="favorite_box">
@@ -129,34 +116,11 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                         </div>
                     </div>
                     <div class="inline user-block append-elem" data-append-desktop-elem="4" data-min-screen="900">
-                        <div class="dropdowm_wrapp">
-                            <div class="dropdown_title user_wrapp">
+                            <div class="user_wrapp">
                                 <a href="login" class="icon_link">
                                     <i class="user_icon<?= $blackClass ?>"></i>
                                 </a>
                             </div>
-                            <div class="dropdown_menu">
-                                <ul>
-                                    <? if (Yii::$app->user->isGuest) : ?>
-                                        <li>
-                                            <?= Html::a(
-                                                Yii::t('app', 'Login'),
-                                                ['/login'],
-                                                ['class' => 'link_2 modal-form size-middle']
-                                            ) ?>
-                                        </li>
-                                    <? else : ?>
-                                        <li>
-                                            <?= Html::a(
-                                                Yii::t('app', 'Logout'),
-                                                ['/logout'],
-                                                ['data-method' => 'post']
-                                            ) ?>
-                                        </li>
-                                    <? endif; ?>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                     <div class="top_menu append-elem" data-append-desktop-elem="5" data-min-screen="470">
                         <?php echo common\widgets\LangWidget::widget() ?>
@@ -179,20 +143,7 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
                 <div class="menu_2">
                     <?php echo common\widgets\TopMenuWidget::widget() ?>
                     <div class="add-advert">
-                        <div class="dropdowm_wrapp <?= $dropdowmClass2 ?>">
-                            <div class="dropdown_title">
-                                <p class="p_width">Добавить объявление</p>
-                                <input type="text" name="" placeholder="Добавить объявление" readonly/>
-                            </div>
-                            <div class="dropdown_menu">
-                                <ul>
-                                    <li><a href="#" title="" />Объявление 1</a></li>
-                                    <li><a href="#" title=""/>Объявление 2</a></li>
-                                    <li><a href="#" title=""/>Объявление 3</a></li>
-                                    <li><a href="#" title=""/>Объявление 4</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                        <a href="/" class="p_width">Добавить объявление</a>
                     </div>
                 </div>
             </div>

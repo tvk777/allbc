@@ -25,12 +25,12 @@ foreach ($offices as $office) : ?>
         if ($office['target'] == 1) {
             $m2_uah = $prices['uah']['m2_2'];
             if ($uah < $m2_uah) $plus = ' ++';
-            $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '&#8372;/m²/month') . $plus;
+            $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '₴/m²/mo.') . $plus;
         } else {
             $value = $prices['uah']['value'];
             $full = $prices['uah']['full'];
             if ($value < $full) $plus = ' ++';
-            $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '&#8372;/m²') . $plus;
+            $price = Yii::t('app', 'Price') . ': ' . $uah . ' ' . Yii::t('app', '₴/m²') . $plus;
         }
     } else {
         $price = Yii::t('app', 'con.');

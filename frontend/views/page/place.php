@@ -83,13 +83,13 @@ $prices = $model->getPricePeriod($rates, $taxes);
 if (!empty($prices)) {
     if ($target == 1) {
         if ($prices['uah']['m2'] < $prices['uah']['m2_2']) $plus = ' ++';
-        $uahText = Yii::t('app', '&#8372;/m²/month');
-        $usdText = Yii::t('app', '$/m²/month');
-        $eurText = Yii::t('app', '€/m²/month');
-        $rubText = Yii::t('app', '₽/m²/month');
+        $uahText = Yii::t('app', '₴/m²/mo.');
+        $usdText = Yii::t('app', '$/m²/mo.');
+        $eurText = Yii::t('app', '€/m²/mo.');
+        $rubText = Yii::t('app', '₽/m²/mo.');
     } else{
         if ($prices['uah']['value'] < $prices['uah']['full']) $plus = ' ++';
-        $uahText = Yii::t('app', '&#8372;/m²');
+        $uahText = Yii::t('app', '₴/m²');
         $usdText = Yii::t('app', '$/m²');
         $eurText = Yii::t('app', '€/m²');
         $rubText = Yii::t('app', '₽/m²');

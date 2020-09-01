@@ -66,24 +66,24 @@ $activePrice = '';
 
 switch ($currency) {
     case 1:
-        $selectText = $targetValue == 1 ? Yii::t('app', '₴/m²/month') : Yii::t('app', '₴/m²');
-        $currencySymbol = '&#8372;';
+        $selectText = $targetValue == 1 ? Yii::t('app', '₴/m²/mo.') : Yii::t('app', '₴/m²');
+        $currencySymbol = '₴';
         break;
     case 2:
-        $selectText = $targetValue == 1 ? Yii::t('app', '$/m²/month') : Yii::t('app', '$/m²');
+        $selectText = $targetValue == 1 ? Yii::t('app', '$/m²/mo.') : Yii::t('app', '$/m²');
         $currencySymbol = '$';
         break;
     case 3:
-        $selectText = $targetValue == 1 ? Yii::t('app', '€/m²/month') : Yii::t('app', '€/m²');
+        $selectText = $targetValue == 1 ? Yii::t('app', '€/m²/mo.') : Yii::t('app', '€/m²');
         $currencySymbol = '€';
         break;
     case 4:
-        $selectText = $targetValue == 1 ? Yii::t('app', '₽/m²/month') : Yii::t('app', '₽/m²');
+        $selectText = $targetValue == 1 ? Yii::t('app', '₽/m²/mo.') : Yii::t('app', '₽/m²');
         $currencySymbol = '₽';
         break;
     default:
-        $selectText = $targetValue == 1 ? Yii::t('app', '₴/m²/month') : Yii::t('app', '₴/m²');
-        $currencySymbol = '&#8372;';
+        $selectText = $targetValue == 1 ? Yii::t('app', '₴/m²/mo.') : Yii::t('app', '₴/m²');
+        $currencySymbol = '₴';
         break;
 }
 
@@ -252,16 +252,16 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                                     </div>
                                                     <div class="dropdown_select" id="price-filter">
                                                         <div class="select_item">
-                                                            <p data-currency="1"><?= $targetValue == 1 ? Yii::t('app', '&#8372;/m²/month') : Yii::t('app', '&#8372;/m²') ?></p>
+                                                            <p data-currency="1"><?= $targetValue == 1 ? Yii::t('app', '₴/m²/mo.') : Yii::t('app', '₴/m²') ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="2"><?= $targetValue == 1 ? Yii::t('app', '$/m²/month') : Yii::t('app', '$/m²') ?></p>
+                                                            <p data-currency="2"><?= $targetValue == 1 ? Yii::t('app', '$/m²/mo.') : Yii::t('app', '$/m²') ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="3"><?= $targetValue == 1 ? Yii::t('app', '€/m²/month') : Yii::t('app', '€/m²') ?></p>
+                                                            <p data-currency="3"><?= $targetValue == 1 ? Yii::t('app', '€/m²/mo.') : Yii::t('app', '€/m²') ?></p>
                                                         </div>
                                                         <div class="select_item">
-                                                            <p data-currency="4"><?= $targetValue == 1 ? Yii::t('app', '₽/m²/month') : Yii::t('app', '₽/m²') ?></p>
+                                                            <p data-currency="4"><?= $targetValue == 1 ? Yii::t('app', '₽/m²/mo.') : Yii::t('app', '₽/m²') ?></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -580,7 +580,7 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                 <div class="dropdow_item_wrapp resp">
                     <div class="dropdown_item_title">
                         <div class="item_title_text">Метро</div>
-                        <div class="chose_filter" data-filters-index="filters_5"><span id="metro_val"></span> Метров
+                        <div class="chose_filter" data-filters-index="filters_5"><span id="metro_val"></span>
                         </div>
                     </div>
                     <div class="dropdown_item_menu dropdown_item_menu_4">

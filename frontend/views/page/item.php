@@ -109,12 +109,12 @@ $eur = round($uah/$rates[3]);
 $rub = round($uah/$rates[4]);
 if ($uah!==0) {
     if ($target == 1) {
-        $uahText = Yii::t('app', '&#8372;/m²/month');
-        $usdText = Yii::t('app', '$/m²/month');
-        $eurText = Yii::t('app', '€/m²/month');
-        $rubText = Yii::t('app', '₽/m²/month');
+        $uahText = Yii::t('app', '₴/m²/mo.');
+        $usdText = Yii::t('app', '$/m²/mo.');
+        $eurText = Yii::t('app', '€/m²/mo.');
+        $rubText = Yii::t('app', '₽/m²/mo.');
     } else{
-        $uahText = Yii::t('app', '&#8372;/m²');
+        $uahText = Yii::t('app', '₴/m²');
         $usdText = Yii::t('app', '$/m²');
         $eurText = Yii::t('app', '€/m²');
         $rubText = Yii::t('app', '₽/m²');

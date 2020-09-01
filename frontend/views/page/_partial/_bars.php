@@ -15,7 +15,7 @@ if (!empty($bars)) {
 }
 switch ($currency) {
     case 1:
-        $currencySymbol = '&#8372;';
+        $currencySymbol = '₴';
         break;
     case 2:
         $currencySymbol = '$';
@@ -27,7 +27,7 @@ switch ($currency) {
         $currencySymbol = '₽';
         break;
     default:
-        $currencySymbol = '&#8372;';
+        $currencySymbol = '₴';
         break;
 }
 $emptyPriceText = $currencySymbol . ', '.Yii::t('app', 'Price');

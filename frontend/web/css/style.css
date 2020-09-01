@@ -1031,10 +1031,6 @@ textarea:focus {
     padding-bottom: 15px;
 }
 
-.header_site .inline.user-block{
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
 
 .header_site .logo_wrapp {
     margin: 2px 0;
@@ -1049,11 +1045,6 @@ textarea:focus {
     padding-left: 0;
 }
 
-.header_site .main_nav_wrapp .dropdown_title {
-    min-height: unset;
-    padding-top: 0;
-    padding-bottom: 0;
-}
 
 .header_site .dropdown_title:before {
     top: 20px;
@@ -1133,7 +1124,12 @@ textarea:focus {
     border-top: 4px solid transparent;
 }
 
-.dropdowm_wrapp .p_width {
+.add-advert-head {
+ padding:17px 10px 15px 10px;
+}
+
+.dropdowm_wrapp .p_width,
+.add-advert-head .p_width{
     overflow: hidden;
     padding: 3px 10px;
     white-space: nowrap;
@@ -1152,6 +1148,10 @@ textarea:focus {
 
 .site.index .menu_2 .dropdown_title .p_width:hover {
     color: #3eb060;
+}
+
+.lang_switch {
+    width: 74px;
 }
 
 .lang_switch .dropdown_menu {
@@ -1505,7 +1505,6 @@ textarea:focus {
 .main_nav_wrapp .dropdowm_wrapp {
     display: block;
     min-width: 100%;
-    border: none;
 }
 
 .inline_blocks > div {
@@ -1527,8 +1526,7 @@ textarea:focus {
 }
 
 .main_nav_wrapp .inline_blocks .dropdown_title:before {
-    right: 0;
-    top:15px;
+    right: 6px;
 }
 
 
@@ -1539,7 +1537,7 @@ textarea:focus {
     z-index: 2;
 }
 
-.menu_2 ul li a {
+.menu_2 a {
     display: block;
     text-align: center;
     padding: 6px 15px;
@@ -1568,33 +1566,33 @@ textarea:focus {
     transition-timing-function: ease;
 }
 
-.menu_2 ul li a:link,
-.menu_2 ul li a:visited,
-.main_nav_wrapp_main .menu_2 .dropdown_menu ul li a{
+.menu_2 a:link,
+.menu_2 a:visited,
+.main_nav_wrapp_main .menu_2 .dropdown_menu a{
     color: #000000;
 }
 
-.main_nav_wrapp_main .menu_2 ul li a,
-.main_nav_wrapp_main .menu_2 ul li a:link,
-.main_nav_wrapp_main .menu_2 ul li a:visited{
+.main_nav_wrapp_main .menu_2 a,
+.main_nav_wrapp_main .menu_2 a:link,
+.main_nav_wrapp_main .menu_2  a:visited{
    color: #ffffff;
 }
 
-.main_nav_wrapp_main .menu_2 .dropdown_menu ul li a{
+.main_nav_wrapp_main .menu_2 .dropdown_menu a{
     color: #000000;
 }
 
 
-.menu_2 ul li a:hover {
+.menu_2  a:hover {
     color: #3eb060;
 }
 
-.menu_2 ul li a:hover,
-.menu_2 ul li a:active,
-.menu_2 ul li a.active,
-.main_nav_wrapp_main .menu_2 ul li a:hover,
-.main_nav_wrapp_main .menu_2 ul li a:active,
-.main_nav_wrapp_main .menu_2 ul li a.active {
+.menu_2  a:hover,
+.menu_2  a:active,
+.menu_2  a.active,
+.main_nav_wrapp_main .menu_2  a:hover,
+.main_nav_wrapp_main .menu_2  a:active,
+.main_nav_wrapp_main .menu_2  a.active {
     color: #3eb060;
 }
 
@@ -1646,6 +1644,7 @@ textarea:focus {
 .add-advert{
     max-width: 600px;
     margin: 0 auto;
+    text-align:center;
 }
 .add-advert .p_width{
     color:#000000;

@@ -27,41 +27,41 @@ function getAdaptivePositionElements() {
 }
 
 function getBarsChart() {
-    if($(".bars").length > 0) {
-        $(".bars").each(function() {
-            if( $(this).is(":visible") ) {
+    if ($(".bars").length > 0) {
+        $(".bars").each(function () {
+            if ($(this).is(":visible")) {
                 var heightArr = [];
                 bar = $(this).find(".bar");
                 barsLength = bar.length;
-                bar.each(function() {
+                bar.each(function () {
                     heightVal = parseInt($(this).attr("data-count-val"));
                     heightArr.push(heightVal);
                 });
                 maxHeight = Math.max.apply(null, heightArr);
                 chartHeight = $(this).height();
                 chartWidth = $(this).width();
-                heightModul = chartHeight/maxHeight;
-                bar.each(function() {
+                heightModul = chartHeight / maxHeight;
+                bar.each(function () {
                     heightVal = parseInt($(this).attr("data-count-val"));
                     $(this).css({
-                        "height" : ( heightVal * heightModul ) + "px",
-                        "width" : chartWidth / barsLength + "px"
+                        "height": ( heightVal * heightModul ) + "px",
+                        "width": chartWidth / barsLength + "px"
                     });
                 });
                 barsCharts = $(this).closest(".bars_range_wrapp");
                 handleLower = barsCharts.find(".noUi-handle-lower");
                 handleUpperr = barsCharts.find(".noUi-handle-upper");
                 leftCoord = handleLower.offset().left;
-                $(this).find(".bar").each(function() {
-                    if(handleUpperr.length > 0) {
+                $(this).find(".bar").each(function () {
+                    if (handleUpperr.length > 0) {
                         rightCoord = handleUpperr.offset().left;
-                        if( $(this).offset().left > leftCoord && $(this).offset().left < rightCoord ) {
+                        if ($(this).offset().left > leftCoord && $(this).offset().left < rightCoord) {
                             $(this).removeClass("disable");
                         } else {
                             $(this).addClass("disable");
                         }
                     } else {
-                        if( $(this).offset().left < leftCoord) {
+                        if ($(this).offset().left < leftCoord) {
                             $(this).removeClass("disable");
                         } else {
                             $(this).addClass("disable");
@@ -395,7 +395,9 @@ $(window).resize(function () {
     getBarsChart();
     getfilterNavParams();
     getCardParams();
-    isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+    if ($('.more_filter').length > 0) {
+        isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+    }
 });
 
 $(document).scroll(function () {
@@ -414,7 +416,9 @@ $(document).on('pjax:start', '#cardsPjax', function (event) {
 });
 
 $(document).on('pjax:complete', '#cardsPjax', function (event) {
-    isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange)
+    if ($('.more_filter').length > 0) {
+        isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+    }
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible start");
     if ($(".filter_nav .street-name").length > 0) $(".filter_nav .street-name").remove();
@@ -445,8 +449,9 @@ $(document).ready(function () {
     getCardParams();
     expertsSlider();
     cardSlider();
-
-    isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+    if ($('.more_filter').length > 0) {
+        isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+    }
 
 
     /*if($("#searchonmap") && $("#searchonmap").length>0) {
@@ -1216,28 +1221,32 @@ $(document).ready(function () {
         });
         priceSlider3.noUiSlider.on('update', function (values, handle) {
             minVal = parseInt(values[0]);
-            $("#metro_val").text(minVal);
+            if(minVal>0) {
+                $("#metro_val").text(minVal+' Метров');
+            } else {
+               $("#metro_val").text('');
+            }
             $("#metro_name").html($("#metro_name_val a").html());
             if (parseInt($("#range_slider_3 .noUi-tooltip").text()) <= 0) {
                 $("#range_slider_3 .noUi-tooltip").text(noMatter);
             }
-            if(minVal>0) {
+            if (minVal > 0) {
                 distFilter.addClass('green_active');
             } else {
                 count = $(".dropdown_item_menu.metro_drp").find("input:checked").length;
-                if(count===0) distFilter.removeClass('green_active');
+                if (count === 0) distFilter.removeClass('green_active');
             }
         });
-        priceSlider3.noUiSlider.on('set', function( values, handle ) {
-            if( parseInt( $("#range_slider_3 .noUi-tooltip").text() ) <= 0) {
+        priceSlider3.noUiSlider.on('set', function (values, handle) {
+            if (parseInt($("#range_slider_3 .noUi-tooltip").text()) <= 0) {
                 $("#range_slider_3 .noUi-tooltip").text("не важно");
             }
-            setTimeout(function() {
+            setTimeout(function () {
                 handleLower = $("#range_slider_3").find(".noUi-handle-lower");
                 leftCoord = handleLower.offset().left;
                 barsCharts = handleLower.closest(".bars_range_wrapp");
-                barsCharts.find(".bars .bar").each(function() {
-                    if( $(this).offset().left < leftCoord ) {
+                barsCharts.find(".bars .bar").each(function () {
+                    if ($(this).offset().left < leftCoord) {
                         $(this).removeClass("disable");
                     } else {
                         $(this).addClass("disable");

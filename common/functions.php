@@ -163,24 +163,24 @@ function getCurrencyText($currency)
     $text = [];
     switch ($currency) {
         case 1:
-            $text[0] = Yii::t('app', '&#8372;/m²/month');
-            $text[1] = Yii::t('app', '&#8372;/month');
+            $text[0] = Yii::t('app', '₴/m²/mo.');
+            $text[1] = Yii::t('app', '₴/mo.');
             break;
         case 2:
-            $text[0] = Yii::t('app', '$/m²/month');
-            $text[1] = Yii::t('app', '$/month');
+            $text[0] = Yii::t('app', '$/m²/mo.');
+            $text[1] = Yii::t('app', '$/mo.');
             break;
         case 3:
-            $text[0] = Yii::t('app', '€/m²/month');
-            $text[1] = Yii::t('app', '€/month');
+            $text[0] = Yii::t('app', '€/m²/mo.');
+            $text[1] = Yii::t('app', '€/mo.');
             break;
         case 4:
-            $text[0] = Yii::t('app', '₽/m²/month');
-            $text[1] = Yii::t('app', '₽/month');
+            $text[0] = Yii::t('app', '₽/m²/mo.');
+            $text[1] = Yii::t('app', '₽/mo.');
             break;
         default:
-            $text[0] = Yii::t('app', '&#8372;/m²/month');
-            $text[1] = Yii::t('app', '&#8372;/month');
+            $text[0] = Yii::t('app', '₴/m²/mo.');
+            $text[1] = Yii::t('app', '₴/mo.');
             break;
     }
     return $text;
@@ -191,8 +191,8 @@ function getCurrencySellText($currency)
     $text = [];
     switch ($currency) {
         case 1:
-            $text[0] = Yii::t('app', '&#8372;/m²');
-            $text[1] = '&#8372;';
+            $text[0] = Yii::t('app', '₴/m²');
+            $text[1] = '₴';
             break;
         case 2:
             $text[0] = Yii::t('app', '$/m²');
@@ -207,8 +207,8 @@ function getCurrencySellText($currency)
             $text[1] = '₽';
             break;
         default:
-            $text[0] = Yii::t('app', '&#8372;/m²');
-            $text[1] = '&#8372;';
+            $text[0] = Yii::t('app', '₴/m²');
+            $text[1] = '₴';
             break;
     }
     return $text;
