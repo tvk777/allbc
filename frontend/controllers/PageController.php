@@ -522,6 +522,7 @@ class PageController extends FrontendController
             'conditions' => $whereCondition,
             'pricesChart' => $this->getPlacesForPriceChart($result['pricesForChart'], $seo->target),
             'countValM2' => $this->getPlacesForM2Chart($result['m2ForChart'], $seo->target),
+            'countValDist' => $this->getPlacesForSubwayChart($result['distancesForChart']),
             'rates' => $rates,
             'currency' => $currency,
             'taxes' => $taxes,
@@ -589,6 +590,32 @@ class PageController extends FrontendController
         $filters['statuses'] = BcStatuses::find()->all();
 
         return $filters;
+    }
+
+    protected function getPlacesForSubwayChart($distArr)
+    {
+        $parts = Yii::$app->settings->partsDist;
+        $maxValue = Yii::$app->settings->maxMdist;
+        $countVal = [];
+        $countVal['count'] = [];
+        $countVal['max'] = 0;
+        $countVal['min'] = 0;
+        if (count($distArr) > 0) {
+            $distArrLimited = array_filter($distArr, function ($k) use ($maxValue) {
+                return $k <= $maxValue;
+            });
+
+            $max = max($distArr);
+            $min = min($distArr);
+            $delta = round($maxValue / $parts);
+
+            $countVal['count'] = $this->getRanges($distArrLimited, $delta, $parts);
+            $countVal['maxVal'] = $maxValue;
+            $countVal['max'] = $max;
+            $countVal['min'] = $min;
+        }
+        //debug($countVal); die();
+        return $countVal;
     }
 
     protected function getPlacesForM2Chart($m2Arr, $target)

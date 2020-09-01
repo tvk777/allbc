@@ -9,7 +9,7 @@ $countPlacesText = Yii::t('app', 'Found: {countPlaces} offices', [
 ]);
 
 
-//debug($filters);
+//debug($countValDist);
 if ($seo->target == 1) {
     $targetText = Yii::t('app', 'Rent');
     $targetValue = 1;
@@ -36,6 +36,7 @@ $squText = Yii::t('app', 'Square');
 $emptySquText = Yii::t('app', 'Square');
 $minM2 = !empty($params['m2min']) ? $params['m2min'] : $countValM2['min'];
 $maxM2 = !empty($params['m2max']) ? $params['m2max'] : $countValM2['maxVal'];
+$maxDist = !empty($params['walk_dist']) ? $params['walk_dist'] : 0;
 
 
 //echo 'minpar='.$params['m2min'].' maxpar='.$params['m2max'].' min='.$countValM2['min'].' max='.$countValM2['max'];
@@ -50,6 +51,9 @@ $this->registerJsVar('maxTotal', $countValM2['max'], $this::POS_HEAD);
 $this->registerJsVar('maxSqRange', $countValM2['maxVal'], $this::POS_HEAD);
 $this->registerJsVar('minSqRange', $countValM2['min'], $this::POS_HEAD);
 $this->registerJsVar('sqText', $emptySquText, $this::POS_HEAD);
+$this->registerJsVar('noMatter', Yii::t('app', 'no matter'), $this::POS_HEAD);
+$this->registerJsVar('maxDist', $maxDist, $this::POS_HEAD);
+$this->registerJsVar('maxDistRange', $countValDist['maxVal'], $this::POS_HEAD);
 
 /*echo '$maxM2='.$maxM2.'</br>';
 echo '$minM2='.$minM2.'</br>';
@@ -94,7 +98,6 @@ $min_max = $currencySymbol . ' ' . $minPrice . '-' . $maxPrice;
 //echo '$maxRange='.$maxRange;
 
 $priceText = Yii::t('app', 'Price');
-$noMatter = Yii::t('app', 'no matter');
 //var_dump($params['pricemin']==$minPrice && $params['pricemax']==$maxPrice);
 $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
@@ -103,13 +106,6 @@ $this->registerJsVar('minRange', $minRange, $this::POS_HEAD);
 $this->registerJsVar('maxPriceTotal', $maxPriceTotal, $this::POS_HEAD);
 $this->registerJsVar('currencySymbol', $currencySymbol, $this::POS_HEAD);
 $this->registerJsVar('priceText', $priceText, $this::POS_HEAD);
-$this->registerJsVar('noMatter', $noMatter, $this::POS_HEAD);
-
-/*echo '$maxPrice='.$maxPrice.'</br>';
-echo '$minPrice='.$minPrice.'</br>';
-echo '$minRange='.$minRange.'</br>';
-echo '$maxPriceRange='.$maxRange.'</br>';
-echo '$maxPriceTotal='.$maxPriceTotal.'</br>';*/
 
 if ((!empty($params['pricemin']) && $params['pricemin'] > round($minpricesChart / $rates[$currency])) ||
     (!empty($params['pricemax']) && $params['pricemax'] < round($maxpricesChart / $rates[$currency]))
@@ -247,8 +243,8 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                             </div>
                             <div class="dropdown_item_menu price_w">
                                 <div class="append-elem" data-append-desktop-elem="7" data-min-screen="900">
-                                    <div class="metro_two_cols metro_two_cols_2">
-                                        <div class="col msg">
+                                    <div class="align_right">
+
                                             <div class="custom_select_wrapp">
                                                 <div class="custom_select">
                                                     <div>
@@ -273,7 +269,7 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        
                                     </div>
 
                                     <? Pjax::begin([
@@ -369,36 +365,13 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                                                         <span class="sl_desc">Метров</span>
                                                         <div class="bars_range_wrapp">
                                                             <div class="bars">
-                                                                <!-- bar это цена, data-count-val - количество объектов по этой цене -->
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="30"></div>
-                                                                <div class="bar" data-count-val="50"></div>
-                                                                <div class="bar" data-count-val="10"></div>
-                                                                <div class="bar" data-count-val="20"></div>
-                                                                <div class="bar" data-count-val="30"></div>
-                                                                <div class="bar" data-count-val="40"></div>
-                                                                <div class="bar" data-count-val="60"></div>
-                                                                <div class="bar" data-count-val="50"></div>
-                                                                <div class="bar" data-count-val="40"></div>
-                                                                <div class="bar" data-count-val="30"></div>
-                                                                <div class="bar" data-count-val="10"></div>
-                                                                <div class="bar" data-count-val="30"></div>
-                                                                <div class="bar" data-count-val="20"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="10"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
-                                                                <div class="bar" data-count-val="0"></div>
+                                                                <? if (!empty($countValDist['count'])) : ?>
+                                                                    <? foreach ($countValDist['count'] as $k => $val): ?>
+                                                                        <? $valClass = $val > 0 ? 'notnull' : '' ?>
+                                                                        <div class="bar <?= $valClass ?>"
+                                                                             data-count-val="<?= $val ?>"></div>
+                                                                    <? endforeach; ?>
+                                                                <? endif; ?>
                                                             </div>
                                                             <div class="range_slider_wrapp">
                                                                 <div id="range_slider_3"></div>
@@ -583,7 +556,7 @@ $st1Active = count($filtersArray) > 0 ? 'active' : '';
                 </div>
             </div>
             <div class="resp_filter_wrapp visible_900">
-                <div class="dropdow_item_wrapp resp">
+                <div class="dropdow_item_wrapp resp price">
                     <div class="dropdown_item_title">
                         <div class="item_title_text">Цена</div>
                         <div class="chose_filter" data-filters-index="filters_3">

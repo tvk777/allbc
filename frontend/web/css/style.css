@@ -4393,7 +4393,7 @@ input.all-subways:checked + label.all-subways:before{
 .custom_select_wrapp {
     max-width: 90px;
     position: relative;
-    z-index: 9;
+    z-index: 3;
 }
 .price .custom_select_wrapp {
   max-width: 100%;

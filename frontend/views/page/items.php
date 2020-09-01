@@ -60,6 +60,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
     <? echo $this->render('_partial/_items-head', [
         'seo' => $seo,
         'countValM2' => $countValM2,
+        'countValDist' => $countValDist,
         'filters' => $filters,
         'params' => $params,
         'pricesChart' => $pricesChart,

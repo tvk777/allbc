@@ -27,44 +27,51 @@ function getAdaptivePositionElements() {
 }
 
 function getBarsChart() {
-    if ($(".bars").length > 0) {
-        $(".bars").each(function () {
-            if ($(this).is(":visible")) {
+    if($(".bars").length > 0) {
+        $(".bars").each(function() {
+            if( $(this).is(":visible") ) {
                 var heightArr = [];
                 bar = $(this).find(".bar");
                 barsLength = bar.length;
-                bar.each(function () {
+                bar.each(function() {
                     heightVal = parseInt($(this).attr("data-count-val"));
                     heightArr.push(heightVal);
                 });
                 maxHeight = Math.max.apply(null, heightArr);
                 chartHeight = $(this).height();
                 chartWidth = $(this).width();
-                heightModul = chartHeight / maxHeight;
-                bar.each(function () {
+                heightModul = chartHeight/maxHeight;
+                bar.each(function() {
                     heightVal = parseInt($(this).attr("data-count-val"));
                     $(this).css({
-                        "height": ( heightVal * heightModul ) + "px",
-                        "width": chartWidth / barsLength + "px"
+                        "height" : ( heightVal * heightModul ) + "px",
+                        "width" : chartWidth / barsLength + "px"
                     });
                 });
                 barsCharts = $(this).closest(".bars_range_wrapp");
                 handleLower = barsCharts.find(".noUi-handle-lower");
                 handleUpperr = barsCharts.find(".noUi-handle-upper");
                 leftCoord = handleLower.offset().left;
-                rightCoord = handleUpperr.offset().left;
-                $(this).find(".bar").each(function () {
-                    if ($(this).offset().left > leftCoord && $(this).offset().left < rightCoord) {
-                        $(this).removeClass("disable");
+                $(this).find(".bar").each(function() {
+                    if(handleUpperr.length > 0) {
+                        rightCoord = handleUpperr.offset().left;
+                        if( $(this).offset().left > leftCoord && $(this).offset().left < rightCoord ) {
+                            $(this).removeClass("disable");
+                        } else {
+                            $(this).addClass("disable");
+                        }
                     } else {
-                        $(this).addClass("disable");
+                        if( $(this).offset().left < leftCoord) {
+                            $(this).removeClass("disable");
+                        } else {
+                            $(this).addClass("disable");
+                        }
                     }
                 });
             }
         });
     }
 }
-
 
 function getMapParams() {
     if ($(".object_map").length > 0) {
@@ -1192,14 +1199,14 @@ $(document).ready(function () {
     if (document.getElementById("range_slider_2")) {
         priceSlider();
     }
-
+    var distFilter = $(".dropdown_item_title.subway-filter");
     if (document.getElementById("range_slider_3")) {
         priceSlider3 = document.getElementById("range_slider_3");
         noUiSlider.create(priceSlider3, {
-            start: [1000],
+            start: [parseInt(maxDist)],
             range: {
                 'min': [0],
-                'max': [5000]
+                'max': [parseInt(maxDistRange)]
             },
             connect: [true, false],
             tooltips: true,
@@ -1214,6 +1221,29 @@ $(document).ready(function () {
             if (parseInt($("#range_slider_3 .noUi-tooltip").text()) <= 0) {
                 $("#range_slider_3 .noUi-tooltip").text(noMatter);
             }
+            if(minVal>0) {
+                distFilter.addClass('green_active');
+            } else {
+                count = $(".dropdown_item_menu.metro_drp").find("input:checked").length;
+                if(count===0) distFilter.removeClass('green_active');
+            }
+        });
+        priceSlider3.noUiSlider.on('set', function( values, handle ) {
+            if( parseInt( $("#range_slider_3 .noUi-tooltip").text() ) <= 0) {
+                $("#range_slider_3 .noUi-tooltip").text("не важно");
+            }
+            setTimeout(function() {
+                handleLower = $("#range_slider_3").find(".noUi-handle-lower");
+                leftCoord = handleLower.offset().left;
+                barsCharts = handleLower.closest(".bars_range_wrapp");
+                barsCharts.find(".bars .bar").each(function() {
+                    if( $(this).offset().left < leftCoord ) {
+                        $(this).removeClass("disable");
+                    } else {
+                        $(this).addClass("disable");
+                    }
+                });
+            }, 500);
         });
         priceSlider3.noUiSlider.on('change', function (values, handle) {
             minVal = parseInt(values[0]);
@@ -2255,7 +2285,7 @@ $(document).ready(function () {
         $(".promo_slider").not(".slick-initialized").slick({
             dots: false,
             arrows: true,
-            autoplay: false,
+            autoplay: true,
             autoplaySpeed: 4000,
             speed: 1200,
             slidesToShow: 1,
@@ -2266,10 +2296,9 @@ $(document).ready(function () {
             nextArrow: '<button class="slick-next white_right_arrow" aria-label="Next" type="button"></button>'
         });
 
-        $(".promo_slider").on('afterChange', function (event, slick, currentSlide, nextSlide) {
-            //alert(currentSlide);
+        $(".promo_slider").on('beforeChange', function (event, slick, currentSlide, nextSlide) {
             $(".promo_footer [data-slide]").hide();
-            $(".promo_footer [data-slide ='" + currentSlide + "']").show();
+            $(".promo_footer [data-slide ='" + nextSlide + "']").show();
         });
     }
 
