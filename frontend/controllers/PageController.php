@@ -518,26 +518,9 @@ class PageController extends FrontendController
                 $session->set('result', $params['result']);
             }
 
-            if (!empty(Yii::$app->request->post('streetId'))) {
-                //debug($params);
-                $params['streetId'] = Yii::$app->request->post('streetId');
-                $session->set('params', $params);
-            }
-            if (Yii::$app->request->post('closeStreet')) {
-                //debug($params);
-                $params = $session->get('params');
-                $params['streetId'] = null;
-                $session->remove('params');
-            }
-
         }
 
-
-        //debug($session->get('params')); die();
-        //debug($params); die();
-
         $whereCondition = $this->getFilter($seo, $params);
-//debug($whereCondition);
         $searchModel = new BcItemsSearch();
         $result = $searchModel->seoSearchFromView($whereCondition);
 
@@ -558,21 +541,10 @@ class PageController extends FrontendController
         }
 
 
-        if (Yii::$app->request->post('markerId')) {
-            $markerId = Yii::$app->request->post('markerId');
-            return $this->render('items', [
-                'markerId' => $markerId
-            ]);
-        } else {
-            $markerId = '';
-        }
-//debug($result['allForPage']);
         return $this->render('items', [
-            'markerId' => $markerId,
             'seo' => $seo,
             'city' => $city,
             'items' => $result['allForPage'],
-            //'countPlaces' => $countPlaces,
             'countPlaces' => $result['count_ofices'],
             'pages' => $result['pages'],
             'markers' => $result['markers'],
@@ -589,7 +561,6 @@ class PageController extends FrontendController
             'rates' => $rates,
             'currency' => $currency,
             'taxes' => $taxes,
-            'streetName' => $result['streetName']
         ]);
     }
 

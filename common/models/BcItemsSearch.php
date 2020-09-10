@@ -327,15 +327,6 @@ class BcItemsSearch extends BcItems
         $filtredQuery = $this->filterConditions($fullQuery, $params);
         $filtredQuery = $this->orderByConditions($filtredQuery, $params);
 
-        if ($params['result'] == 'offices' && !empty($params['streetId'])) {
-            $streetQuery = clone $filtredQuery;
-            $streetParams = $this->filterConditionByStreet($streetQuery, $params);
-            $streetQuery = $streetParams[0];
-            $streetName = $streetParams[1];
-            $streetQuery = $streetQuery->all();
-            $fullStreetsPlaces = getUniqueArray('pid', $streetQuery);
-        }
-
         $filtredQuery = $filtredQuery->all();//Полный запрос всех отфильтрованных и отсортированных строк
 
         $fullPlaces = getUniqueArray('pid', $filtredQuery);
@@ -379,9 +370,6 @@ class BcItemsSearch extends BcItems
             }
         } else {
             $itemsForMarkers = $fullPlaces;
-            if ($params['result'] == 'offices' && !empty($params['streetId'])) {
-                $fullPlaces = $fullStreetsPlaces;
-            }
             $pages = new Pagination(['totalCount' => count($fullPlaces), 'pageSize' => $pageSize]);
             $pages->pageSizeParam = false;
             $pages->forcePageParam = false;
@@ -414,9 +402,8 @@ class BcItemsSearch extends BcItems
         $pricesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'uah_price'));
         $distancesForChart = array_filter(ArrayHelper::getColumn($forChartsQuery, 'walk_distance'));
         $center = !empty($markers['features'][0]['geometry']['coordinates']) ? $markers['features'][0]['geometry']['coordinates'] : null;
-//debug($streetName); die(); walk_distance
+
         $result = [];
-        $result['streetName'] = $streetName;
         $result['params'] = $params;
         $result['center'] = $center;
         $result['count_ofices'] = $count_ofices; //количество найденных офисов

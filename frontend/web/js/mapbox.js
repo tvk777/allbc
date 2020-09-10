@@ -54,44 +54,19 @@
         });
     }
 
-    function pjax_street(id) {
-        streetId = id;
-        $.pjax({
-            url: window.location.href,
-            type: 'POST',
-            data: {streetId: streetId},
-            container: '#cardsPjax',
-            async: true,
-            scrollTo: false
-        });
-        //console.log(streetId);
-    }
-
-    function pjax_close_street() {
-        streetId = undefined;
-        $.pjax({
-            url: window.location.href,
-            type: 'POST',
-            data: {closeStreet: true},
-            container: '#cardsPjax',
-            async: true,
-            scrollTo: false
-        });
-    }
-    
     function handleClickOnMarker(id, result) {
-        console.log(id, result);
         $(".popup_bg").fadeIn(300);
         $('#markerId').val(id);
         $('#popupForm').submit();
     }
 
-
     function getJbjectsAdressPosition()  {
-        var leftOHCoord = $(".map_objects_popup .popup_content").offset().left;
-        $(".map_objects_templ .objects_adress").css({
-            "left" : leftOHCoord + "px"
-        });
+        if($(".map_objects_templ .objects_adress").length > 0) {
+            var leftOHCoord = $(".map_objects_popup .popup_content").offset().left;
+            $(".map_objects_templ .objects_adress").css({
+                "left": leftOHCoord + "px"
+            });
+        }
     }
 
     function showObject() {
@@ -152,9 +127,13 @@
         $("[data-popup]").fadeOut(300);
     }
 
-    /* $(window).resize(function() {
+    $(document).ready(function() {
         getJbjectsAdressPosition();
-    });*/
+    });
+
+    $(window).resize(function() {
+        getJbjectsAdressPosition();
+    });
 
     $(document).on('pjax:complete', '#popupCards', function (event) {
         showObject();
@@ -218,8 +197,6 @@
         getJbjectsAdressPosition();
     });
 
-
-
     $(document).on({
      click: function () {
      if ($(this).attr('data-id')) {
@@ -280,16 +257,12 @@
             $(this).addClass('hover');
             if ($('#onMap').prop('checked') == true
                 && $('#searchonmap').prop('checked') == false
-                //&& geojson.result == 'offices'
                 && markerId !== 'undefined') {
                 marker_change_ico(markerId);
-                //console.log(markerId, geojson.result);
-                //pjax_street(markerId);
                 handleClickOnMarker(markerId, geojson.result);
             }
         }
     }, '.marker');
-
 
     function marker_change_ico(id) {
         $('.marker').removeClass('hover');
@@ -297,7 +270,6 @@
         element = $(markers[id]._element);
         element.addClass('hover');
     }
-
 
     function getVisibles(){
         var bounds, minLat, maxLat, minLng, maxLng, center, zoom;
@@ -323,7 +295,6 @@
         return(mapParams);
     }
 
-
     function initMap() {
         mapboxgl.accessToken = 'pk.eyJ1Ijoic2RiLXN0dWRpbyIsImEiOiJjanl3amJ5NHUweTdiM2JuNGV0b3VvOXlhIn0.4EWyUOq1U6Ib_bZi4-d2KQ';
         map = new mapboxgl.Map({
@@ -339,6 +310,15 @@
             //defaultLanguage: 'en'
             //defaultLanguage: 'ru'
         }));
+
+        map.addControl(
+            new mapboxgl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true
+                },
+                trackUserLocation: true
+            })
+        );
 
         geojson.features.forEach(function (marker) {
             var el = document.createElement('div'), html = '', id = marker.properties.id;
@@ -374,7 +354,7 @@
             }
         });
 
-        map.on('load', function() {
+        /*map.on('load', function() {
             map.on('click', function (e) {
                 var targetClassName = $(e.originalEvent.srcElement).attr('class');
                 //console.log($(e.originalEvent.srcElement).attr('class'), streetId);
@@ -387,7 +367,7 @@
                 }
             });
 
-        });
+        });*/
 
         map.on('zoomstart', function() {
             $('.marker.hover').removeClass('hover');
