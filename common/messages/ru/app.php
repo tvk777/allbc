@@ -108,6 +108,7 @@ return [
     'Office' => 'Офис',
     'All business centers here' => 'Все бизнес-центры здесь',
     'See More' => 'Смотреть подробнее',
+    'More' => 'Смотреть подробнее',
     'Type/Class' => 'Тип/Класс',
     'Condition' => 'Состояние',
     'Metro line' => 'Ветка метро',

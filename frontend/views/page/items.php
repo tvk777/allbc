@@ -15,7 +15,7 @@ use yii\helpers\Url;
 //debug($items[0]->place);
 //$currency = $conditions['currency'];
 $pageSize = Yii::$app->settings->page_size;
-$halfPage = $pageSize/2;
+$halfPage = $pageSize / 2;
 $currentLanguage = Yii::$app->language;
 $this->title = getDefaultTranslate('title', $currentLanguage, $seo);
 $this->params['breadcrumbs'][] = $this->title;
@@ -45,6 +45,8 @@ $this->registerJs($script, $this::POS_READY, 'city-handler');
 $result = !empty($params['result']) && $params['result'] == 'bc' ? 'bc' : 'offices';
 $h1 = getDefaultTranslate('name', $currentLanguage, $seo);
 $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
+
+//debug($conditions);
 ?>
 
 <?= common\widgets\SliderWidget::widget(['text' => [$h1, $h2]]); ?>
@@ -82,53 +84,11 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
             //'scrollTo' => 1000,
         ]); ?>
 
-        <? //debug($conditions['streetId']); ?>
-        <? if (!empty($conditions['streetId'])) : ?>
-            <div class="row">
-                <? if ($streetName) : ?>
-                    <div class="street-name">
-                        <?= $streetName ?>
-                        <button type="button" class="close close_btn close_street"><i class="close_black"></i></button>
-                    </div>
-                <? endif; ?>
-                <div class="w_half full-high">
-                    <div class="objects_cards">
-                        <? if (count($items) > 0) : ?>
-                            <? if (!empty($items[0]->place->bcitem)) : ?>
-                            <? //debug($items[0]->place->bcitem->address);
-                            $bc = $items[0]->place->bcitem;
-                            $bgStyle = count($bc->slides)>0 ? 'style="background-image: url('.$bc->slides[0]['big'].')"' : '';
-                            ?>
-                            <div class="bc-street" <?= $bgStyle ?> >
-                                <p><?= $bc->address ?></p>
-                                <a href="<?= $bc->slug->slug ?>">подробнее</a>
-                            </div>
-                            <? endif; ?>
-                            <?
-                            foreach ($items as $item) {
-                                echo $this->render('_partial/_card', [
-                                    'item' => $item,
-                                    'target' => $seo->target,
-                                    'result' => $result,
-                                    'currentLanguage' => $currentLanguage,
-                                    'currency' => $currency,
-                                    'rates' => $rates,
-                                    'type' => $conditions['type'],
-                                    'taxes' => $taxes
-                                ]);
-                            }
-                            ?>
-                        <? endif; ?>
-                    </div>
-                </div>
-            </div>
-        <? else: ?>
-
             <div class="row">
                 <div class="w_half">
                     <div class="objects_cards">
                         <?
-                        for ($i = 0; $i <= $halfPage-1; $i++) {
+                        for ($i = 0; $i <= $halfPage - 1; $i++) {
                             if (isset($items[$i])) {
                                 echo $this->render('_partial/_card', [
                                     'item' => $items[$i],
@@ -137,7 +97,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                     'currentLanguage' => $currentLanguage,
                                     'currency' => $currency,
                                     'rates' => $rates,
-                                    'type' => $conditions['type'],
+                                    //'type' => $conditions['type'],
                                     'taxes' => $taxes
                                 ]);
                             }
@@ -168,7 +128,7 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
                                     'currentLanguage' => $currentLanguage,
                                     'currency' => $currency,
                                     'rates' => $rates,
-                                    'type' => $conditions['type'],
+                                    //'type' => $conditions['type'],
                                     'taxes' => $taxes
                                 ]);
                             }
@@ -185,7 +145,6 @@ $h2 = getDefaultTranslate('short_content', $currentLanguage, $seo);
             <div class="row">
 
             </div>
-        <? endif; ?>
 
         <?
         $script = <<< JS
@@ -216,20 +175,47 @@ JS;
 
 </section>
 
+
 <? echo $this->render('_partial/_items-foot', [
     'seo' => $seo,
     'city' => $city
 ]); ?>
 
-<!-- Photo Gallery -->
-<div class="photo_gallery"></div>
-<!-- /Photo Gallery -->
+
 <?
 $this->registerCssFile('https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css');
 $this->registerJsFile('https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js');
 $this->registerJsFile('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.10.1/mapbox-gl-language.js');
 $this->registerJsFile('/js/mapbox.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
 ?>
+
+
+<? Pjax::begin([
+    'enablePushState' => false,
+    'enableReplaceState' => false,
+    'options' => ['id' => 'popupCards'],
+    'formSelector' => '#popupForm',
+]);
+?>
+
+<?
+$params['markerId'] = null;
+$params['result'] = $result;
+$params['target'] = $seo->target;
+$params['lang'] = $currentLanguage;
+$params['currency'] = $currency;
+
+echo $this->render('popup-cards', [
+    'params' => $params,
+    'searchResult' => null,
+    'rates' => $rates,
+    'taxes' => $taxes,
+]); ?>
+
+<?php Pjax::end(); ?>
+
+
+
 
 
 

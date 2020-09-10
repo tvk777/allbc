@@ -20,7 +20,6 @@
 
     $(document).on('pjax:complete', function (event) {
         initMap();
-        console.log(streetId);
 
         $(".map_object_templ").addClass("map_show");
         $("#onMap").prop("checked", showMap);
@@ -79,12 +78,146 @@
             scrollTo: false
         });
     }
-//close_street
-    $(document).on({
-        click: function () {
-            pjax_close_street();
+    
+    function handleClickOnMarker(id, result) {
+        console.log(id, result);
+        $(".popup_bg").fadeIn(300);
+        $('#markerId').val(id);
+        $('#popupForm').submit();
+    }
+
+
+    function getJbjectsAdressPosition()  {
+        var leftOHCoord = $(".map_objects_popup .popup_content").offset().left;
+        $(".map_objects_templ .objects_adress").css({
+            "left" : leftOHCoord + "px"
+        });
+    }
+
+    function showObject() {
+        popupName = "popup_2";
+        div = document.createElement('div');
+        div.style.overflowY = 'scroll';
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.visibility = 'hidden';
+        document.body.appendChild(div);
+        scrollWidth = div.offsetWidth - div.clientWidth;
+        document.body.removeChild(div);
+        $("body").addClass("fixed");
+        $("body").css({
+            "position" : "fixed",
+            "top" :  -$(document).scrollTop() + "px",
+            "overflow" : "hidden",
+            "right" : 0,
+            "left" : 0,
+            "bottom" : 0,
+            "padding-right" : scrollWidth + "px"
+        });
+        $(".popup_bg").fadeIn(300);
+        $("[data-popup = '"+ popupName +"']").fadeIn(300);
+        setTimeout(function() {
+            getJbjectsAdressPosition();
+        }, 100);
+
+        objectSlider = $(".map_objects_thumbs .object_slider").not(".slick-initialized").slick({
+            dots: false,
+            arrows: true,
+            autoplay: false,
+            speed: 300,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            fade: true,
+            prevArrow: '<button class="slick-prev white_left_arrow" aria-label="Previous" type="button"></button>',
+            nextArrow: '<button class="slick-next white_right_arrow" aria-label="Next" type="button"></button>'
+        });
+
+        $(".object_slider").each(function() {
+            slideImgBox = $(this).find(".slick-current .img_box");
+            imagePath = $(this).find(".slick-current .img_box").attr("data-imageurl");
+            slideImgBox.find("img").attr("src", imagePath);
+        });
+
+    }
+
+    function hideObject() {
+        curTop = $("body").css("top");
+        curTop = Math.abs(parseInt(curTop, 10));
+        $("body").attr("style", "");
+        if (curTop !== 0) {
+            $("html").scrollTop(curTop);
         }
-    }, '.close_street');
+        $("body").removeClass("fixed");
+        $(".popup_bg").fadeOut(300);
+        $("[data-popup]").fadeOut(300);
+    }
+
+    /* $(window).resize(function() {
+        getJbjectsAdressPosition();
+    });*/
+
+    $(document).on('pjax:complete', '#popupCards', function (event) {
+        showObject();
+       $(".close_popup, .popup_bg").on("click", function(e) {
+            e.preventDefault();
+            hideObject();
+        });
+    });
+
+    $(".close_popup, .popup_bg").on("click", function(e) {
+        e.preventDefault();
+        curTop = $("body").css("top");
+        curTop = Math.abs(parseInt(curTop, 10));
+        $("body").attr("style", "");
+        if (curTop !== 0) {
+            $("html").scrollTop(curTop);
+        }
+        $("body").removeClass("fixed");
+        $(".popup_bg").fadeOut(300);
+        $("[data-popup]").fadeOut(300);
+    });
+
+    $(this).keydown(function(eventObject){
+        if (eventObject.which == 27 ) {
+            curTop = $("body").css("top");
+            curTop = Math.abs(parseInt(curTop, 10));
+            $("body").attr("style", "");
+            if (curTop !== 0) {
+                $("html").scrollTop(curTop);
+            }
+            $("body").removeClass("fixed");
+            $(".popup_bg").fadeOut(300);
+            $("[data-popup]").fadeOut(300);
+        }
+    });
+
+    $(document).on("mouseup", function(e) {
+        if($(".popup").is(":visible")) {
+            e.preventDefault();
+            hide_element = $(".popup_content");
+            if (!hide_element.is(e.target)
+                && hide_element.has(e.target).length === 0) {
+                curTop = $("body").css("top");
+                curTop = Math.abs(parseInt(curTop, 10));
+                $("body").attr("style", "");
+                if (curTop !== 0) {
+                    $("html").scrollTop(curTop);
+                }
+                $("body").removeClass("fixed");
+                $(".popup_bg").fadeOut(300);
+                $("[data-popup]").fadeOut(300);
+            }
+        }
+    });
+
+    $(document).ready(function() {
+        getJbjectsAdressPosition();
+    });
+
+    $(window).resize(function() {
+        getJbjectsAdressPosition();
+    });
+
 
 
     $(document).on({
@@ -147,10 +280,12 @@
             $(this).addClass('hover');
             if ($('#onMap').prop('checked') == true
                 && $('#searchonmap').prop('checked') == false
-                && geojson.result == 'offices'
+                //&& geojson.result == 'offices'
                 && markerId !== 'undefined') {
                 marker_change_ico(markerId);
-                pjax_street(markerId);
+                //console.log(markerId, geojson.result);
+                //pjax_street(markerId);
+                handleClickOnMarker(markerId, geojson.result);
             }
         }
     }, '.marker');
@@ -209,7 +344,7 @@
             var el = document.createElement('div'), html = '', id = marker.properties.id;
 
             el.className = 'marker ' + id;
-            if(geojson.result!='offices') {
+            /*if(geojson.result!='offices') {
                 html += '<div class="map-img">';
                 html += '<img src="' + marker.properties.img + '"/>';
                 html += '<div class="green_circle">' + marker.properties.class + '</div>';
@@ -225,7 +360,10 @@
                 mar = new mapboxgl.Marker(el)
                     .setLngLat(marker.geometry.coordinates)
                     .addTo(map);
-            }
+            }*/
+            mar = new mapboxgl.Marker(el)
+                .setLngLat(marker.geometry.coordinates)
+                .addTo(map);
             markers[id] = mar;
         });
 
@@ -239,10 +377,10 @@
         map.on('load', function() {
             map.on('click', function (e) {
                 var targetClassName = $(e.originalEvent.srcElement).attr('class');
-                console.log($(e.originalEvent.srcElement).attr('class'), streetId);
+                //console.log($(e.originalEvent.srcElement).attr('class'), streetId);
                 if ($('#onMap').prop('checked') == true
                     && $('#searchonmap').prop('checked') == false
-                    && geojson.result == 'offices'
+                    //&& geojson.result == 'offices'
                     && targetClassName === 'mapboxgl-canvas'
                     && streetId!==undefined) {
                     pjax_close_street();
@@ -256,7 +394,7 @@
         });
 
         map.on('zoomend', function() {
-         console.log(map.getZoom());
+         //console.log(map.getZoom());
          });
 
     }

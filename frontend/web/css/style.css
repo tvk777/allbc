@@ -5631,6 +5631,7 @@ a.object_card_title:focus {
     padding-bottom: 10px;
 }
 
+
 .object_card .thumb_5_footer_col:nth-child(1) p {
     font-size: 14px;
     font-weight: 600;
@@ -5641,6 +5642,11 @@ a.object_card_title:focus {
     font-size: 14px;
     font-weight: 600;
     color: #000000;
+}
+
+.object_card .thumb_5_footer_col p {
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .object_table {
@@ -9020,7 +9026,7 @@ i.star_2.rem {
     display: inline-block;
 }*/
 
-.popup_sect {
+/*.popup_sect {
     display: none;
     width: 100%;
     height: 100%;
@@ -9031,7 +9037,7 @@ i.star_2.rem {
     overflow-y: auto;
     background: rgba(255, 255, 255, .5);
     padding: 70px 0 30px 0;
-}
+}*/
 
 .marker {
     background-image: url('../img/newmarker5.png');
@@ -10418,3 +10424,136 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle.noUi-handle-upper {
     display: none;
 }
 
+/*-- Popup --*/
+
+body.fixed {
+    width: 100%;
+    padding-right: 20px;
+    overflow: hidden;
+}
+
+.popup {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+}
+
+.popup_bg {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(234, 234, 234, .85);
+    z-index: 19;
+}
+
+.close_popup {
+    display: block;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background-color: transparent;
+    background-image: url(../img/close.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.popup_content {
+    max-width: 500px;
+    margin: 70px auto 20px auto;
+    position: relative;
+    z-index: 2;
+    padding: 37px 55px 39px 55px;
+    background-color: #fff;
+}
+
+.map_objects_templ {
+    position: relative;
+    padding: 10px 15px 80px 15px;
+}
+
+.objects_adress {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+}
+
+.objects_adress > div:nth-child(1) {
+    width: 50px;
+    padding-left: 10px;
+}
+
+.objects_adress .inner_bg {
+    width: calc(100% - 50px);
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    width: calc(100% - 50px);
+    background-color: #a6a6a6;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.objects_adress .inner_bg > div:nth-child(1) {
+    width: calc(100% - 140px);
+    padding-left: 15px;
+}
+
+.objects_adress .inner_bg > div:nth-child(2) {
+    width: 140px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+}
+
+.map_objects_popup .popup_content {
+    max-width: 700px;
+    margin-top: 0;
+    padding: 0 0 39px 0;
+}
+
+.map_objects_templ .objects_adress {
+    width: 100%;
+    max-width: 700px;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 4;
+}
+
+.objects_adress p {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    color: #fff;
+}
+
+.map_objects_thumbs {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    margin: 50px -14px 10px -14px;
+}
+
+.map_objects_thumbs .object_card {
+    width: calc(50% - 14px);
+}
+
+
+/*-- /Popup  --*/

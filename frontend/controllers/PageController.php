@@ -400,6 +400,58 @@ class PageController extends FrontendController
         ]);
     }
 
+    public function actionPopupCards()
+    {
+        if (Yii::$app->request->isPjax && Yii::$app->request->post('markerId')) {
+            $params['markerId'] = Yii::$app->request->post('markerId');
+            $params['result'] = Yii::$app->request->post('result');
+            $params['target'] = Yii::$app->request->post('target');
+            $params['currency'] = Yii::$app->request->post('currency');
+            $params['lang'] = Yii::$app->language;
+            //$currency = 2;
+            //$markerId, $result, $target
+            $searchModel = new BcItemsSearch();
+            $searchResult = $searchModel->getPopupCards($params);
+            //debug($params); die();
+            //debug($searchResult); die();
+            $priceDatas = $this->getPriceDatas();
+            $rates = $priceDatas[0];
+            $taxes = $priceDatas[1];
+            return $this->renderPartial('popup-cards', [
+                'searchResult' => $searchResult,
+                'params' => $params,
+                'rates' => $rates,
+                'taxes' => $taxes,
+                //'currency' => $params['currency']
+            ]);
+        }
+        return false;
+    }
+
+    public function actionTestPopup()
+    {
+        $params['markerId'] = 32268;
+        $params['result'] = 'bc'; //'offices';//
+        $params['target'] = 1;
+        $params['lang'] = Yii::$app->language;
+        $params['currency'] = 1;
+        //$markerId, $result, $target
+        $searchModel = new BcItemsSearch();
+        $searchResult = $searchModel->getPopupCards($params);
+        //debug($params); die();
+        //debug($searchResult); die();
+        $priceDatas = $this->getPriceDatas();
+        $rates = $priceDatas[0];
+        $taxes = $priceDatas[1];
+        return $this->render('popup-cards', [
+            'searchResult' => $searchResult,
+            'params' => $params,
+            'rates' => $rates,
+            'taxes' => $taxes,
+            //'currency' => $params['currency']
+        ]);
+    }
+
     //страница выдачи каталога
     public function actionSeo_catalog_urls($slug)
     {
@@ -505,7 +557,18 @@ class PageController extends FrontendController
             $center = $result['center'];
         }
 
+
+        if (Yii::$app->request->post('markerId')) {
+            $markerId = Yii::$app->request->post('markerId');
+            return $this->render('items', [
+                'markerId' => $markerId
+            ]);
+        } else {
+            $markerId = '';
+        }
+//debug($result['allForPage']);
         return $this->render('items', [
+            'markerId' => $markerId,
             'seo' => $seo,
             'city' => $city,
             'items' => $result['allForPage'],

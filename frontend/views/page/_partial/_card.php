@@ -49,7 +49,7 @@ if ($result == 'bc') {
     $city = $cardItem->city->name;
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
     $address = $placeItem->hide_bc == 1 ? $cardItem->street : $cardItem->address;
-    $minmax = !empty($placeItem->m2min) ? $item->m2min . ' m² - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
+    $minmax = !empty($placeItem->m2min) ? $item->m2min . ' - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
     $placePrices = getPlacePrices($item, $currency, $rates, $taxes, $target);
     $minPrice = $placePrices['forM2'];
     //$priceForAll = $placePrices['forAll'];

@@ -225,9 +225,9 @@ class BcItemsSearch extends BcItems
                 break;
         }
 
-        $street = $this->getStreetName($params['streetId'], $params['target'], $streetField);
-        $query->andFilterWhere(['like', $streetField, $street]);
-        return [$query, $street];
+        $street = $this->getStreetName($params['markerId'], $params['target'], $streetField);
+        $query->andFilterWhere(['like', $streetField, $street[$streetField]])->andFilterWhere(['city_id' => $street['city_id']]);
+        return [$query, $street[$streetField]];
     }
 
 
@@ -434,6 +434,67 @@ class BcItemsSearch extends BcItems
         return $result;
     }
 
+    public function getPopupCards($params){
+        $streetName = '';
+        if ($params['target'] == 1) {
+            $query = BcPlacesView::find()->with('place', 'place.images');
+        } else {
+            $query = BcPlacesSellView::find()->with('place', 'place.images');
+        }
+        $query->andFilterWhere([
+            'active' => 1,
+            'approved' => 1,
+            'hide' => 0,
+            'phide' => 0,
+        ]);
+        if ($params['result'] == 'offices') {
+            $streetParams = $this->filterConditionByStreet($query, $params);
+            $streetQuery = $streetParams[0];
+            $streetName = $streetParams[1];
+            $streetQuery = $streetQuery->all();
+            $items = getUniqueArray('pid', $streetQuery);
+        } else {
+            $query->andFilterWhere(['id' => $params['markerId']]);
+            $bcQuery = $query->all();
+            $items = getUniqueArray('pid', $bcQuery);
+        }
+
+        $result = [];
+        $result['streetName'] = $streetName;
+        $result['items'] = $items;
+
+        return $result;
+    }
+
+    /*public function getPopupCards($markerId, $result, $target){
+        if($result==='bc'){
+            $bc = BcItems::findOne($markerId);
+            $query = $target===1 ? BcPlaces::find() : BcPlacesSell::find();
+            $query->where(['item_id' => $markerId])
+                ->andWhere(['archive' => 0])
+                ->andWhere(['hide' => 0])
+                ->with('bcitem', 'images', 'slug');
+            $places = $query->all();
+        } else {
+            if ($target === 1) {
+                $query = BcPlacesView::find()
+                    ->with('place', 'place.images');
+            } else {
+                $query = BcPlacesSellView::find()
+                    ->with('place', 'place.images');
+            }
+            $params['lang'] = Yii::$app->language;
+            $streetParams = $this->filterConditionByStreet($query, $params);
+            $streetQuery = $streetParams[0];
+            $streetName = $streetParams[1];
+            $streetQuery = $streetQuery->all();
+            $places = getUniqueArray('pid', $streetQuery);
+        }
+        $searchResult['bc'] = $bc;
+        $searchResult['places'] = $places;
+        //debug($searchResult);
+        return $searchResult;
+    }*/
 
     protected function getItemsByUser($id)
     {
@@ -445,8 +506,8 @@ class BcItemsSearch extends BcItems
     protected function getStreetName($id, $target, $field)
     {
         $query = $target == 1 ? BcPlacesView::find() : BcPlacesSellView::find();
-        $street = $query->select($field)->where(['pid' => $id])->asArray()->one();
-        return $street[$field];
+        $street = $query->select(['city_id', $field])->where(['pid' => $id])->asArray()->one();
+        return $street;
     }
 
 }

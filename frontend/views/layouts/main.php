@@ -175,7 +175,7 @@ $countCircle = !empty($wishAmount) ? '<span class="count_circle">' . $wishAmount
     </footer>
 
     <!-- /Footer -->
-
+    <div class="popup_bg"></div>
 
     <?php $this->endBody() ?>
 </div>

@@ -92,11 +92,13 @@ function getPlusForBC($places, $target)
     });
     $min = count($arrNotNull) > 0 ? min($arrNotNull) : null;
     foreach ($places as $place) {
+        $placeTax = (int) $place->tax;
+
         if (!is_null($min) && $place->uah_price === $min) {
-            if ($target == 1 && ($place->kop > 0 || $place->tax == 1 || $place->tax == 4 || $place->opex > 0)) {
+            if ($target == 1 && ($place->kop > 0 || $placeTax == 1 || $placeTax == 4 || $place->opex > 0)) {
                 return true;
             }
-            if ($target == 2 && ($place->kop > 0 || $place->tax == 1 || $place->tax == 4)) {
+            if ($target == 2 && ($place->kop > 0 || $placeTax == 1 || $placeTax == 4)) {
                 return true;
             }
         }
@@ -229,6 +231,7 @@ function getPlusForPlace($place, $target)
     return false;
 }
 
+
 //цена с текстом валюты для страницы выдачи офисов
 function getPlacePrices($place, $currency, $rates, $taxes, $target)
 {
@@ -269,10 +272,12 @@ function getPlacePrice($place, $currency, $rates, $taxes, $target)
 //price from bc_places_view стоимость аренды итого за всю площадь в месяц
 function calculateRentPrice($place, $taxes, $rates, $uahPrice = null)
 {
+    $placeTax = (int) $place->tax;
+
     if($uahPrice===null) $uahPrice = $place->uah_price;
     $plusKop = $place->kop > 0 ? ($place->m2 + ($place->m2 * $place->kop) / 100) : $place->m2;
-    $stavkaTax = $place->tax == 1 || $place->tax == 4
-        ? $uahPrice + ($uahPrice * $taxes[$place->tax]) / 100
+    $stavkaTax = $placeTax == 1 || $placeTax == 4
+        ? $uahPrice + ($uahPrice * $taxes[$placeTax]) / 100
         : $uahPrice;
     $opexValuteId = !empty($place->opex_valute_id) ? $place->opex_valute_id : 1;
     $opex_uah = $place->opex * $rates[$opexValuteId];
@@ -286,10 +291,40 @@ function calculateRentPrice($place, $taxes, $rates, $uahPrice = null)
 //price from bc_places_view
 function calculateSellPrice($place, $taxes, $rates)
 {
+    $placeTax = (int) $place->tax;
     $plusKop = $place->kop > 0 ? ($place->m2 + ($place->m2 * $place->kop) / 100) : $place->m2;
-    $stavka = $place->tax == 1 || $place->tax == 4
-        ? $place->uah_price + ($place->uah_price * $taxes[$place->tax]) / 100
+    $stavka = $placeTax == 1 || $placeTax == 4
+        ? $place->uah_price + ($place->uah_price * $taxes[$placeTax]) / 100
         : $place->uah_price;
 
     return $plusKop * $stavka;
+}
+
+
+//function for calculating price for popupCard
+function getPlaceUahPrice($place, $currency, $rates, $target){
+    $price = Yii::t('app', 'con.');
+    $priceUah = $price;
+    if ($place->con_price != 1 && !empty($place->price)) {
+        $text = $target==1 ? getCurrencyText($currency) : getCurrencySellText($currency);
+        $placePlus = getPlusForPlace($place, $target) ? '++' : '';
+        switch ($place->price_period){
+            case 1:
+                $priceUah = round($place->price * $rates[$place->valute_id]);
+                break;
+            case 2:
+                $priceUah = $target===1
+                    ? round(($place->price * $rates[$place->valute_id])/12)
+                    : round(($place->price * $rates[$place->valute_id])/$place->m2);
+                break;
+            case 3:
+                $priceUah = round(($place->price * $rates[$place->valute_id])/$place->m2);
+                break;
+            default:
+                break;
+        }
+
+        $price = round($priceUah / $rates[$currency]) . $placePlus . ' ' . $text[0];
+    }
+    return $price;
 }

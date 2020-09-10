@@ -1193,6 +1193,7 @@ $(document).ready(function () {
             $('#currency').val(currency);
             $('#typeF').val(type);
             $('#currF').val(currency);
+            $('#popupCurrency').val(currency);
             $('.price-filter').removeClass('green_active');
             $('.price-filter .item_title_text').text(priceText);
             $("#barsForm").submit();
@@ -1588,6 +1589,8 @@ $(document).ready(function () {
         $("[data-filters-index = '" + filtersIndex + "']").text($(this).html());
     });
 
+
+
     /*var chIndex, countCh;
 
      $("[data-ch]").on("change", function() {
@@ -1682,7 +1685,6 @@ $(document).ready(function () {
         }
     });
 
-
     //Submit form and clear filters buttons
 
     $(".filter-form .submit").on("click", function (e) {
@@ -1697,6 +1699,8 @@ $(document).ready(function () {
     });
 
     $("input.submit_filter").on("change", function (e) {
+        if($(this).attr('id')==='bc_result') $("#popupResult").val('bc');
+        if($(this).attr('id')==='offices_result') $("#popupResult").val('offices');
         if ($(this).closest('.resp_filter_inner').length === 0) $(".filter-form").submit();
     });
 
