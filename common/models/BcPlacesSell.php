@@ -214,8 +214,9 @@ class BcPlacesSell extends ActiveRecord
 
     protected function calculatedPrice($price, $rates=null, $taxes)
     {
+        $taxIndex = (int) $this->tax;
         return $this->tax == 1 || $this->tax == 4
-            ? $price + ($price * $taxes[$this->tax]) / 100
+            ? $price + ($price * $taxes[$taxIndex]) / 100
             : $price;
     }
 

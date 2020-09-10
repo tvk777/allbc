@@ -32,11 +32,11 @@ if ($result == 'bc') {
     $countItemPlaces = count($itemPlaces);
     if ($countItemPlaces > 1) {
         $priceInfo = Yii::t('app', 'from') . ' ' . $minPrice;
-        $squareInfo .= 'от '.$cardItem->minM2 . ' до ' . $cardItem->maxM2 . ' м²';
+        $squareInfo .= 'от ' . $cardItem->minM2 . ' до ' . $cardItem->maxM2 . ' м²';
     } elseif ($countItemPlaces == 1) {
         $priceInfo = $minPrice;
         $itemPlace = $itemPlaces[0];
-        $squareInfo .= $itemPlace->m2min ? 'от '.$itemPlace->m2min . ' до ' . $itemPlace->m2 . ' м²' : $itemPlace->m2 . ' м²';
+        $squareInfo .= $itemPlace->m2min ? 'от ' . $itemPlace->m2min . ' до ' . $itemPlace->m2 . ' м²' : $itemPlace->m2 . ' м²';
     }
 } else {
     $cardItem = $item->place->bcitem; //bc
@@ -50,8 +50,8 @@ if ($result == 'bc') {
     $district = $cardItem->district ? $cardItem->district->name . ' р-н' : '';
     $address = $placeItem->hide_bc == 1 ? $cardItem->street : $cardItem->address;
     $minmax = !empty($placeItem->m2min) ? $item->m2min . ' - ' . $item->m2 . ' m²' : $item->m2 . ' m²';
-    $placePrices = getPlacePrices($item, $currency, $rates, $taxes, $target);
-    $minPrice = $placePrices['forM2'];
+    $placePrices = getPlacePricesAllCurrencies($item, $rates, $taxes, $target);
+    $minPrice = $placePrices[$currency]['forM2'];
     //$priceForAll = $placePrices['forAll'];
     $itemPlaces = null;
     $placesInfo = null;
@@ -68,7 +68,7 @@ if ($result == 'bc') {
     $itemComission = $cardItem->percent_commission;
     $building = 'office';
 }
-$date =Yii::$app->formatter->asDate($cardItem->updated_at, 'php:d.m');
+$date = Yii::$app->formatter->asDate($cardItem->updated_at, 'php:d.m');
 //$date = date('d.m', strtotime ($cardItem->updated_at));
 if (!empty($itemSubway)) {
     switch ($itemSubway->subwayDetails->branch_id) {
@@ -146,19 +146,19 @@ if (!empty($itemSubway)) {
                             </div>
                         </div>
                         <? if ($result == 'bc') : ?>
-                        <div class="two_cols_2_col">
-                            <div class="office_cont_wrapp">
-                                <div class="office_cont">
-                                    <div class="col">
-                                        <i class="room_2"></i>
+                            <div class="two_cols_2_col">
+                                <div class="office_cont_wrapp">
+                                    <div class="office_cont">
+                                        <div class="col">
+                                            <i class="room_2"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5><?= $countItemPlaces ?></h5>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <h5><?= $countItemPlaces ?></h5>
-                                    </div>
+                                    <p>офисов</p>
                                 </div>
-                                <p>офисов</p>
                             </div>
-                        </div>
                         <? endif; ?>
                     </div>
                 </div>
@@ -169,13 +169,18 @@ if (!empty($itemSubway)) {
                             <p><?= Yii::t('app', 'Square') ?>: <?= $minmax ?></p>
                         </div>
                         <div class="thumb_5_footer_col">
-                            <p><?= Yii::t('app', 'Price') ?>: <?= $minPrice ?></p>
+                            <p class="office_price"
+                               data-price-m2-uah="<?= $placePrices[1]['forM2'] ?>"
+                               data-price-m2-usd="<?= $placePrices[2]['forM2'] ?>"
+                               data-price-m2-eur="<?= $placePrices[3]['forM2'] ?>"
+                               data-price-m2-rub="<?= $placePrices[4]['forM2'] ?>"
+                            ><?= Yii::t('app', 'Price') ?>: <?= '<span>'.$minPrice.'</span>' ?></p>
                         </div>
                     <? endif; ?>
                     <? if ($result == 'bc') : ?>
-                            <div class="thumb_5_footer_inner">
-                                <p><?= Yii::t('app', 'Square') ?>: <?= $squareInfo ?></p>
-                            </div>
+                        <div class="thumb_5_footer_inner">
+                            <p><?= Yii::t('app', 'Square') ?>: <?= $squareInfo ?></p>
+                        </div>
                     <? endif; ?>
                 </div>
 
@@ -189,7 +194,15 @@ if (!empty($itemSubway)) {
                             <p>м²</p>
                         </div>
                         <div class="table_cell">
-                            <p><?= $target == 1 ? getCurrencyText($currency)[0] : getCurrencySellText($currency)[0] ?></p>
+                            <? $texts = $target == 1 ? getCurrencyRentTexts() : getCurrencySellTexts() ?>
+                            <p class="price_text"
+                               data-text-uah="<?= $texts[1] ?>"
+                               data-text-usd="<?= $texts[2] ?>"
+                               data-text-eur="<?= $texts[3] ?>"
+                               data-text-rub="<?= $texts[4] ?>"
+                            >
+                                <?= $texts[$currency] ?>
+                            </p>
                         </div>
                         <div class="table_cell">
                             <p><?= $target == 1 ? 'all in/мес' : 'all in' ?></p>
@@ -200,7 +213,8 @@ if (!empty($itemSubway)) {
                     <? if ($itemPlaces): ?>
                         <? foreach ($itemPlaces as $k => $place): ?>
                             <?
-                            $prices = getPlacePrice($place, $currency, $rates, $taxes, $target);
+                            $prices = getPlacePriceAllCurrencies($place, $rates, $taxes, $target);
+                            //debug($prices);
                             ?>
                             <div class="table_row">
                                 <div class="table_cell">
@@ -208,24 +222,34 @@ if (!empty($itemSubway)) {
                                     <p><?= $squ ?></p>
                                 </div>
                                 <div class="table_cell">
-                                    <p><?= $prices['forM2'] ?></p>
+                                    <p class="price_forM2"
+                                       data-price-m2-uah="<?= $prices[1]['forM2'] ?>"
+                                       data-price-m2-usd="<?= $prices[2]['forM2'] ?>"
+                                       data-price-m2-eur="<?= $prices[3]['forM2'] ?>"
+                                       data-price-m2-rub="<?= $prices[4]['forM2'] ?>"
+                                    >
+                                        <?= $prices[$currency]['forM2'] ?></p>
                                 </div>
                                 <div class="table_cell">
-                                    <p><?= $prices['forAll'] ?></p>
+                                    <p class="price_forAll"
+                                       data-price-all-uah="<?= $prices[1]['forAll'] ?>"
+                                       data-price-all-usd="<?= $prices[2]['forAll'] ?>"
+                                       data-price-all-eur="<?= $prices[3]['forAll'] ?>"
+                                       data-price-all-rub="<?= $prices[4]['forAll'] ?>"
+                                    ><?= $prices[$currency]['forAll'] ?></p>
                                 </div>
                                 <div class="table_cell">
-                                    <? //debug($place->place->images) ?>
                                     <div class="place-image">
-                                    <? if (isset($place->place->images) && count($place->place->images) > 0) : ?>
-                                        <a href="#" class="icon_link_2" data-photogallerylink="<?= $place->pid ?>">
-                                            <i class="photo"></i>
-                                        </a>
-                                        <div class="images_paths_array" data-photogalleryindex="<?= $place->pid ?>">
-                                            <? foreach ($place->place->images as $img) : ?>
-                                                <span data-imagepath="<?= $img->imgSrc ?>"></span>
-                                            <? endforeach; ?>
-                                        </div>
-                                    <? endif; ?>
+                                        <? if (isset($place->place->images) && count($place->place->images) > 0) : ?>
+                                            <a href="#" class="icon_link_2" data-photogallerylink="<?= $place->pid ?>">
+                                                <i class="photo"></i>
+                                            </a>
+                                            <div class="images_paths_array" data-photogalleryindex="<?= $place->pid ?>">
+                                                <? foreach ($place->place->images as $img) : ?>
+                                                    <span data-imagepath="<?= $img->imgSrc ?>"></span>
+                                                <? endforeach; ?>
+                                            </div>
+                                        <? endif; ?>
                                     </div>
                                     <div class="star_place">
                                         <?= WishlistButton::widget([

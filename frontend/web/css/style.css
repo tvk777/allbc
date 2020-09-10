@@ -10557,3 +10557,6 @@ body.fixed {
 
 
 /*-- /Popup  --*/
+.price_texts{
+    display: none;
+}

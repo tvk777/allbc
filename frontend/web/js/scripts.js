@@ -567,6 +567,93 @@ $(document).ready(function () {
         $(this).addClass("active");
     });
 
+    $(document).on({
+        click: function () {
+            var type = $(this).data('type'),
+                currency = $(this).data('currency');
+            changePrices(currency);
+            $('#type').val(type);
+            $('#currency').val(currency);
+            $('#typeF').val(type);
+            $('#currF').val(currency);
+            $('#popupCurrency').val(currency);
+            $('.price-filter').removeClass('green_active');
+            $('.price-filter .item_title_text').text(priceText);
+            $("#barsForm").submit();
+        }
+    }, '#price-filter .select_item p');
+
+    function changePrices(currency) {
+        var targetText = $('.price_text'),
+            targetForM2 = $('.price_forM2'),
+            targetForAll = $('.price_forAll'),
+            targetOffice = $('.office_price');
+
+        switch (currency) {
+            case 1:
+                targetText.text(targetText.data('text-uah'));
+                targetForM2.each(function (index) {
+                    $(this).text($(this).data('price-m2-uah'));
+                });
+                targetForAll.each(function (index) {
+                    $(this).text($(this).data('price-all-uah'));
+                });
+                targetOffice.each(function (index) {
+                    $(this).text($(this).data('price-m2-uah'));
+                });
+                break;
+            case 2:
+                targetText.text(targetText.data('text-usd'));
+                targetForM2.each(function (index) {
+                    $(this).text($(this).data('price-m2-usd'));
+                });
+                targetForAll.each(function (index) {
+                    $(this).text($(this).data('price-all-usd'));
+                });
+                targetOffice.each(function (index) {
+                    $(this).text($(this).data('price-m2-usd'));
+                });
+                break;
+            case 3:
+                targetText.text(targetText.data('text-eur'));
+                targetForM2.each(function (index) {
+                    $(this).text($(this).data('price-m2-eur'));
+                });
+                targetForAll.each(function (index) {
+                    $(this).text($(this).data('price-all-eur'));
+                });
+                targetOffice.each(function (index) {
+                    $(this).text($(this).data('price-m2-eur'));
+                });
+                break;
+            case 4:
+                targetText.text(targetText.data('text-rub'));
+                targetForM2.each(function (index) {
+                    $(this).text($(this).data('price-m2-rub'));
+                });
+                targetForAll.each(function (index) {
+                    $(this).text($(this).data('price-all-rub'));
+                });
+                targetOffice.each(function (index) {
+                    $(this).text($(this).data('price-m2-rub'));
+                });
+                break;
+            default:
+                targetText.text(targetText.data('text-uah'));
+                targetForM2.each(function (index) {
+                    $(this).text($(this).data('price-m2-uah'));
+                });
+                targetForAll.each(function (index) {
+                    $(this).text($(this).data('price-all-uah'));
+                });
+                targetOffice.each(function (index) {
+                    $(this).text($(this).data('price-m2-uah'));
+                });
+                break;
+        }
+    }
+
+
     $(".currency_switch .dropdown_menu li").on('click', function (e) {
         e.preventDefault();
         var priceSpans = $('.place-price span'),
@@ -1185,21 +1272,6 @@ $(document).ready(function () {
         }
     }, '.select_item p');
 
-    $(document).on({
-        click: function () {
-            var type = $(this).data('type'),
-                currency = $(this).data('currency');
-            $('#type').val(type);
-            $('#currency').val(currency);
-            $('#typeF').val(type);
-            $('#currF').val(currency);
-            $('#popupCurrency').val(currency);
-            $('.price-filter').removeClass('green_active');
-            $('.price-filter .item_title_text').text(priceText);
-            $("#barsForm").submit();
-        }
-    }, '#price-filter .select_item p');
-
 
     // Range Slider
     if (document.getElementById("range_slider_2")) {
@@ -1222,10 +1294,10 @@ $(document).ready(function () {
         });
         priceSlider3.noUiSlider.on('update', function (values, handle) {
             minVal = parseInt(values[0]);
-            if(minVal>0) {
-                $("#metro_val").text(minVal+' Метров');
+            if (minVal > 0) {
+                $("#metro_val").text(minVal + ' Метров');
             } else {
-               $("#metro_val").text('');
+                $("#metro_val").text('');
             }
             $("#metro_name").html($("#metro_name_val a").html());
             if (parseInt($("#range_slider_3 .noUi-tooltip").text()) <= 0) {
@@ -1590,7 +1662,6 @@ $(document).ready(function () {
     });
 
 
-
     /*var chIndex, countCh;
 
      $("[data-ch]").on("change", function() {
@@ -1699,8 +1770,8 @@ $(document).ready(function () {
     });
 
     $("input.submit_filter").on("change", function (e) {
-        if($(this).attr('id')==='bc_result') $("#popupResult").val('bc');
-        if($(this).attr('id')==='offices_result') $("#popupResult").val('offices');
+        if ($(this).attr('id') === 'bc_result') $("#popupResult").val('bc');
+        if ($(this).attr('id') === 'offices_result') $("#popupResult").val('offices');
         if ($(this).closest('.resp_filter_inner').length === 0) $(".filter-form").submit();
     });
 

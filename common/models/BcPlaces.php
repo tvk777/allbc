@@ -224,13 +224,16 @@ class BcPlaces extends ActiveRecord
 
     protected function calculatedPrice($price, $rates, $taxes)
     {
+        $taxIndex = (int) $this->tax;
+        $opexIndex = (int) $this->opex_tax;
+
         $stavkaTax = $this->tax == 1 || $this->tax == 4
-            ? $price + ($price * $taxes[$this->tax]) / 100
+            ? $price + ($price * $taxes[$taxIndex]) / 100
             : $price;
         $opexValuteId = !empty($this->opex_valute_id) ? $this->opex_valute_id : 1;
         $opex_uah = $this->opex * $rates[$opexValuteId];
         $opex = ($this->opex_tax == 1 || $this->opex_tax == 4)
-            ? ($opex_uah + ($opex_uah * $taxes[$this->opex_tax]) / 100)
+            ? ($opex_uah + ($opex_uah * $taxes[$opexIndex]) / 100)
             : $opex_uah;
         $stavka = round($stavkaTax + $opex);
 
