@@ -89,9 +89,8 @@ switch ($currency) {
 
 $minpricesChart = $pricesChart['min'];
 $maxpricesChart = $pricesChart['maxVal'];
-$maxPriceTotal = $pricesChart['max'];
-$minRange = round($minpricesChart / $rates[$currency]);
-$maxRange = round($maxpricesChart / $rates[$currency]);
+$minRange = $minpricesChart; //round($minpricesChart / $rates[$currency]);
+$maxRange = $maxpricesChart; //round($maxpricesChart / $rates[$currency]);
 $minPrice = !empty($params['pricemin']) ? $params['pricemin'] : $minRange;
 $maxPrice = !empty($params['pricemax']) ? $params['pricemax'] : $maxRange;
 $min_max = $currencySymbol . ', ' . $minPrice . '-' . $maxPrice;
@@ -100,9 +99,7 @@ $priceText = $currencySymbol . ', '.Yii::t('app', 'Price');
 
 $this->registerJsVar('maxPrice', $maxPrice, $this::POS_HEAD);
 $this->registerJsVar('minPrice', $minPrice, $this::POS_HEAD);
-$this->registerJsVar('maxPriceRange', $maxRange, $this::POS_HEAD);
 $this->registerJsVar('minRange', $minRange, $this::POS_HEAD);
-$this->registerJsVar('maxPriceTotal', $maxPriceTotal, $this::POS_HEAD);
 $this->registerJsVar('currencySymbol', $currencySymbol, $this::POS_HEAD);
 $this->registerJsVar('priceText', $priceText, $this::POS_HEAD);
 
@@ -167,6 +164,7 @@ unset($filtersArray['m2max']);
 unset($filtersArray['pricemin']);
 unset($filtersArray['pricemax']);
 $st1Active = count($filtersArray) > 0 ? 'active' : '';
+//debug($pricesChart);
 ?>
 <?= Html::beginForm(['page/bars'], 'post', ['data-pjax' => true, 'id' => 'barsForm']) ?>
 <?= Html::input('hidden', 'bars[]', serialize($pricesChart)) ?>

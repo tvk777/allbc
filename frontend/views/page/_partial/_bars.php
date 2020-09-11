@@ -5,11 +5,11 @@ $counts = [];
 //debug($bars);
 if (!empty($bars)) {
     $counts = $bars['count'];
-    $maxRange = round($bars['max'] / $rate);
+    $maxRange = round($bars['maxVal'] / $rate);
     $minRange = round($bars['min'] / $rate);
     if (empty($minmax)) {
         $minPrice = round($bars['min'] / $rate);
-        $maxPrice = round($bars['max'] / $rate);
+        $maxPrice = round($bars['maxVal'] / $rate);
         $minmax = [$minPrice, $maxPrice];
     }
 }

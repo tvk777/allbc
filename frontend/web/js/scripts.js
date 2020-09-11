@@ -227,8 +227,7 @@ function priceSlider() { //price slider ₴/м²/mec
     } else {
         maxPrice = parseInt(maxPrice);
         minPrice = parseInt(minPrice);
-        maxRange = parseInt(maxPriceRange);
-        maxPriceTotal = parseInt(maxPriceTotal);
+        maxRange = parseInt(maxRange);
         start = [minPrice, maxPrice];
     }
 
@@ -241,8 +240,7 @@ function priceSlider() { //price slider ₴/м²/mec
         start: start,
         range: {
             'min': [0],
-            '99%': [maxRange, maxPriceTotal - maxRange],
-            'max': [maxPriceTotal]
+            'max': [maxRange]
         },
         connect: true,
         format: wNumb({
@@ -331,13 +329,13 @@ function priceSlider() { //price slider ₴/м²/mec
     });
 }
 
-function isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange) {
+function isMoreFilterActive(maxSqRange, minSqRange, maxRange, minRange) {
     var moreFilters = $('.more_filter'),
         filtersContainer = $('.filter_resp_inner'),
         checkedInputs,
         bcInput = $('#bc_result');
     checkedInputs = filtersContainer.find('input:checkbox:checked').length;
-    isPriceSelected = parseInt(filtersContainer.find('#minpricem2').val()) > minRange || parseInt(filtersContainer.find('#maxpricem2').val()) < maxPriceRange;
+    isPriceSelected = parseInt(filtersContainer.find('#minpricem2').val()) > minRange || parseInt(filtersContainer.find('#maxpricem2').val()) < maxRange;
     isSqSelected = parseInt(filtersContainer.find('#minm2').val()) > minSqRange || parseInt(filtersContainer.find('#maxm2').val()) < maxSqRange;
     isCheckboxesSelected = checkedInputs > 0;
     isBcInputSelected = bcInput.is(':checked');
@@ -346,7 +344,7 @@ function isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange) {
     } else {
         moreFilters.removeClass('active');
     }
-    //console.log($('#minpricem2').val(), minRange);
+    //console.log(isPriceSelected, isSqSelected, isCheckboxesSelected, isBcInputSelected);
     //return isPriceSelected || isSqSelected || isCheckboxesSelected || isBcInputSelected;
 }
 
@@ -396,7 +394,7 @@ $(window).resize(function () {
     getfilterNavParams();
     getCardParams();
     if ($('.more_filter').length > 0) {
-        isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+        isMoreFilterActive(maxSqRange, minSqRange, maxPrice, minRange);
     }
 });
 
@@ -417,7 +415,7 @@ $(document).on('pjax:start', '#cardsPjax', function (event) {
 
 $(document).on('pjax:complete', '#cardsPjax', function (event) {
     if ($('.more_filter').length > 0) {
-        isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+        isMoreFilterActive(maxSqRange, minSqRange, maxPrice, minRange);
     }
     $("#countOfices").text(countOfices);
     $("#map_box .mask").removeClass("visible start");
@@ -450,7 +448,7 @@ $(document).ready(function () {
     expertsSlider();
     cardSlider();
     if ($('.more_filter').length > 0) {
-        isMoreFilterActive(maxSqRange, minSqRange, maxPriceRange, minRange);
+        isMoreFilterActive(maxSqRange, minSqRange, maxPrice, minRange);
     }
 
 
